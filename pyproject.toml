@@ -8,13 +8,22 @@ dependencies = [
     "uvicorn[standard]>=0.32",
     "pydantic>=2.9",
     "pydantic-settings>=2.6",
-    "numpy>=1.26",
+    "numpy>=1.26,<2.0",
+    "onnxruntime>=1.18",
 ]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.3", "httpx>=0.27"]
-# Capture/training deps are heavy and only needed for M2/M3.
+# Capture deps, needed for M2 recording and feature extraction.
 ml = ["mediapipe>=0.10.14", "opencv-python>=4.10"]
+# Training deps. Heavy, and only needed to train/export a model — not to run the app.
+# onnx is pinned below 1.18: newer releases require ml-dtypes>=0.5, which TF 2.17 forbids.
+train = [
+    "tensorflow>=2.17,<2.18",
+    "onnx>=1.16,<1.18",
+    "tf2onnx>=1.16",
+    "matplotlib>=3.9",
+]
 
 [build-system]
 requires = ["setuptools>=68"]

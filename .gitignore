@@ -19,3 +19,8 @@ ml/models/*.keras
 tests/fixtures/parity_frames.json
 signsight.db
 tsconfig.tsbuildinfo
+
+# training artefacts — models, metadata, cached features, generated reports
+ml/models/*.json
+ml/data/cache/
+ml/reports/
