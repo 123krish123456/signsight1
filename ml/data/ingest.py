@@ -102,6 +102,43 @@ def sessions_from_sequence(paths: list[Path], number_re: str, gap: int) -> dict[
     return mapping
 
 
+def signers_from_passes(paths: list[Path], number_re: str, gap: int = 3) -> dict[str, str]:
+    """Recover signer identity from recording passes within each class folder.
+
+    A word's clips are not one continuous run: they come in tight blocks separated by
+    large jumps, e.g. "loud" = 5177-5179, 5257-5259, 5335-5337, 9289-9291, 9368-9370,
+    9448-9450, 9534-9536. Each block is one person's takes of that word in one sitting,
+    and the whole corpus was recorded by each signer in turn — "loud" has exactly seven
+    blocks, and INCLUDE documents exactly seven signers.
+
+    So the Nth block of every word belongs to the same person, and clustering per class
+    rather than globally is what makes the split work: every class then appears under
+    every signer, instead of whole categories landing in one split because they were
+    filmed in one sitting.
+
+    Still a heuristic — it assumes the signers recorded in a consistent order — but a far
+    better one than global session clustering, and it is checkable: a word should have as
+    many blocks as there are signers.
+    """
+    per_class: dict[str, list[tuple[int, Path]]] = {}
+    for p in paths:
+        m = re.search(number_re, p.name)
+        if m:
+            per_class.setdefault(p.parent.name, []).append((int(m.group(1)), p))
+
+    mapping: dict[str, str] = {}
+    for items in per_class.values():
+        items.sort()
+        index = 0
+        prev = items[0][0]
+        for n, path in items:
+            if n - prev > gap:
+                index += 1
+            mapping[path.as_posix()] = f"signer{index:02d}"
+            prev = n
+    return mapping
+
+
 def _signer_from(rel: Path, pattern: str | None, fallback: str) -> str:
     if not pattern:
         return fallback
@@ -116,12 +153,18 @@ def collect_files(root: Path, extensions: set[str]) -> list[Path]:
 def from_tree(root: Path, extensions: set[str], pack: VocabPack,
               signer_pattern: str | None, default_signer: str, source: str,
               session_re: str | None = None, session_gap: int = 50,
-              include_letters: bool = True) -> tuple[list[Clip], dict]:
+              include_letters: bool = True,
+              pass_re: str | None = None, pass_gap: int = 3) -> tuple[list[Clip], dict]:
     """Class comes from the containing folder name; signer from a regex or from
     sequential-filename session clustering."""
     mapping = gloss_map(pack, include_letters)
     files = collect_files(root, extensions)
-    sessions = sessions_from_sequence(files, session_re, session_gap) if session_re else {}
+    if pass_re:
+        sessions = signers_from_passes(files, pass_re, pass_gap)
+    elif session_re:
+        sessions = sessions_from_sequence(files, session_re, session_gap)
+    else:
+        sessions = {}
     clips, unmatched = [], {}
     for path in files:
         gloss = mapping.get(gloss_key(path.parent.name))
@@ -247,6 +290,11 @@ def main() -> int:
                     help=r"derive sessions from sequential filenames, e.g. 'MVI_(\d+)'")
     ap.add_argument("--session-gap", type=int, default=50,
                     help="a jump larger than this in the sequence starts a new session")
+    ap.add_argument("--pass-re", default=None, metavar="REGEX",
+                    help=r"recover signers from per-class recording passes, e.g. 'MVI_(\d+)'. "
+                         "Preferred over --session-re: it keeps every class present in every split.")
+    ap.add_argument("--pass-gap", type=int, default=3,
+                    help="a jump larger than this within one class starts a new pass")
     ap.add_argument("--no-letters", action="store_true",
                     help="ignore manual-alphabet classes; use for word corpora, whose "
                          "single-letter class names are words, not fingerspelling")
@@ -278,7 +326,8 @@ def main() -> int:
         clips, unmatched = from_tree(args.root, ext, pack, args.signer_pattern,
                                      default_signer, args.source,
                                      args.session_re, args.session_gap,
-                                     include_letters=not args.no_letters)
+                                     include_letters=not args.no_letters,
+                                     pass_re=args.pass_re, pass_gap=args.pass_gap)
         for c in clips:
             c.split = args.split
         kind = args.kind

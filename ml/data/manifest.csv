@@ -1,0 +1,497 @@
+clip,gloss,signer,split,source
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_5183.MOV,HAPPY,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_5184.MOV,HAPPY,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_5185.MOV,HAPPY,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_5263.MOV,HAPPY,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_5264.MOV,HAPPY,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_5265.MOV,HAPPY,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_5341.MOV,HAPPY,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_5342.MOV,HAPPY,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_5343.MOV,HAPPY,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_9295.MOV,HAPPY,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_9296.MOV,HAPPY,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_9297.MOV,HAPPY,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_9374.MOV,HAPPY,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_9375.MOV,HAPPY,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_9376.MOV,HAPPY,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_9454.MOV,HAPPY,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_9455.MOV,HAPPY,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_9456.MOV,HAPPY,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_9540.MOV,HAPPY,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_9541.MOV,HAPPY,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_9542.MOV,HAPPY,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_5123.MOV,BIG,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_5124.MOV,BIG,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_5125.MOV,BIG,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_5203.MOV,BIG,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_5204.MOV,BIG,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_5205.MOV,BIG,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_5283.MOV,BIG,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_5284.MOV,BIG,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_5285.MOV,BIG,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_9233.MOV,BIG,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_9234.MOV,BIG,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_9235.MOV,BIG,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_9316.MOV,BIG,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_9317.MOV,BIG,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_9318.MOV,BIG,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_9394.MOV,BIG,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_9395.MOV,BIG,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_9396.MOV,BIG,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_9475.MOV,BIG,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_9476.MOV,BIG,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_9477.MOV,BIG,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_5126.MOV,SMALL,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_5127.MOV,SMALL,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_5128.MOV,SMALL,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_5206.MOV,SMALL,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_5207.MOV,SMALL,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_5208.MOV,SMALL,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_5286.MOV,SMALL,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_5287.MOV,SMALL,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_5288.MOV,SMALL,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_9236.MOV,SMALL,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_9237.MOV,SMALL,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_9238.MOV,SMALL,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_9319.MOV,SMALL,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_9320.MOV,SMALL,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_9321.MOV,SMALL,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_9397.MOV,SMALL,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_9398.MOV,SMALL,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_9400.MOV,SMALL,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_9478.MOV,SMALL,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_9479.MOV,SMALL,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_9480.MOV,SMALL,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_5139.MOV,COLD,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_5140.MOV,COLD,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_5219.MOV,COLD,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_5220.MOV,COLD,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_5221.MOV,COLD,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_5298.MOV,COLD,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_5299.MOV,COLD,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_5300.MOV,COLD,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_9250.MOV,COLD,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_9251.MOV,COLD,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_9252.MOV,COLD,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_9331.MOV,COLD,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_9332.MOV,COLD,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_9333.MOV,COLD,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_9411.MOV,COLD,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_9412.MOV,COLD,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_9413.MOV,COLD,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_9490.MOV,COLD,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_9491.MOV,COLD,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_9492.MOV,COLD,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_5170.MOV,SICK,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_5171.MOV,SICK,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_5172.MOV,SICK,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_5251.MOV,SICK,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_5252.MOV,SICK,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_5253.MOV,SICK,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_5329.MOV,SICK,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_5330.MOV,SICK,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_5331.MOV,SICK,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_9280.MOV,SICK,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_9281.MOV,SICK,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_9282.MOV,SICK,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_9362.MOV,SICK,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_9363.MOV,SICK,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_9364.MOV,SICK,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_9442.MOV,SICK,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_9443.MOV,SICK,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_9444.MOV,SICK,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_9527.MOV,SICK,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_9528.MOV,SICK,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_9529.MOV,SICK,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_5173.MOV,HEALTHY,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_5174.MOV,HEALTHY,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_5175.MOV,HEALTHY,signer00,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_5254.MOV,HEALTHY,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_5255.MOV,HEALTHY,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_5256.MOV,HEALTHY,signer01,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_5332.MOV,HEALTHY,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_5333.MOV,HEALTHY,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_5334.MOV,HEALTHY,signer02,val,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_9286.MOV,HEALTHY,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_9287.MOV,HEALTHY,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_9288.MOV,HEALTHY,signer03,test,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_9365.MOV,HEALTHY,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_9366.MOV,HEALTHY,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_9367.MOV,HEALTHY,signer04,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_9445.MOV,HEALTHY,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_9446.MOV,HEALTHY,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_9447.MOV,HEALTHY,signer05,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_9530.MOV,HEALTHY,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_9531.MOV,HEALTHY,signer06,train,include
+E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_9532.MOV,HEALTHY,signer06,train,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_0029.MOV,HELLO,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_0030.MOV,HELLO,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_0031.MOV,HELLO,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_0032.MOV,HELLO,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_0037.MOV,HELLO,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_0038.MOV,HELLO,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_0039.MOV,HELLO,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_0089.MOV,HELLO,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_0090.MOV,HELLO,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_0091.MOV,HELLO,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_9914.MOV,HELLO,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_9915.MOV,HELLO,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_9916.MOV,HELLO,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_9917.MOV,HELLO,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_9954.MOV,HELLO,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_9955.MOV,HELLO,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_9956.MOV,HELLO,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_9957.MOV,HELLO,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_9982.MOV,HELLO,signer05,train,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_9983.MOV,HELLO,signer05,train,include
+E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_9984.MOV,HELLO,signer05,train,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_0033.MOV,HOW-ARE-YOU,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_0034.MOV,HOW-ARE-YOU,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_0035.MOV,HOW-ARE-YOU,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_0036.MOV,HOW-ARE-YOU,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_0040.MOV,HOW-ARE-YOU,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_0041.MOV,HOW-ARE-YOU,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_0042.MOV,HOW-ARE-YOU,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_0092.MOV,HOW-ARE-YOU,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_0093.MOV,HOW-ARE-YOU,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_0094.MOV,HOW-ARE-YOU,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_9918.MOV,HOW-ARE-YOU,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_9919.MOV,HOW-ARE-YOU,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_9920.MOV,HOW-ARE-YOU,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_9921.MOV,HOW-ARE-YOU,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_9959.MOV,HOW-ARE-YOU,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_9960.MOV,HOW-ARE-YOU,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_9961.MOV,HOW-ARE-YOU,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_9962.MOV,HOW-ARE-YOU,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_9985.MOV,HOW-ARE-YOU,signer05,train,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_9986.MOV,HOW-ARE-YOU,signer05,train,include
+E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_9987.MOV,HOW-ARE-YOU,signer05,train,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_0037.MOV,ALRIGHT,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_0038.MOV,ALRIGHT,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_0039.MOV,ALRIGHT,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_0040.MOV,ALRIGHT,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_0043.MOV,ALRIGHT,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_0044.MOV,ALRIGHT,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_0045.MOV,ALRIGHT,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_0095.MOV,ALRIGHT,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_0096.MOV,ALRIGHT,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_0097.MOV,ALRIGHT,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_9923.MOV,ALRIGHT,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_9924.MOV,ALRIGHT,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_9925.MOV,ALRIGHT,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_9926.MOV,ALRIGHT,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_9963.MOV,ALRIGHT,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_9964.MOV,ALRIGHT,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_9965.MOV,ALRIGHT,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_9966.MOV,ALRIGHT,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_9988.MOV,ALRIGHT,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_9989.MOV,ALRIGHT,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_9990.MOV,ALRIGHT,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_0042.MOV,GOOD-MORNING,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_0043.MOV,GOOD-MORNING,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_0044.MOV,GOOD-MORNING,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_0045.MOV,GOOD-MORNING,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_0046.MOV,GOOD-MORNING,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_0047.MOV,GOOD-MORNING,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_0048.MOV,GOOD-MORNING,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_0098.MOV,GOOD-MORNING,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_0099.MOV,GOOD-MORNING,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_0100.MOV,GOOD-MORNING,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_9932.MOV,GOOD-MORNING,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_9933.MOV,GOOD-MORNING,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_9934.MOV,GOOD-MORNING,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_9935.MOV,GOOD-MORNING,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_9968.MOV,GOOD-MORNING,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_9969.MOV,GOOD-MORNING,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_9970.MOV,GOOD-MORNING,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_9971.MOV,GOOD-MORNING,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_9991.MOV,GOOD-MORNING,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_9992.MOV,GOOD-MORNING,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_9993.MOV,GOOD-MORNING,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_0006.MOV,THANK-YOU,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_0007.MOV,THANK-YOU,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_0008.MOV,THANK-YOU,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_0058.MOV,THANK-YOU,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_0059.MOV,THANK-YOU,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_0060.MOV,THANK-YOU,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_0060_.MOV,THANK-YOU,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_0061.MOV,THANK-YOU,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_0062.MOV,THANK-YOU,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_0063.MOV,THANK-YOU,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_0111.MOV,THANK-YOU,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_0112.MOV,THANK-YOU,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_0113.MOV,THANK-YOU,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_9948.MOV,THANK-YOU,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_9949.MOV,THANK-YOU,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_9950.MOV,THANK-YOU,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_9951.MOV,THANK-YOU,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_9984.MOV,THANK-YOU,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_9985.MOV,THANK-YOU,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_9986.MOV,THANK-YOU,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_9987.MOV,THANK-YOU,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_0009.MOV,PLEASED,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_0010.MOV,PLEASED,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_0011.MOV,PLEASED,signer00,train,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_0061.MOV,PLEASED,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_0062.MOV,PLEASED,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_0063.MOV,PLEASED,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_0065.MOV,PLEASED,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_0066.MOV,PLEASED,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_0067.MOV,PLEASED,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_0068.MOV,PLEASED,signer01,train,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_0114.MOV,PLEASED,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_0115.MOV,PLEASED,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_0116.MOV,PLEASED,signer02,val,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_9952.MOV,PLEASED,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_9953.MOV,PLEASED,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_9954.MOV,PLEASED,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_9955.MOV,PLEASED,signer03,test,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_9988.MOV,PLEASED,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_9989.MOV,PLEASED,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_9990.MOV,PLEASED,signer04,train,include
+E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_9991.MOV,PLEASED,signer04,train,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_3760.MOV,MOTHER,signer00,train,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_3761.MOV,MOTHER,signer00,train,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_3762.MOV,MOTHER,signer00,train,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_3906.MOV,MOTHER,signer01,train,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_3907.MOV,MOTHER,signer01,train,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_3908.MOV,MOTHER,signer01,train,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_4057.MOV,MOTHER,signer02,val,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_4058.MOV,MOTHER,signer02,val,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_4059.MOV,MOTHER,signer02,val,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_4222.MOV,MOTHER,signer03,test,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_4937.MOV,MOTHER,signer04,train,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_4938.MOV,MOTHER,signer04,train,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_4939.MOV,MOTHER,signer04,train,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_5077.MOV,MOTHER,signer05,train,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_5078.MOV,MOTHER,signer05,train,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_5079.MOV,MOTHER,signer05,train,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_5224.MOV,MOTHER,signer06,train,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_5225.MOV,MOTHER,signer06,train,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_5226.MOV,MOTHER,signer06,train,include
+E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_8625.MP4,MOTHER,signer07,train,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_3763.MOV,FATHER,signer00,train,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_3764.MOV,FATHER,signer00,train,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_3765.MOV,FATHER,signer00,train,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_3909.MOV,FATHER,signer01,train,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_3910.MOV,FATHER,signer01,train,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_3912.MOV,FATHER,signer01,train,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_4060.MOV,FATHER,signer02,val,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_4061.MOV,FATHER,signer02,val,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_4062.MOV,FATHER,signer02,val,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_4223.MOV,FATHER,signer03,test,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_4940.MOV,FATHER,signer04,train,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_4941.MOV,FATHER,signer04,train,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_4942.MOV,FATHER,signer04,train,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_5080.MOV,FATHER,signer05,train,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_5081.MOV,FATHER,signer05,train,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_5082.MOV,FATHER,signer05,train,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_5227.MOV,FATHER,signer06,train,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_5228.MOV,FATHER,signer06,train,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_5229.MOV,FATHER,signer06,train,include
+E:/datasets/INCLUDE/extracted/People/61. Father/MVI_8626.MP4,FATHER,signer07,train,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_3772.MOV,MAN,signer00,train,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_3773.MOV,MAN,signer00,train,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_3774.MOV,MAN,signer00,train,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_3921.MOV,MAN,signer01,train,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_3922.MOV,MAN,signer01,train,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_3923.MOV,MAN,signer01,train,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_4069.MOV,MAN,signer02,val,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_4070.MOV,MAN,signer02,val,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_4071.MOV,MAN,signer02,val,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_4227.MOV,MAN,signer03,test,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_4949.MOV,MAN,signer04,train,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_4950.MOV,MAN,signer04,train,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_4951.MOV,MAN,signer04,train,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_5089.MOV,MAN,signer05,train,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_5090.MOV,MAN,signer05,train,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_5091.MOV,MAN,signer05,train,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_5237.MOV,MAN,signer06,train,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_5238.MOV,MAN,signer06,train,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_5239.MOV,MAN,signer06,train,include
+E:/datasets/INCLUDE/extracted/People/64. Man/MVI_8629.MP4,MAN,signer07,train,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_3775.MOV,WOMAN,signer00,train,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_3776.MOV,WOMAN,signer00,train,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_3777.MOV,WOMAN,signer00,train,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_3924.MOV,WOMAN,signer01,train,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_3925.MOV,WOMAN,signer01,train,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_3926.MOV,WOMAN,signer01,train,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_4072.MOV,WOMAN,signer02,val,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_4073.MOV,WOMAN,signer02,val,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_4074.MOV,WOMAN,signer02,val,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_4229.MOV,WOMAN,signer03,test,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_4952.MOV,WOMAN,signer04,train,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_4953.MOV,WOMAN,signer04,train,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_4954.MOV,WOMAN,signer04,train,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_5092.MOV,WOMAN,signer05,train,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_5093.MOV,WOMAN,signer05,train,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_5094.MOV,WOMAN,signer05,train,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_5240.MOV,WOMAN,signer06,train,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_5241.MOV,WOMAN,signer06,train,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_5242.MOV,WOMAN,signer06,train,include
+E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_8630.MP4,WOMAN,signer07,train,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_3826.MOV,FRIEND,signer00,train,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_3827.MOV,FRIEND,signer00,train,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_3828.MOV,FRIEND,signer00,train,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_3975.MOV,FRIEND,signer01,train,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_3976.MOV,FRIEND,signer01,train,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_3977.MOV,FRIEND,signer01,train,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_4122.MOV,FRIEND,signer02,val,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_4123.MOV,FRIEND,signer02,val,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_4124.MOV,FRIEND,signer02,val,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_4246.MOV,FRIEND,signer03,test,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_4997.MOV,FRIEND,signer04,train,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_4998.MOV,FRIEND,signer04,train,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_4999.MOV,FRIEND,signer04,train,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_5145.MOV,FRIEND,signer05,train,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_5146.MOV,FRIEND,signer05,train,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_5147.MOV,FRIEND,signer05,train,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_5299.MOV,FRIEND,signer06,train,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_5300.MOV,FRIEND,signer06,train,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_5301.MOV,FRIEND,signer06,train,include
+E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_8648.MP4,FRIEND,signer07,train,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3267.MOV,HOUSE,signer00,train,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3268.MOV,HOUSE,signer00,train,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3269.MOV,HOUSE,signer00,train,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3270.MOV,HOUSE,signer00,train,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3349.MOV,HOUSE,signer01,train,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3350.MOV,HOUSE,signer01,train,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3351.MOV,HOUSE,signer01,train,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3352.MOV,HOUSE,signer01,train,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3435.MOV,HOUSE,signer02,val,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3436.MOV,HOUSE,signer02,val,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3437.MOV,HOUSE,signer02,val,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3438.MOV,HOUSE,signer02,val,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3513.MOV,HOUSE,signer03,test,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3514.MOV,HOUSE,signer03,test,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3515.MOV,HOUSE,signer03,test,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3516.MOV,HOUSE,signer03,test,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3593.MOV,HOUSE,signer04,train,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3594.MOV,HOUSE,signer04,train,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3595.MOV,HOUSE,signer04,train,include
+E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3596.MOV,HOUSE,signer04,train,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3290.MOV,SCHOOL,signer00,train,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3291.MOV,SCHOOL,signer00,train,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3292.MOV,SCHOOL,signer00,train,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3293.MOV,SCHOOL,signer00,train,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3371.MOV,SCHOOL,signer01,train,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3372.MOV,SCHOOL,signer01,train,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3373.MOV,SCHOOL,signer01,train,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3374.MOV,SCHOOL,signer01,train,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3456.MOV,SCHOOL,signer02,val,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3457.MOV,SCHOOL,signer02,val,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3458.MOV,SCHOOL,signer02,val,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3459.MOV,SCHOOL,signer02,val,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3535.MOV,SCHOOL,signer03,test,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3536.MOV,SCHOOL,signer03,test,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3537.MOV,SCHOOL,signer03,test,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3538.MOV,SCHOOL,signer03,test,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3614.MOV,SCHOOL,signer04,train,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3615.MOV,SCHOOL,signer04,train,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3616.MOV,SCHOOL,signer04,train,include
+E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3617.MOV,SCHOOL,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_0001.MOV,ME,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_0002.MOV,ME,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_0003.MOV,ME,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_0012.MOV,ME,signer01,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_0013.MOV,ME,signer01,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_0014.MOV,ME,signer01,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_0064.MOV,ME,signer02,val,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_0065.MOV,ME,signer02,val,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_0066.MOV,ME,signer02,val,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_9878.MOV,ME,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_9879.MOV,ME,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_9880.MOV,ME,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_9881.MOV,ME,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_9918.MOV,ME,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_9919.MOV,ME,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_9920.MOV,ME,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_9922.MOV,ME,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_9957.MOV,ME,signer05,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_9958.MOV,ME,signer05,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_9959.MOV,ME,signer05,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_9995.MOV,ME,signer06,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_0015.MOV,YOU,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_0016.MOV,YOU,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_0017.MOV,YOU,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_0067.MOV,YOU,signer01,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_0068.MOV,YOU,signer01,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_0069.MOV,YOU,signer01,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_9885.MOV,YOU,signer02,val,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_9886.MOV,YOU,signer02,val,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_9887.MOV,YOU,signer02,val,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_9888.MOV,YOU,signer02,val,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_9923.MOV,YOU,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_9924.MOV,YOU,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_9925.MOV,YOU,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_9926.MOV,YOU,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_9960.MOV,YOU,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_9961.MOV,YOU,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_9962.MOV,YOU,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_9996.MOV,YOU,signer05,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_9997.MOV,YOU,signer05,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_9998.MOV,YOU,signer05,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_9999.MOV,YOU,signer05,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_0005.MOV,HE,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_0006.MOV,HE,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_0007.MOV,HE,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_0008.MOV,HE,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_0018.MOV,HE,signer01,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_0019.MOV,HE,signer01,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_0020.MOV,HE,signer01,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_0070.MOV,HE,signer02,val,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_0071.MOV,HE,signer02,val,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_0072.MOV,HE,signer02,val,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_9889.MOV,HE,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_9890.MOV,HE,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_9891.MOV,HE,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_9892.MOV,HE,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_9927.MOV,HE,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_9928.MOV,HE,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_9930.MOV,HE,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_9931.MOV,HE,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_9963.MOV,HE,signer05,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_9964.MOV,HE,signer05,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_9965.MOV,HE,signer05,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_0009.MOV,SHE,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_0010.MOV,SHE,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_0011.MOV,SHE,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_0012.MOV,SHE,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_0021.MOV,SHE,signer01,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_0022.MOV,SHE,signer01,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_0023.MOV,SHE,signer01,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_0073.MOV,SHE,signer02,val,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_0074.MOV,SHE,signer02,val,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_0075.MOV,SHE,signer02,val,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_9893.MOV,SHE,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_9894.MOV,SHE,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_9895.MOV,SHE,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_9896.MOV,SHE,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_9932.MOV,SHE,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_9933.MOV,SHE,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_9934.MOV,SHE,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_9935.MOV,SHE,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_9966.MOV,SHE,signer05,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_9967.MOV,SHE,signer05,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_9968.MOV,SHE,signer05,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_0017.MOV,WE,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_0018.MOV,WE,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_0019.MOV,WE,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_0020.MOV,WE,signer00,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_0027.MOV,WE,signer01,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_0028.MOV,WE,signer01,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_0029.MOV,WE,signer01,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_0079.MOV,WE,signer02,val,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_0080.MOV,WE,signer02,val,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_0081.MOV,WE,signer02,val,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_9901.MOV,WE,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_9902.MOV,WE,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_9903.MOV,WE,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_9904.MOV,WE,signer03,test,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_9940.MOV,WE,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_9941.MOV,WE,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_9942.MOV,WE,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_9943.MOV,WE,signer04,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_9972.MOV,WE,signer05,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_9973.MOV,WE,signer05,train,include
+E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_9974.MOV,WE,signer05,train,include

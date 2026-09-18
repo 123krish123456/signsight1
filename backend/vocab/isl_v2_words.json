@@ -1,0 +1,322 @@
+{
+  "name": "isl_v2_words",
+  "language": "Indian Sign Language",
+  "version": "2.0-words-only",
+  "entries": [
+    {
+      "gloss": "HELLO",
+      "pos": "interjection",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Hello"
+      ]
+    },
+    {
+      "gloss": "THANK-YOU",
+      "pos": "interjection",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Thank you"
+      ]
+    },
+    {
+      "gloss": "GOOD-MORNING",
+      "pos": "interjection",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Good Morning"
+      ]
+    },
+    {
+      "gloss": "HOW-ARE-YOU",
+      "pos": "question",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "How are you"
+      ]
+    },
+    {
+      "gloss": "ALRIGHT",
+      "pos": "interjection",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Alright"
+      ]
+    },
+    {
+      "gloss": "PLEASED",
+      "pos": "adj",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Pleased"
+      ]
+    },
+    {
+      "gloss": "ME",
+      "pos": "pronoun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "I"
+      ]
+    },
+    {
+      "gloss": "YOU",
+      "pos": "pronoun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "you"
+      ]
+    },
+    {
+      "gloss": "HE",
+      "pos": "pronoun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "he"
+      ]
+    },
+    {
+      "gloss": "SHE",
+      "pos": "pronoun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "she"
+      ]
+    },
+    {
+      "gloss": "WE",
+      "pos": "pronoun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "we"
+      ]
+    },
+    {
+      "gloss": "MOTHER",
+      "pos": "noun",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Mother"
+      ]
+    },
+    {
+      "gloss": "FATHER",
+      "pos": "noun",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Father"
+      ]
+    },
+    {
+      "gloss": "FRIEND",
+      "pos": "noun",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Friend"
+      ]
+    },
+    {
+      "gloss": "MAN",
+      "pos": "noun",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Man"
+      ]
+    },
+    {
+      "gloss": "WOMAN",
+      "pos": "noun",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Woman"
+      ]
+    },
+    {
+      "gloss": "HAPPY",
+      "pos": "adj",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "happy"
+      ]
+    },
+    {
+      "gloss": "SICK",
+      "pos": "adj",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "sick"
+      ]
+    },
+    {
+      "gloss": "HEALTHY",
+      "pos": "adj",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "healthy"
+      ]
+    },
+    {
+      "gloss": "BIG",
+      "pos": "adj",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "big large"
+      ]
+    },
+    {
+      "gloss": "SMALL",
+      "pos": "adj",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "small little"
+      ]
+    },
+    {
+      "gloss": "COLD",
+      "pos": "adj",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "cold"
+      ]
+    },
+    {
+      "gloss": "HOUSE",
+      "pos": "noun",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "House"
+      ]
+    },
+    {
+      "gloss": "SCHOOL",
+      "pos": "noun",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "School"
+      ]
+    }
+  ],
+  "templates": [
+    {
+      "pattern": [
+        "ME",
+        "$ADJ"
+      ],
+      "output": "I am {1}."
+    },
+    {
+      "pattern": [
+        "YOU",
+        "$ADJ"
+      ],
+      "output": "You are {1}."
+    },
+    {
+      "pattern": [
+        "HE",
+        "$ADJ"
+      ],
+      "output": "He is {1}."
+    },
+    {
+      "pattern": [
+        "SHE",
+        "$ADJ"
+      ],
+      "output": "She is {1}."
+    },
+    {
+      "pattern": [
+        "WE",
+        "$ADJ"
+      ],
+      "output": "We are {1}."
+    },
+    {
+      "pattern": [
+        "$NOUN",
+        "$ADJ"
+      ],
+      "output": "The {0} is {1}."
+    },
+    {
+      "pattern": [
+        "HOW-ARE-YOU"
+      ],
+      "output": "How are you?"
+    },
+    {
+      "pattern": [
+        "GOOD-MORNING"
+      ],
+      "output": "Good morning."
+    },
+    {
+      "pattern": [
+        "THANK-YOU"
+      ],
+      "output": "Thank you."
+    },
+    {
+      "pattern": [
+        "HELLO"
+      ],
+      "output": "Hello."
+    },
+    {
+      "pattern": [
+        "ALRIGHT"
+      ],
+      "output": "I am alright."
+    }
+  ],
+  "fallback": "join_with_spaces_and_capitalise"
+}

@@ -15,7 +15,7 @@ from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from backend.config import ROOT
+from backend.config import ROOT, settings
 from backend.vocab.schema import load_pack
 
 MANIFEST = ROOT / "ml" / "data" / "manifest.csv"
@@ -80,10 +80,20 @@ def assign_splits(clips: list[Clip], test_signers: int = 1, val_signers: int = 1
                 f"need >= {test_signers + val_signers + 1} signers for a disjoint split, "
                 f"have {len(signers)}: {signers}"
             )
-        # Smallest contributors become val/test: the biggest signer is worth more in training.
-        by_size = sorted(signers, key=lambda s: sum(c.signer == s for c in identified))
-        test = set(by_size[:test_signers])
-        val = set(by_size[test_signers : test_signers + val_signers])
+        # Pick evaluation signers by how many CLASSES they cover, not by how few clips
+        # they contributed. Choosing the smallest contributor is tempting — it costs the
+        # least training data — but a signer who only recorded part of the vocabulary
+        # yields a test set missing most classes, which measures nothing. Coverage first,
+        # size as the tie-break.
+        classes_of = defaultdict(set)
+        for c in identified:
+            classes_of[c.signer].add(c.gloss)
+        ranked = sorted(
+            signers,
+            key=lambda s: (-len(classes_of[s]), sum(c.signer == s for c in identified)),
+        )
+        test = set(ranked[:test_signers])
+        val = set(ranked[test_signers : test_signers + val_signers])
         for c in identified:
             c.split = "test" if c.signer in test else "val" if c.signer in val else "train"
 
@@ -207,7 +217,9 @@ def main() -> int:
 
     print(summary(clips))
     if args.check:
-        glosses = {e.gloss for e in load_pack(ROOT / "backend" / "vocab" / "isl_v1.json").entries}
+        # honour the configured pack: hardcoding isl_v1 here meant --check silently
+        # graded every manifest against the wrong vocabulary
+        glosses = {e.gloss for e in load_pack(settings.vocab_pack).entries}
         problems = verify(clips, glosses)
         for p in problems:
             print(f"  FAIL {p}")

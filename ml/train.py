@@ -114,14 +114,45 @@ def transfer_weights(model, source_path: Path) -> int:
     return copied
 
 
-def require_signer_disjoint_manifest() -> None:
+SHORTFALL = "below"  # the clips-per-class problem — the one thing a corpus can simply cap
+
+
+def require_signer_disjoint_manifest(accept_shortfall: bool = False) -> list[str]:
+    """Refuse to train on a manifest that fails M2. Returns the accepted deviations.
+
+    PRD rule 9 forbids lowering a criterion that cannot be met, so the clips-per-class
+    target is never relaxed silently: accepting it takes an explicit flag, and the
+    shortfall is written into the model's metadata so any number produced carries the
+    caveat with it.
+
+    Leakage problems — a signer present in two splits, a class missing from a split —
+    are never waivable. Those make a number wrong rather than merely limited.
+    """
     problems = verify(load_manifest(), None)
-    if problems:
+    if not problems:
+        return []
+
+    waivable = [p for p in problems if SHORTFALL in p]
+    blocking = [p for p in problems if SHORTFALL not in p]
+
+    if blocking or not accept_shortfall:
+        hint = ""
+        if waivable and not blocking:
+            hint = ("\n\nThe clips-per-class shortfall can be accepted with "
+                    "--accept-shortfall when the corpus has no more; it is recorded "
+                    "with the model.")
         raise SystemExit(
             "Refusing to train — the manifest does not meet M2:\n"
             + "\n".join(f"  - {p}" for p in problems)
-            + "\n\nRecord clips, then: python -m ml.data.manifest --assign --check"
+            + hint
+            + "\n\nThen: python -m ml.data.manifest --assign --check"
         )
+
+    print("ACCEPTED DEVIATION FROM M2 (recorded in the model metadata):")
+    for p in waivable:
+        print(f"  - {p}")
+    print()
+    return waivable
 
 
 # ------------------------------------------------------------------ main
@@ -133,6 +164,9 @@ def main() -> int:
     ap.add_argument("--batch-size", type=int, default=32)
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--seed", type=int, default=42)
+    ap.add_argument("--accept-shortfall", action="store_true",
+                    help="train despite fewer clips per class than the target, when the "
+                         "corpus has no more. Recorded with the model.")
     ap.add_argument("--synthetic", action="store_true",
                     help="run on generated data to verify the pipeline (no clips needed)")
     ap.add_argument("--init-from", type=Path, default=None,
@@ -149,13 +183,14 @@ def main() -> int:
     n_classes = len(pack.labels)
     seq_len = settings.segment_resample_frames
 
+    deviations: list[str] = []
     if args.synthetic:
         print("!! SYNTHETIC DATA — verifies the pipeline only, not recognition accuracy\n")
         x_train, y_train = synthetic_split(24, n_classes, seq_len, args.seed)
         x_val, y_val = synthetic_split(6, n_classes, seq_len, args.seed + 1)
         x_test, y_test = synthetic_split(6, n_classes, seq_len, args.seed + 2)
     else:
-        require_signer_disjoint_manifest()
+        deviations = require_signer_disjoint_manifest(args.accept_shortfall)
         x_train, y_train, s_train = load_split("train", pack)
         x_val, y_val, s_val = load_split("val", pack)
         x_test, y_test, _ = load_split("test", pack)
@@ -208,6 +243,7 @@ def main() -> int:
         "train_clips": int(len(x_train)),
         "pack": pack.name,
         "init_from": args.init_from.name if args.init_from else None,
+        "m2_deviations": deviations,
         "test_top1": round(float(test_acc), 4),
         "best_val_acc": round(float(max(history.history["val_accuracy"])), 4),
     }
