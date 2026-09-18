@@ -25,6 +25,15 @@ class VocabEntry(BaseModel):
     mirror_safe: bool = True  # false → left/right mirror augmentation changes the meaning
     repeatable: bool = False  # true → exempt from the repeat cooldown (PRD §4.5)
     reference_video: str | None = None
+    # Names this sign goes by in public datasets. ISL corpora label the greeting
+    # "namaste", not "hello", and every corpus differs. Keeping the mapping here means
+    # adopting a new dataset edits JSON, never Python — the same reason templates and
+    # the vocabulary itself live in the pack (PRD §4.6).
+    aliases: list[str] = []
+
+    @property
+    def names(self) -> list[str]:
+        return [self.gloss, *self.aliases]
 
 
 class Template(BaseModel):

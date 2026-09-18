@@ -49,7 +49,8 @@ def gloss_key(name: str) -> str:
 
 
 def gloss_map(pack: VocabPack) -> dict[str, str]:
-    return {gloss_key(e.gloss): e.gloss for e in pack.entries}
+    """Every name a sign answers to → its canonical gloss."""
+    return {gloss_key(name): e.gloss for e in pack.entries for name in e.names}
 
 
 def _signer_from(rel: Path, pattern: str | None, fallback: str) -> str:

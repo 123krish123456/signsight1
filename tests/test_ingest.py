@@ -30,6 +30,25 @@ def test_gloss_key_normalises_dataset_names(raw, expected):
     assert gloss_key(raw) == expected
 
 
+def test_aliases_map_dataset_names_onto_our_glosses():
+    """ISL corpora label the greeting "namaste", not "hello". Adding a dataset must be
+    a JSON edit, never a code change (PRD §4.6)."""
+    from backend.vocab.schema import VocabPack
+
+    pack = VocabPack.model_validate({
+        "name": "t", "language": "ISL", "version": "1",
+        "entries": [{"gloss": "HELLO", "pos": "interjection", "aliases": ["namaste", "namaskar"]}],
+    })
+    m = gloss_map(pack)
+    assert m[gloss_key("namaste")] == "HELLO"
+    assert m[gloss_key("2. Namaskar")] == "HELLO"
+    assert m[gloss_key("HELLO")] == "HELLO", "the canonical gloss still resolves"
+
+
+def test_entries_without_aliases_still_work():
+    assert gloss_map(PACK)[gloss_key("HELLO")] == "HELLO"
+
+
 def test_gloss_map_matches_real_vocabulary():
     m = gloss_map(PACK)
     assert m[gloss_key("thank you")] == "THANK-YOU"
