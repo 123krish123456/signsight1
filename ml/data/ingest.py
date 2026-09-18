@@ -53,6 +53,43 @@ def gloss_map(pack: VocabPack) -> dict[str, str]:
     return {gloss_key(name): e.gloss for e in pack.entries for name in e.names}
 
 
+def sessions_from_sequence(paths: list[Path], number_re: str, gap: int) -> dict[str, str]:
+    """Group clips into recording sessions using the camera's sequential file numbers.
+
+    Datasets recorded on a handheld camera (INCLUDE among them) name files MVI_4437,
+    MVI_4438, ... and the counter runs continuously through a sitting: one person
+    records word 46 four times, then word 47, and so on. A jump in the number therefore
+    marks a new session, and clips within a block were shot by one person at one sitting.
+
+    This is a HEURISTIC and it is WEAKER than a real signer split. INCLUDE has 7 signers
+    but far more than 7 sessions, so one person certainly recorded several — meaning a
+    session-disjoint split can still put the same person on both sides, which is exactly
+    what PRD rule 4 forbids.
+
+    It is still worth doing, because it stops consecutive takes of one person in one
+    sitting from landing on both sides, and that is the leakage that inflates accuracy
+    most. But a number measured this way is an upper bound on the signer-independent
+    number, and must be reported as such. Prefer the dataset's own split files wherever
+    it ships them — INCLUDE includes a Train_Test_Split folder.
+    """
+    numbered = []
+    for p in paths:
+        m = re.search(number_re, p.name)
+        if m:
+            numbered.append((int(m.group(1)), p))
+    if not numbered:
+        return {}
+    numbered.sort()
+    mapping, session = {}, 0
+    prev = numbered[0][0]
+    for n, p in numbered:
+        if n - prev > gap:
+            session += 1
+        mapping[p.as_posix()] = f"session{session:02d}"
+        prev = n
+    return mapping
+
+
 def _signer_from(rel: Path, pattern: str | None, fallback: str) -> str:
     if not pattern:
         return fallback
@@ -65,22 +102,22 @@ def collect_files(root: Path, extensions: set[str]) -> list[Path]:
 
 
 def from_tree(root: Path, extensions: set[str], pack: VocabPack,
-              signer_pattern: str | None, default_signer: str, source: str) -> tuple[list[Clip], dict]:
-    """Class comes from the containing folder name; signer from a regex if given."""
+              signer_pattern: str | None, default_signer: str, source: str,
+              session_re: str | None = None, session_gap: int = 50) -> tuple[list[Clip], dict]:
+    """Class comes from the containing folder name; signer from a regex or from
+    sequential-filename session clustering."""
     mapping = gloss_map(pack)
+    files = collect_files(root, extensions)
+    sessions = sessions_from_sequence(files, session_re, session_gap) if session_re else {}
     clips, unmatched = [], {}
-    for path in collect_files(root, extensions):
+    for path in files:
         gloss = mapping.get(gloss_key(path.parent.name))
         if gloss is None:
             unmatched[path.parent.name] = unmatched.get(path.parent.name, 0) + 1
             continue
         rel = path.relative_to(root)
-        clips.append(Clip(
-            clip=path.as_posix(),
-            gloss=gloss,
-            signer=_signer_from(rel, signer_pattern, default_signer),
-            source=source,
-        ))
+        signer = sessions.get(path.as_posix()) or _signer_from(rel, signer_pattern, default_signer)
+        clips.append(Clip(clip=path.as_posix(), gloss=gloss, signer=signer, source=source))
     return clips, unmatched
 
 
@@ -193,6 +230,10 @@ def main() -> int:
     ap.add_argument("--source", required=True, help="tag recorded in the manifest, e.g. include / asl-citizen")
     ap.add_argument("--signer-pattern", default=None,
                     help="regex over the relative path; group 1 is the signer id")
+    ap.add_argument("--session-re", default=None, metavar="REGEX",
+                    help=r"derive sessions from sequential filenames, e.g. 'MVI_(\d+)'")
+    ap.add_argument("--session-gap", type=int, default=50,
+                    help="a jump larger than this in the sequence starts a new session")
     ap.add_argument("--default-signer", default=None,
                     help=f"used when no signer can be determined (default: {UNLABELLED!r})")
     ap.add_argument("--csv", type=Path, default=None, help="CSV listing the clips instead of walking the tree")
@@ -219,7 +260,8 @@ def main() -> int:
     else:
         ext = VIDEO_EXT if args.kind == "videos" else IMAGE_EXT
         clips, unmatched = from_tree(args.root, ext, pack, args.signer_pattern,
-                                     default_signer, args.source)
+                                     default_signer, args.source,
+                                     args.session_re, args.session_gap)
         for c in clips:
             c.split = args.split
         kind = args.kind

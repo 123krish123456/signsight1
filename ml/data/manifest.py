@@ -114,6 +114,15 @@ def disclosures(clips: list[Clip]) -> list[str]:
             f"optimistic and must be reported separately: {', '.join(classes[:8])}"
             + (" ..." if len(classes) > 8 else "")
         )
+    sessions = {c.signer for c in clips if c.signer.startswith("session")}
+    if sessions:
+        notes.append(
+            f"{len(sessions)} 'signers' are recording sessions inferred from filename "
+            "numbering, not identified people. One person recorded several sessions, so the "
+            "split is session-disjoint but NOT signer-disjoint: accuracy is an upper bound on "
+            "the signer-independent figure. Prefer the dataset's own split files."
+        )
+
     sources = {c.source for c in clips}
     if "self" not in sources and sources:
         notes.append(
