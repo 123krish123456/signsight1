@@ -1,0 +1,21 @@
+__pycache__/
+*.egg-info/
+.venv/
+.env
+.pytest_cache/
+
+node_modules/
+dist/
+
+# vendored MediaPipe assets — regenerate with `npm run fetch-assets` (~15 MB)
+app/public/wasm/
+app/public/models/
+extension/vendor/
+
+# data + artefacts
+ml/data/clips/
+ml/models/*.onnx
+ml/models/*.keras
+tests/fixtures/parity_frames.json
+signsight.db
+tsconfig.tsbuildinfo

@@ -1,0 +1,15 @@
+{
+  "name": "asl_v1",
+  "language": "American Sign Language",
+  "version": "0.1-stub",
+  "entries": [
+    { "gloss": "ME", "pos": "pronoun", "mirror_safe": true, "repeatable": false, "reference_video": null },
+    { "gloss": "NAME", "pos": "noun", "mirror_safe": true, "repeatable": false, "reference_video": null },
+    { "gloss": "HELLO", "pos": "interjection", "mirror_safe": false, "repeatable": false, "reference_video": null }
+  ],
+  "templates": [
+    { "pattern": ["ME", "NAME", "$FINGERSPELL"], "output": "My name is {2}." },
+    { "pattern": ["HELLO"], "output": "Hello." }
+  ],
+  "fallback": "join_with_spaces_and_capitalise"
+}

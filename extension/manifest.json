@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "SignSight — Listener Mode",
+  "version": "0.1.0",
+  "description": "Live captions for a sign language user on a video call. Automated, may contain errors.",
+  "permissions": ["desktopCapture", "offscreen", "storage", "activeTab"],
+  "host_permissions": ["ws://localhost:8000/*", "ws://127.0.0.1:8000/*"],
+  "background": { "service_worker": "background.js", "type": "module" },
+  "action": { "default_popup": "popup.html", "default_title": "SignSight" },
+  "content_scripts": [
+    {
+      "matches": ["https://meet.google.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["vendor/*"],
+      "matches": ["https://meet.google.com/*"]
+    }
+  ]
+}

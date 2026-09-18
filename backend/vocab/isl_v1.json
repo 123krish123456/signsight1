@@ -1,0 +1,455 @@
+{
+  "name": "isl_v1",
+  "language": "Indian Sign Language",
+  "version": "1.0",
+  "entries": [
+    {
+      "gloss": "A",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "B",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "C",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "D",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "E",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "F",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "G",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "H",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "I",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "J",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "K",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "L",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "M",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "N",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "O",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "P",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "Q",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "R",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "S",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "T",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "U",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "V",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "W",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "X",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "Y",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "Z",
+      "pos": "letter",
+      "mirror_safe": false,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "ME",
+      "pos": "pronoun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "YOU",
+      "pos": "pronoun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "NAME",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "HELLO",
+      "pos": "interjection",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "THANK-YOU",
+      "pos": "interjection",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "PLEASE",
+      "pos": "interjection",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "SORRY",
+      "pos": "interjection",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "YES",
+      "pos": "interjection",
+      "mirror_safe": true,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "NO",
+      "pos": "interjection",
+      "mirror_safe": true,
+      "repeatable": true,
+      "reference_video": null
+    },
+    {
+      "gloss": "HELP",
+      "pos": "verb",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "WANT",
+      "pos": "verb",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "NEED",
+      "pos": "verb",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "WHAT",
+      "pos": "question",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "WHERE",
+      "pos": "question",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "WHO",
+      "pos": "question",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "WHEN",
+      "pos": "question",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "HOW",
+      "pos": "question",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "GOOD",
+      "pos": "adj",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "BAD",
+      "pos": "adj",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "WATER",
+      "pos": "noun",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "FOOD",
+      "pos": "noun",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "HOME",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "WORK",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null
+    },
+    {
+      "gloss": "UNDERSTAND",
+      "pos": "verb",
+      "mirror_safe": false,
+      "repeatable": false,
+      "reference_video": null
+    }
+  ],
+  "templates": [
+    {
+      "pattern": [
+        "ME",
+        "NAME",
+        "$FINGERSPELL"
+      ],
+      "output": "My name is {2}."
+    },
+    {
+      "pattern": [
+        "YOU",
+        "NAME",
+        "WHAT"
+      ],
+      "output": "What is your name?"
+    },
+    {
+      "pattern": [
+        "ME",
+        "$NOUN",
+        "WANT"
+      ],
+      "output": "I want {1}."
+    },
+    {
+      "pattern": [
+        "ME",
+        "$NOUN",
+        "NEED"
+      ],
+      "output": "I need {1}."
+    },
+    {
+      "pattern": [
+        "ME",
+        "HELP",
+        "NEED"
+      ],
+      "output": "I need help."
+    },
+    {
+      "pattern": [
+        "YOU",
+        "HELP",
+        "ME"
+      ],
+      "output": "Please help me."
+    },
+    {
+      "pattern": [
+        "ME",
+        "UNDERSTAND",
+        "NO"
+      ],
+      "output": "I do not understand."
+    },
+    {
+      "pattern": [
+        "$NOUN",
+        "WHERE"
+      ],
+      "output": "Where is the {0}?"
+    },
+    {
+      "pattern": [
+        "YOU",
+        "HOW"
+      ],
+      "output": "How are you?"
+    },
+    {
+      "pattern": [
+        "ME",
+        "$ADJ"
+      ],
+      "output": "I am {1}."
+    },
+    {
+      "pattern": [
+        "THANK-YOU"
+      ],
+      "output": "Thank you."
+    },
+    {
+      "pattern": [
+        "HELLO"
+      ],
+      "output": "Hello."
+    },
+    {
+      "pattern": [
+        "SORRY"
+      ],
+      "output": "Sorry."
+    }
+  ],
+  "fallback": "join_with_spaces_and_capitalise"
+}

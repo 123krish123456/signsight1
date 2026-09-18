@@ -1,0 +1,27 @@
+[project]
+name = "signsight"
+version = "0.1.0"
+description = "Indian Sign Language → English, live, from a webcam"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3", "httpx>=0.27"]
+# Capture/training deps are heavy and only needed for M2/M3.
+ml = ["mediapipe>=0.10.14", "opencv-python>=4.10"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["backend", "ml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
