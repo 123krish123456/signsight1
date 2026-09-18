@@ -48,9 +48,21 @@ def gloss_key(name: str) -> str:
     return re.sub(r"[^A-Z0-9]+", "", stem.upper())
 
 
-def gloss_map(pack: VocabPack) -> dict[str, str]:
-    """Every name a sign answers to → its canonical gloss."""
-    return {gloss_key(name): e.gloss for e in pack.entries for name in e.names}
+def gloss_map(pack: VocabPack, include_letters: bool = True) -> dict[str, str]:
+    """Every name a sign answers to → its canonical gloss.
+
+    `include_letters=False` drops the manual alphabet. Word-level corpora contain
+    single-letter class names that are not fingerspelling: INCLUDE's "40. I" is the
+    pronoun, and it silently matched our letter I — two entirely different signs, which
+    would have poisoned that class. Letters come from alphabet datasets; word corpora
+    should be ingested with letters excluded.
+    """
+    return {
+        gloss_key(name): e.gloss
+        for e in pack.entries
+        if include_letters or e.pos != "letter"
+        for name in e.names
+    }
 
 
 def sessions_from_sequence(paths: list[Path], number_re: str, gap: int) -> dict[str, str]:
@@ -103,10 +115,11 @@ def collect_files(root: Path, extensions: set[str]) -> list[Path]:
 
 def from_tree(root: Path, extensions: set[str], pack: VocabPack,
               signer_pattern: str | None, default_signer: str, source: str,
-              session_re: str | None = None, session_gap: int = 50) -> tuple[list[Clip], dict]:
+              session_re: str | None = None, session_gap: int = 50,
+              include_letters: bool = True) -> tuple[list[Clip], dict]:
     """Class comes from the containing folder name; signer from a regex or from
     sequential-filename session clustering."""
-    mapping = gloss_map(pack)
+    mapping = gloss_map(pack, include_letters)
     files = collect_files(root, extensions)
     sessions = sessions_from_sequence(files, session_re, session_gap) if session_re else {}
     clips, unmatched = [], {}
@@ -234,6 +247,9 @@ def main() -> int:
                     help=r"derive sessions from sequential filenames, e.g. 'MVI_(\d+)'")
     ap.add_argument("--session-gap", type=int, default=50,
                     help="a jump larger than this in the sequence starts a new session")
+    ap.add_argument("--no-letters", action="store_true",
+                    help="ignore manual-alphabet classes; use for word corpora, whose "
+                         "single-letter class names are words, not fingerspelling")
     ap.add_argument("--default-signer", default=None,
                     help=f"used when no signer can be determined (default: {UNLABELLED!r})")
     ap.add_argument("--csv", type=Path, default=None, help="CSV listing the clips instead of walking the tree")
@@ -261,7 +277,8 @@ def main() -> int:
         ext = VIDEO_EXT if args.kind == "videos" else IMAGE_EXT
         clips, unmatched = from_tree(args.root, ext, pack, args.signer_pattern,
                                      default_signer, args.source,
-                                     args.session_re, args.session_gap)
+                                     args.session_re, args.session_gap,
+                                     include_letters=not args.no_letters)
         for c in clips:
             c.split = args.split
         kind = args.kind

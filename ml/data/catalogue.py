@@ -49,6 +49,8 @@ def main() -> int:
     ap.add_argument("--dir", type=Path, required=True)
     ap.add_argument("--suggest", action="store_true", help="propose aliases for near-miss names")
     ap.add_argument("--min-clips", type=int, default=0, help="only list classes with at least this many clips")
+    ap.add_argument("--no-letters", action="store_true",
+                    help="ignore the manual alphabet when matching (word corpora use single letters as words)")
     args = ap.parse_args()
 
     archives = sorted(args.dir.glob("*.zip"))
@@ -67,7 +69,7 @@ def main() -> int:
     print(f"read {read}/{len(archives)} archives — {len(classes)} classes, {sum(classes.values())} clips\n")
 
     pack = load_pack(settings.vocab_pack)
-    mapping = gloss_map(pack)
+    mapping = gloss_map(pack, include_letters=not args.no_letters)
 
     matched, unmatched = {}, {}
     for name, n in classes.items():
