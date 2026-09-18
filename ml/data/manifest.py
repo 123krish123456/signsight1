@@ -55,20 +55,78 @@ def append(clip: Clip, path: Path = MANIFEST) -> None:
     save(clips, path)
 
 
-def assign_splits(clips: list[Clip], test_signers: int = 1, val_signers: int = 1) -> list[Clip]:
-    """Whole signers go to one split. Never split a signer's clips across splits."""
-    signers = sorted({c.signer for c in clips})
-    if len(signers) < test_signers + val_signers + 1:
-        raise ValueError(
-            f"need >= {test_signers + val_signers + 1} signers for a disjoint split, have {len(signers)}: {signers}"
-        )
-    # Smallest contributors become val/test: the biggest signer is worth more in training.
-    by_size = sorted(signers, key=lambda s: sum(c.signer == s for c in clips))
-    test = set(by_size[:test_signers])
-    val = set(by_size[test_signers : test_signers + val_signers])
-    for c in clips:
-        c.split = "test" if c.signer in test else "val" if c.signer in val else "train"
+UNLABELLED = "unlabelled"  # datasets that do not say who is signing (see ml/data/ingest.py)
+
+
+def assign_splits(clips: list[Clip], test_signers: int = 1, val_signers: int = 1,
+                  seed: int = 0) -> list[Clip]:
+    """Whole signers go to one split. Never split a signer's clips across splits.
+
+    Samples whose signer is unknown (public image sets, mostly) cannot take part in a
+    signer-disjoint split. Putting them all in one split would be worse than useless —
+    every class sourced that way would be absent from training, or absent from test — so
+    they get a per-class random split instead. That is a weaker guarantee, and
+    `disclosures()` reports it so it reaches the write-up rather than being buried.
+    """
+    import random
+
+    identified = [c for c in clips if c.signer != UNLABELLED]
+    anonymous = [c for c in clips if c.signer == UNLABELLED]
+
+    if identified:
+        signers = sorted({c.signer for c in identified})
+        if len(signers) < test_signers + val_signers + 1:
+            raise ValueError(
+                f"need >= {test_signers + val_signers + 1} signers for a disjoint split, "
+                f"have {len(signers)}: {signers}"
+            )
+        # Smallest contributors become val/test: the biggest signer is worth more in training.
+        by_size = sorted(signers, key=lambda s: sum(c.signer == s for c in identified))
+        test = set(by_size[:test_signers])
+        val = set(by_size[test_signers : test_signers + val_signers])
+        for c in identified:
+            c.split = "test" if c.signer in test else "val" if c.signer in val else "train"
+
+    if anonymous:
+        rng = random.Random(seed)
+        by_gloss: dict[str, list[Clip]] = defaultdict(list)
+        for c in anonymous:
+            by_gloss[c.gloss].append(c)
+        for group in by_gloss.values():  # stratified, so every class reaches every split
+            rng.shuffle(group)
+            n = len(group)
+            n_test = max(1, round(n * 0.2)) if n >= 3 else 0
+            n_val = max(1, round(n * 0.1)) if n >= 3 else 0
+            for i, c in enumerate(group):
+                c.split = "test" if i < n_test else "val" if i < n_test + n_val else "train"
     return clips
+
+
+def disclosures(clips: list[Clip]) -> list[str]:
+    """Compromises that must appear in the report. Not errors — chosen trade-offs."""
+    notes = []
+    anonymous = [c for c in clips if c.signer == UNLABELLED]
+    if anonymous:
+        classes = sorted({c.gloss for c in anonymous})
+        notes.append(
+            f"{len(anonymous)} samples across {len(classes)} classes have no signer identity, "
+            f"so those classes use a random split, NOT a signer-disjoint one. Their accuracy is "
+            f"optimistic and must be reported separately: {', '.join(classes[:8])}"
+            + (" ..." if len(classes) > 8 else "")
+        )
+    sources = {c.source for c in clips}
+    if "self" not in sources and sources:
+        notes.append(
+            f"No self-recorded clips: every sample comes from {sorted(sources)}. Live accuracy "
+            "in your own lighting and camera angle will be lower than the test split suggests."
+        )
+    images = [c for c in clips if c.clip.lower().endswith((".jpg", ".jpeg", ".png", ".bmp", ".webp"))]
+    if images:
+        notes.append(
+            f"{len(images)} samples are still images expanded to a fixed-length sequence, so every "
+            "velocity feature is zero for them. Signs involving motion cannot be learned this way."
+        )
+    return notes
 
 
 def verify(clips: list[Clip], vocab_glosses: set[str] | None = None) -> list[str]:
@@ -81,14 +139,19 @@ def verify(clips: list[Clip], vocab_glosses: set[str] | None = None) -> list[str
     for c in clips:
         split_of[c.signer].add(c.split)
     for signer, splits in sorted(split_of.items()):
+        if signer == UNLABELLED:
+            continue  # deliberately split per class; see assign_splits
         if len(splits) > 1:
             problems.append(f"signer {signer!r} appears in multiple splits {sorted(splits)} — splits must be signer-disjoint")
         if splits <= {""}:
             problems.append(f"signer {signer!r} has unassigned clips — run assign_splits")
 
-    signers = {c.signer for c in clips}
+    signers = {c.signer for c in clips} - {UNLABELLED}
     if len(signers) < MIN_SIGNERS:
-        problems.append(f"only {len(signers)} signer(s), PRD M2 requires >= {MIN_SIGNERS}")
+        problems.append(
+            f"only {len(signers)} identified signer(s), PRD M2 requires >= {MIN_SIGNERS} "
+            f"(samples with no signer identity do not count)"
+        )
 
     counts = Counter(c.gloss for c in clips)
     if vocab_glosses:

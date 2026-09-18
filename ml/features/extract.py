@@ -167,6 +167,38 @@ def extract_video(path: str, every_nth: int = 2) -> np.ndarray:
     return np.array(frames, dtype=np.float64) if frames else np.zeros((0, FEATURE_DIM))
 
 
+def extract_image(path: str, n_frames: int = 45) -> np.ndarray:
+    """Still image → (n_frames, 261), the same landmarks repeated.
+
+    Fingerspelling letters are held handshapes rather than movements, so a still is a
+    fair approximation of one and this is how the public alphabet datasets can be used
+    at all. Be honest about the cost: every velocity feature is exactly zero, so the
+    model cannot learn anything about how a letter is approached or released, and a
+    letter that does move (J and Z in most alphabets) is represented wrongly.
+    """
+    import cv2  # noqa: PLC0415
+    import mediapipe as mp  # noqa: PLC0415
+
+    image = cv2.imread(str(path))
+    if image is None:
+        return np.zeros((0, FEATURE_DIM))
+
+    with mp.solutions.holistic.Holistic(
+        static_image_mode=True, model_complexity=1, refine_face_landmarks=False
+    ) as holistic:
+        res = holistic.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+
+    frame = normalise_frame(
+        _mp_list(res.pose_landmarks),
+        _mp_list(res.left_hand_landmarks),
+        _mp_list(res.right_hand_landmarks),
+        _mp_list(res.face_landmarks),
+    )
+    if not frame.any():
+        return np.zeros((0, FEATURE_DIM))  # nothing detected — caller drops it
+    return np.tile(frame, (n_frames, 1))
+
+
 def _mp_list(landmark_list) -> list[list[float]] | None:
     if landmark_list is None:
         return None

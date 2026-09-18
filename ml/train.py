@@ -94,6 +94,26 @@ def synthetic_split(n_per_class: int, n_classes: int, seq_len: int, seed: int):
     return np.asarray(x, np.float32), np.asarray(y, np.int64)
 
 
+def transfer_weights(model, source_path: Path) -> int:
+    """Copy weights from a pre-trained model, skipping layers whose shape differs.
+
+    The point is training on ASL and fine-tuning on ISL. The 261-d features describe
+    body geometry, not a language, so the recurrent layers transfer; only the final
+    classifier is language-specific, and it has a different width per vocabulary, so it
+    is left at its initial values. Returns how many layers were copied.
+    """
+    import keras
+
+    source = keras.saving.load_model(source_path, compile=False)
+    copied = 0
+    for dst, src in zip(model.layers, source.layers):
+        dst_w, src_w = dst.get_weights(), src.get_weights()
+        if dst_w and len(dst_w) == len(src_w) and all(a.shape == b.shape for a, b in zip(dst_w, src_w)):
+            dst.set_weights(src_w)
+            copied += 1
+    return copied
+
+
 def require_signer_disjoint_manifest() -> None:
     problems = verify(load_manifest(), None)
     if problems:
@@ -115,13 +135,17 @@ def main() -> int:
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--synthetic", action="store_true",
                     help="run on generated data to verify the pipeline (no clips needed)")
+    ap.add_argument("--init-from", type=Path, default=None,
+                    help="pre-trained .keras to transfer weights from (e.g. an ASL model)")
+    ap.add_argument("--pack", type=Path, default=None,
+                    help="vocabulary pack to train against (default: the configured one)")
     ap.add_argument("--out", type=Path, default=None)
     args = ap.parse_args()
 
     import keras
 
     keras.utils.set_random_seed(args.seed)
-    pack = load_pack(settings.vocab_pack)
+    pack = load_pack(args.pack or settings.vocab_pack)
     n_classes = len(pack.labels)
     seq_len = settings.segment_resample_frames
 
@@ -143,6 +167,10 @@ def main() -> int:
     n_features = x_val_f.shape[-1]
 
     model = ARCHITECTURES[args.arch](seq_len, n_features, n_classes)
+    if args.init_from:
+        copied = transfer_weights(model, args.init_from)
+        print(f"transferred {copied} layers from {args.init_from.name}; "
+              f"the {n_classes}-class head starts fresh")
     model.compile(
         optimizer=keras.optimizers.Adam(args.lr),
         # Label smoothing 0.1: with few clips per class, hard targets overfit fast.
@@ -178,6 +206,8 @@ def main() -> int:
         "n_features": n_features,
         "synthetic": args.synthetic,
         "train_clips": int(len(x_train)),
+        "pack": pack.name,
+        "init_from": args.init_from.name if args.init_from else None,
         "test_top1": round(float(test_acc), 4),
         "best_val_acc": round(float(max(history.history["val_accuracy"])), 4),
     }

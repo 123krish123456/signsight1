@@ -12,7 +12,7 @@ Spec: [`docs/SignSight_PRD.md`](docs/SignSight_PRD.md). Engineering rules: [`PRO
 |---|---|
 | M0 skeleton | ✅ done |
 | M1 landmark pipeline + JS/Python parity | ✅ done (parity drift 8.9e-16) |
-| M2 data | 🔨 tooling done, **0 clips recorded** — needs a human and a webcam |
+| M2 data | 🔨 ingest tooling done; public datasets need downloading — see [`docs/datasets.md`](docs/datasets.md) |
 | M3 model | 🔨 training pipeline written and tested; needs clips |
 | M4 live recognition | 🔨 segmenter done and wired in; classifier blocked on M3 |
 | M5 speaker app (assembler, TTS) | 🔨 buildable now against the mock recogniser |
@@ -67,7 +67,26 @@ python -m backend.pipeline.buffer        # ring-buffer self-check
 | **Krish** | Backend inference path — everything between a landmark frame and a gloss | `backend/pipeline/`, `backend/storage/` |
 | **Arpit** | Both front ends — speaker app and listener extension | `app/src/`, `extension/` |
 
-### Step 1 — all three of us record (blocks everything else)
+### Step 1 — load the public datasets (blocks everything else)
+
+Self-recording is not happening, so v1 trains on public data. The strategy, the
+datasets surveyed, and the compromises that must reach the report are in
+[`docs/datasets.md`](docs/datasets.md). Short version: ISL words from INCLUDE/FDMSE-ISL,
+the alphabet from image sets, and ASL corpora for pre-training — ISL stays the shipped
+language.
+
+```bash
+python -m ml.data.ingest videos <dir> --source include --signer-pattern "(signer\d+)" --dry-run
+python -m ml.data.ingest images <dir> --source isl-alphabet --dry-run
+python -m ml.data.manifest --assign --check
+```
+
+`--check` prints the compromises (alphabet classes are not signer-disjoint, stills have
+no motion, nothing is recorded in our own conditions). Those go in the write-up.
+
+<details>
+<summary>The original plan — recording it ourselves (not happening)</summary>
+
 
 The splits are **signer-disjoint**, so the training set needs several different people
 signing. We are three people, which is the bare minimum the spec allows.
@@ -87,11 +106,7 @@ python -m ml.data.manifest --assign --check  # signer-disjoint splits + M2 gate
 25 clips × 50 signs each ≈ 1,250 clips total, varying lighting and background.
 `--check` exits non-zero until that holds; nobody starts M3 before it passes.
 
-**Worth doing:** with exactly three signers, one goes to test, one to validation, and
-only **one** is left to train on — which is thin, and will show up as poor
-generalisation to new signers. If each of us recruits one more person (a flatmate, a
-sibling), we get 5–6 signers and 3–4 of them training. Best accuracy-per-hour available
-to us.
+</details>
 
 ### Step 2 — three parallel tracks
 
