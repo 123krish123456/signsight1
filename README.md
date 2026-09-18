@@ -53,11 +53,83 @@ python -m ml.features.extract            # normalisation self-check
 python -m backend.pipeline.buffer        # ring-buffer self-check
 ```
 
+## Team and work split
+
+| Who | Owns | Files |
+|---|---|---|
+| **Eashan** | Feature pipeline, model training, evaluation, integration | `ml/`, `backend/config.py`, parity spec |
+| **Krish** | Backend inference path — everything between a landmark frame and a gloss | `backend/pipeline/`, `backend/storage/` |
+| **Arpit** | Both front ends — speaker app and listener extension | `app/src/`, `extension/` |
+
+### Step 1 — all three of us record (blocks everything else)
+
+The splits are **signer-disjoint**, so the training set needs several different people
+signing. We are three people, which is the bare minimum the spec allows.
+
+> **Do not divide the vocabulary between us.** Each of us records *all 50 signs*.
+> Splitting the word list three ways makes signer-disjoint splits impossible to form —
+> the test signer would have no examples of the signs the other two recorded, and the
+> whole evaluation falls apart.
+
+```bash
+python -m ml.data.record --signer eashan     # use your own name; SPACE record · N next · U undo · Q quit
+python -m ml.data.record --signer krish
+python -m ml.data.record --signer arpit
+python -m ml.data.manifest --assign --check  # signer-disjoint splits + M2 gate
+```
+
+25 clips × 50 signs each ≈ 1,250 clips total, varying lighting and background.
+`--check` exits non-zero until that holds; nobody starts M3 before it passes.
+
+**Worth doing:** with exactly three signers, one goes to test, one to validation, and
+only **one** is left to train on — which is thin, and will show up as poor
+generalisation to new signers. If each of us recruits one more person (a flatmate, a
+sibling), we get 5–6 signers and 3–4 of them training. Best accuracy-per-hour available
+to us.
+
+### Step 2 — three parallel tracks
+
+Nobody waits for the model. The interfaces below are already fixed and committed, so
+Krish and Arpit can both build against stubs while clips are still being recorded.
+
+**Eashan — ML (M3, M7)**
+`ml/train.py`, `ml/evaluate.py`, `ml/export_onnx.py`. BiLSTM per the spec, the full
+augmentation stack, signer-disjoint evaluation, ONNX export. Then the confusion matrix,
+latency percentiles, per-signer breakdown and ablations for the report.
+
+**Krish — backend (M4, M5 server side)**
+`classifier.py` (ONNX Runtime wrapper behind a registry so architectures swap via
+config), `smoother.py` (k-of-n voting, confidence gate, repeat cooldown),
+`assembler.py` (templates + fingerspelling), `session_log.py` (SQLite).
+The segmenter is done and wired in — read it for the house style.
+Inference goes in a `ThreadPoolExecutor`; the event loop must never block.
+
+**Arpit — front ends (M5 client side, M6)**
+Speaker app: transcript view, TTS via the Web Speech API, sign reference sheet rendered
+from `GET /vocab`. Extension: `chrome.desktopCapture` region selection, the offscreen
+document that does the cropping and landmark extraction, and overlay polish.
+The MediaPipe bundling problem the spec warns about is already solved — assets are
+vendored by `npm run fetch-assets`.
+
+### Interfaces — settled, do not renegotiate mid-sprint
+
+- **Wire format and events** — `docs/SignSight_PRD.md` §5.1. Arpit can mock every
+  server event today; Krish can emit them without a model.
+- **Classifier contract** — in `(45, 261)` float32, out `(51,)` softmax, class order is
+  `VocabPack.labels` (50 signs then `UNKNOWN`). Krish can build and test the whole
+  inference path against a stub that returns random softmax.
+- **Vocabulary and templates** — `backend/vocab/isl_v1.json`, validated by
+  `vocab/schema.py`. Sentence templates are data, not code.
+- **The 261-d feature spec is frozen.** Changing it means changing `extract.py`,
+  `normalise.ts` and `test_parity.py` in one commit — talk to Eashan first.
+
+Everyone: `pytest` passes before you push.
+
 ## Recording data (M2 — the long pole)
 
 ```bash
-python -m ml.data.record --signer eashan     # SPACE record · N next · U undo · Q quit
-python -m ml.data.manifest --assign --check  # signer-disjoint splits + M2 DoD gate
+python -m ml.data.record --signer <yourname>  # SPACE record · N next · U undo · Q quit
+python -m ml.data.manifest --assign --check   # signer-disjoint splits + M2 DoD gate
 ```
 
 Needs **25 clips × 50 classes across ≥3 signers**, varying lighting and background.
