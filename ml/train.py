@@ -67,8 +67,34 @@ def build_transformer(seq_len: int, n_features: int, n_classes: int):
     return keras.Model(inp, out, name="transformer")
 
 
+def build_bilstm_small(seq_len: int, n_features: int, n_classes: int):
+    """A quarter of the baseline's width, and heavier dropout.
+
+    With roughly 14 training clips per class the 587k-parameter baseline reaches 92%
+    on train and half that on test — it is memorising. Less capacity is the cheapest
+    thing to try against that.
+    """
+    import keras
+    from keras import layers
+
+    return keras.Sequential([
+        layers.Input(shape=(seq_len, n_features)),
+        layers.Masking(mask_value=0.0),
+        layers.Bidirectional(layers.LSTM(48, return_sequences=True)),
+        layers.Dropout(0.5),
+        layers.Bidirectional(layers.LSTM(32)),
+        layers.Dropout(0.5),
+        layers.Dense(64, activation="relu"),
+        layers.Dense(n_classes, activation="softmax"),
+    ], name="bilstm_small")
+
+
 # Registry, so architectures are selected by config rather than code edits (PRD §4.4).
-ARCHITECTURES = {"bilstm": build_bilstm, "transformer": build_transformer}
+ARCHITECTURES = {
+    "bilstm": build_bilstm,
+    "bilstm_small": build_bilstm_small,
+    "transformer": build_transformer,
+}
 
 
 # ------------------------------------------------------------------ data

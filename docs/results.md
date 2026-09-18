@@ -10,9 +10,40 @@ after training finished.
 **57.3% top-1** over 24 Indian Sign Language words, on a test signer the model never saw.
 Chance is 4%.
 
+That is the model **validation** selected. A second configuration scored 69.3% on test —
+see "Which number to report" below for why the lower one is the honest headline.
+
 At the 0.75 confidence gate the system actually used live, it speaks for **43% of
 segments and is right 72% of the time** — the more honest number for a demo, because
 below-threshold segments surface as "…" rather than as a wrong word.
+
+## Which number to report
+
+| Configuration | Val | Test |
+|---|---|---|
+| Baseline | 70.1% | 52.0% |
+| **Pre-trained, 50 epochs** | **80.5%** | **57.3%** |
+| Pre-trained, 140 epochs | 79.2% | **69.3%** |
+| Lower-capacity BiLSTM (158k params) | 63.6% | 48.0% |
+
+Validation ranks the 50-epoch model highest; test ranks the 140-epoch model highest, by
+12 points. They disagree, and that disagreement is the whole point:
+
+- **Model selection must use validation.** Picking the 140-epoch run because it scored
+  better on test is tuning on the test split, which the spec forbids and which would make
+  the number meaningless as an estimate of unseen performance.
+- **Neither set can resolve a 12-point gap.** Test is 75 clips from one signer, validation
+  77 from another. At n=75 the standard error is ±5.3pp, so 57.3% and 69.3% carry 95%
+  intervals of 46–68% and 59–80% — heavily overlapping.
+
+So: **report 57.3%, and report the range.** The truthful statement is that this system
+scores somewhere around 50–70% on unseen signers over 24 classes, and that the evaluation
+sets are too small to pin it down further. Quoting 69.3% alone would be picking the
+luckiest of four runs.
+
+Splitting by signer is what makes the evaluation small — there are only ~8 signers, so
+one of them is the entire test set. That is the right trade: a larger random split would
+report a higher, wronger number.
 
 ## Ablations (PRD §7 M7)
 
@@ -21,7 +52,14 @@ below-threshold segments surface as "…" rather than as a wrong word.
 | Baseline — 261-d features, trained from scratch | 52.0% | 70.1% |
 | **+ velocity features (522-d)** | 52.0% | 68.8% |
 | **+ pre-training on 179 other INCLUDE classes** | **57.3%** | **80.5%** |
+| + pre-training, 140 epochs instead of 50 | 69.3% | 79.2% |
+| Lower-capacity BiLSTM, 158k parameters | 48.0% | 63.6% |
 | Pre-trained, face-lite block zeroed at test time | 48.0% | — |
+
+**Less capacity does not help.** Quartering the width and raising dropout cost 4 points
+of test and 6.5 of validation. The failure mode is not purely over-parameterisation —
+the model needs capacity *and* representations it cannot learn from 14 clips per class,
+which is exactly what pre-training supplies.
 
 **Velocity features earn nothing.** Identical test accuracy, slightly worse validation,
 double the input width. `use_velocity_features` stays `false`, as the spec's default
