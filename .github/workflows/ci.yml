@@ -1,0 +1,46 @@
+name: tests
+
+# PRD §9: pytest on every push. Model training is deliberately not in CI — it needs
+# the dataset and a GPU budget neither of which belong in a CI runner.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      # The JS/Python parity test runs normalise.ts through node's type stripping,
+      # which needs 22.18 or newer.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install
+        run: pip install -e ".[dev]"
+
+      - name: Run tests
+        run: pytest -q
+
+      # These carry their own assertions and are cheap; a failure here means the
+      # feature spec or the ring buffer broke without a test noticing.
+      - name: Module self-checks
+        run: |
+          python -m ml.features.extract
+          python -m backend.pipeline.buffer
+          python -m backend.mock
+
+      - name: Typecheck the app
+        working-directory: app
+        run: |
+          npm ci
+          npx tsc -b
