@@ -64,6 +64,39 @@ run so they reach the write-up instead of being quietly forgotten.
 | WLASL | 21,000 clips, 2,000 words | 119 | ~11 | Free |
 | MS-ASL | 25,000 videos, 1,000 words | 222 | ~25 | Free; some source links have rotted |
 
+## Verify a dataset before trusting it
+
+Two datasets were rejected before any training happened. Both looked fine on paper.
+
+**A ViViT-preprocessed copy of INCLUDE (1,166 clips, 75 classes).** The clips are
+224x224 at 10 fps, downscaled for a model that reads raw pixels and does not need
+landmarks. Measured through our own extractor:
+
+| | |
+|---|---|
+| pose detected | 100% |
+| hands detected | **0%** |
+
+At that size the hands are a few pixels across. MediaPipe finds the body perfectly,
+which is what makes this dangerous — the data looks healthy right up until the model
+will not learn. Hand shape is what separates one sign from another. It also covered only
+2 of our 50 classes.
+
+**A third-party project's `landmarks.csv` (6,151 rows, 16 signs).** Vocabulary overlap
+was good, but the features are 63-d single-hand with no pose. Our normalisation divides
+by shoulder width and centres on the shoulder midpoint, so without pose the 261-d vector
+cannot be built at all. The rows are also independent frames with no clip grouping, so
+no sequence can be reconstructed.
+
+Hence the rule at the top of this file, and hence `--probe`:
+
+```bash
+python -m ml.data.ingest videos <dir> --source include --probe --dry-run
+```
+
+It runs the real extractor over a sample and reports detection rates. Thirty seconds,
+and it catches both failures above. Anything under 30% hand detection is not trainable.
+
 ## How to load them
 
 `ml/data/ingest.py` assumes nothing about layout — you say where the class and the
