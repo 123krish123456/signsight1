@@ -13,11 +13,11 @@ Spec: [`docs/SignSight_PRD.md`](docs/SignSight_PRD.md). Engineering rules: [`PRO
 | M0 skeleton | ✅ done |
 | M1 landmark pipeline + JS/Python parity | ✅ done (parity drift 8.9e-16) |
 | M2 data | 🔨 tooling done, **0 clips recorded** — needs a human and a webcam |
-| M3 model | ⛔ blocked on M2 |
+| M3 model | 🔨 training pipeline written and tested; needs clips |
 | M4 live recognition | 🔨 segmenter done and wired in; classifier blocked on M3 |
-| M5 speaker app (assembler, TTS) | ⛔ blocked on M4 |
-| M6 listener extension | ⛔ shell only |
-| M7 evaluation | ⛔ |
+| M5 speaker app (assembler, TTS) | 🔨 buildable now against the mock recogniser |
+| M6 listener extension | 🔨 shell only; buildable now against the mock recogniser |
+| M7 evaluation | 🔨 scripts written; needs a real model |
 
 **No accuracy number is claimed yet, because no model has been trained.** When one is,
 it goes here, measured on a signer-disjoint test split, whatever it turns out to be.
@@ -29,7 +29,7 @@ pip install -e ".[dev]"          # backend + tests
 pip install -e ".[ml]"           # + mediapipe/opencv, for recording and training
 
 cd app && npm install
-npm run fetch-assets             # vendors MediaPipe WASM + holistic model (~15 MB)
+npm run fetch-assets             # vendors MediaPipe WASM + holistic model (~46 MB)
 ```
 
 ## Run
@@ -40,7 +40,13 @@ cd app && npm run dev                    # speaker app on :5173
 ```
 
 Open http://127.0.0.1:5173 and hit **Start camera**. You should see ~15 FPS and the
-backend logging `{'received': ..., 'dropped': 0, 'fps': 15.0}`.
+backend logging `{'received': ..., 'evicted': ..., 'lost': 0, 'fps': 15.0}`.
+
+**Building the UI before the model exists?** Run the backend with
+`SIGNSIGHT_MOCK_RECOGNITION=true` and it fabricates realistic glosses and sentences, so
+the transcript, speech output and overlay can all be built and demoed today — see
+[`docs/frontend-guide.md`](docs/frontend-guide.md). Turn it off for real demos: it does
+not look at the camera.
 
 Load the extension with `chrome://extensions` → Developer mode → Load unpacked →
 `extension/`. It shows the overlay on Google Meet; capture arrives in M6.
@@ -48,7 +54,7 @@ Load the extension with `chrome://extensions` → Developer mode → Load unpack
 ## Test
 
 ```bash
-pytest                                   # 27 tests; parity test needs node >= 22.18
+pytest                                   # 38 tests; parity test needs node >= 22.18
 python -m ml.features.extract            # normalisation self-check
 python -m backend.pipeline.buffer        # ring-buffer self-check
 ```
@@ -104,7 +110,7 @@ config), `smoother.py` (k-of-n voting, confidence gate, repeat cooldown),
 The segmenter is done and wired in — read it for the house style.
 Inference goes in a `ThreadPoolExecutor`; the event loop must never block.
 
-**Arpit — front ends (M5 client side, M6)**
+**Arpit — front ends (M5 client side, M6)** — start with [`docs/frontend-guide.md`](docs/frontend-guide.md)
 Speaker app: transcript view, TTS via the Web Speech API, sign reference sheet rendered
 from `GET /vocab`. Extension: `chrome.desktopCapture` region selection, the offscreen
 document that does the cropping and landmark extraction, and overlay polish.

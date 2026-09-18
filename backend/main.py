@@ -18,6 +18,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from backend.config import settings
 from backend.pipeline.buffer import Frame, FrameBuffer
+from backend.mock import MockRecogniser
 from backend.pipeline.segmenter import Segmenter
 from backend.vocab.schema import load_pack
 
@@ -69,6 +70,7 @@ async def stream(ws: WebSocket) -> None:
     session_id = str(uuid.uuid4())
     buf = FrameBuffer(capacity=settings.max_queue_frames)
     segmenter = Segmenter()
+    mock = MockRecogniser() if settings.mock_recognition else None
     last_state = "IDLE"
     segments_seen = 0
     warned_drop = False
@@ -127,10 +129,15 @@ async def stream(ws: WebSocket) -> None:
                     # No classifier until M3. The PRD requires the user be able to tell
                     # "not understood" from "not signing", so an unclassified segment
                     # surfaces as UNKNOWN, which the UI renders as "…" (§4.5).
+                    gloss, confidence = mock.classify(segment) if mock else ("UNKNOWN", 0.0)
                     await ws.send_json({
-                        "type": "gloss", "value": "UNKNOWN",
-                        "confidence": 0.0, "segment_ms": round(segment.duration_ms),
+                        "type": "gloss", "value": gloss,
+                        "confidence": confidence, "segment_ms": round(segment.duration_ms),
                     })
+                    if mock and (sentence := mock.advance()) is not None:
+                        await ws.send_json({
+                            "type": "transcript", "text": sentence, "is_final": True,
+                        })
 
                 if buf.received % (settings.target_fps * 5) == 0:
                     log.info("session %s %s", session_id[:8], buf.stats())
@@ -140,6 +147,8 @@ async def stream(ws: WebSocket) -> None:
                 if action == "reset_buffer":
                     buf.clear()
                     segmenter.reset()
+                    if mock:
+                        mock.reset()
                     last_state = "IDLE"
                 elif action == "stop":
                     break

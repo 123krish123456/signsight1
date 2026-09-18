@@ -45,6 +45,11 @@ class Settings(BaseSettings):
     # --- backpressure (PRD §5.3) ---
     max_queue_frames: int = 90  # 6 s at 15 FPS; oldest dropped past this
 
+    # --- development ---
+    # Fabricates glosses so the front ends can be built before a model exists.
+    # Never enable for a real demo: it does not look at the landmarks.
+    mock_recognition: bool = False
+
     # --- paths ---
     vocab_pack: Path = ROOT / "backend" / "vocab" / "isl_v1.json"
     model_path: Path = ROOT / "ml" / "models" / "signsight_v1.onnx"
