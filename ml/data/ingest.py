@@ -108,6 +108,52 @@ def from_csv(root: Path, csv_path: Path, pack: VocabPack, class_col: str, file_c
     return clips, unmatched
 
 
+MIN_USABLE_HAND_RATE = 0.30
+
+
+def probe(clips: list[Clip], n: int = 6) -> bool:
+    """Run the real extractor over a sample and report how often hands are found.
+
+    Worth thirty seconds before ingesting anything. Signs are distinguished mostly by
+    hand shape, so a dataset whose hands MediaPipe cannot see is useless no matter how
+    many clips it has — and downscaled or long-shot footage fails exactly this way while
+    still detecting the body perfectly, which makes it look fine until you train on it.
+    """
+    import random
+
+    import numpy as np
+
+    from ml.features.extract import HAND_DIM, POSE_DIM, extract_image, extract_video
+
+    sample = random.Random(0).sample(clips, min(n, len(clips)))
+    print(f"\nprobing {len(sample)} files for detectable landmarks...")
+    print(f"  {'file':<28} {'frames':>6} {'pose':>6} {'hands':>6}")
+    rates = []
+    for c in sample:
+        path = Path(c.clip)
+        seq = (extract_image(str(path)) if path.suffix.lower() in IMAGE_EXT
+               else extract_video(str(path), every_nth=1))
+        if len(seq) == 0:
+            print(f"  {path.name:<28} {'--':>6}  unreadable")
+            rates.append(0.0)
+            continue
+        pose = np.any(seq[:, :POSE_DIM] != 0, axis=1).mean()
+        hands = np.any(seq[:, POSE_DIM : POSE_DIM + 2 * HAND_DIM] != 0, axis=1).mean()
+        rates.append(hands)
+        print(f"  {path.name:<28} {len(seq):>6} {pose:>5.0%} {hands:>6.0%}")
+
+    mean = sum(rates) / max(len(rates), 1)
+    print(f"\n  hands visible in {mean:.0%} of frames")
+    if mean < MIN_USABLE_HAND_RATE:
+        print(f"  UNUSABLE: below {MIN_USABLE_HAND_RATE:.0%}. Hand shape is what separates one sign")
+        print("  from another, so these clips carry almost no usable signal. Usually means the")
+        print("  video is downscaled or the signer is too far from the camera. Find the")
+        print("  original full-resolution release of this dataset.")
+        return False
+    print("  OK — hands are detectable often enough to train on.")
+    return True
+
+
 def report(clips: list[Clip], unmatched: dict, pack: VocabPack, kind: str) -> None:
     from collections import Counter
 
@@ -156,6 +202,8 @@ def main() -> int:
                     help="pre-assign a split (use when the dataset ships its own signer-disjoint splits)")
     ap.add_argument("--pack", type=Path, default=None)
     ap.add_argument("--dry-run", action="store_true", help="report coverage without writing")
+    ap.add_argument("--probe", type=int, nargs="?", const=6, default=None, metavar="N",
+                    help="extract landmarks from N sampled files and report detection rates")
     args = ap.parse_args()
 
     if not args.root.is_dir():
@@ -182,6 +230,9 @@ def main() -> int:
         return 1
 
     report(clips, unmatched, pack, kind)
+
+    if args.probe:
+        probe(clips, args.probe)
 
     if args.dry_run:
         print("\ndry run — nothing written. Drop --dry-run to add these to the manifest.")

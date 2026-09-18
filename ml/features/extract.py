@@ -131,19 +131,57 @@ def resample(seq: np.ndarray, n_frames: int) -> np.ndarray:
     return seq[lo] * (1 - w) + seq[hi] * w
 
 
+# The same model file the browser loads, so training and inference see identical
+# landmarks. Vendored by `npm run fetch-assets`; override with SIGNSIGHT_HOLISTIC_MODEL.
+def _model_path() -> str:
+    import os
+    from pathlib import Path
+
+    override = os.environ.get("SIGNSIGHT_HOLISTIC_MODEL")
+    if override:
+        return override
+    root = Path(__file__).resolve().parent.parent.parent
+    for candidate in (
+        root / "app" / "public" / "models" / "holistic_landmarker.task",
+        root / "extension" / "vendor" / "models" / "holistic_landmarker.task",
+    ):
+        if candidate.exists():
+            return str(candidate)
+    raise FileNotFoundError(
+        "holistic_landmarker.task not found — run `npm run fetch-assets` in app/, "
+        "or set SIGNSIGHT_HOLISTIC_MODEL"
+    )
+
+
+def _landmarker(running_mode):
+    """MediaPipe Tasks holistic landmarker. The legacy `mp.solutions` API this used to
+    call was removed in mediapipe 1.0; Tasks is also what the clients run, so both
+    sides now share one model file."""
+    import mediapipe as mp  # noqa: PLC0415
+    from mediapipe.tasks.python import BaseOptions  # noqa: PLC0415
+    from mediapipe.tasks.python import vision  # noqa: PLC0415
+
+    return vision.HolisticLandmarker.create_from_options(
+        vision.HolisticLandmarkerOptions(
+            base_options=BaseOptions(model_asset_path=_model_path()),
+            running_mode=running_mode,
+        )
+    ), mp
+
+
 def extract_video(path: str, every_nth: int = 2) -> np.ndarray:
     """Video file → (T,261). Needs the `ml` extra (mediapipe, opencv).
 
     `every_nth=2` decimates 30 FPS source clips to the 15 FPS the clients run at
-    (PRD §4.1) so training features match inference features.
+    (PRD §4.1) so training features match inference features. Pass 1 for footage that
+    is already at or below 15 FPS, or you throw away half of a short clip.
     """
     import cv2  # noqa: PLC0415 — heavy, import only when actually extracting
-    import mediapipe as mp  # noqa: PLC0415
+    from mediapipe.tasks.python import vision  # noqa: PLC0415
 
-    holistic = mp.solutions.holistic.Holistic(
-        static_image_mode=False, model_complexity=1, refine_face_landmarks=False
-    )
-    cap = cv2.VideoCapture(path)
+    landmarker, mp = _landmarker(vision.RunningMode.VIDEO)
+    cap = cv2.VideoCapture(str(path))
+    fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
     frames, i = [], 0
     try:
         while True:
@@ -151,20 +189,27 @@ def extract_video(path: str, every_nth: int = 2) -> np.ndarray:
             if not ok:
                 break
             if i % every_nth == 0:
-                res = holistic.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-                frames.append(
-                    normalise_frame(
-                        _mp_list(res.pose_landmarks),
-                        _mp_list(res.left_hand_landmarks),
-                        _mp_list(res.right_hand_landmarks),
-                        _mp_list(res.face_landmarks),
-                    )
+                image = mp.Image(
+                    image_format=mp.ImageFormat.SRGB,
+                    data=cv2.cvtColor(frame, cv2.COLOR_BGR2RGB),
                 )
+                res = landmarker.detect_for_video(image, int(i / fps * 1000))
+                frames.append(_from_result(res))
             i += 1
     finally:
         cap.release()
-        holistic.close()
+        landmarker.close()
     return np.array(frames, dtype=np.float64) if frames else np.zeros((0, FEATURE_DIM))
+
+
+def _from_result(res) -> np.ndarray:
+    """HolisticLandmarkerResult → one normalised 261-d frame."""
+    return normalise_frame(
+        _mp_list(getattr(res, "pose_landmarks", None)),
+        _mp_list(getattr(res, "left_hand_landmarks", None)),
+        _mp_list(getattr(res, "right_hand_landmarks", None)),
+        _mp_list(getattr(res, "face_landmarks", None)),
+    )
 
 
 def extract_image(path: str, n_frames: int = 45) -> np.ndarray:
@@ -177,32 +222,42 @@ def extract_image(path: str, n_frames: int = 45) -> np.ndarray:
     letter that does move (J and Z in most alphabets) is represented wrongly.
     """
     import cv2  # noqa: PLC0415
-    import mediapipe as mp  # noqa: PLC0415
 
     image = cv2.imread(str(path))
     if image is None:
         return np.zeros((0, FEATURE_DIM))
 
-    with mp.solutions.holistic.Holistic(
-        static_image_mode=True, model_complexity=1, refine_face_landmarks=False
-    ) as holistic:
-        res = holistic.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    from mediapipe.tasks.python import vision  # noqa: PLC0415
 
-    frame = normalise_frame(
-        _mp_list(res.pose_landmarks),
-        _mp_list(res.left_hand_landmarks),
-        _mp_list(res.right_hand_landmarks),
-        _mp_list(res.face_landmarks),
-    )
+    landmarker, mp = _landmarker(vision.RunningMode.IMAGE)
+    try:
+        res = landmarker.detect(
+            mp.Image(image_format=mp.ImageFormat.SRGB,
+                     data=cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+        )
+    finally:
+        landmarker.close()
+
+    frame = _from_result(res)
     if not frame.any():
         return np.zeros((0, FEATURE_DIM))  # nothing detected — caller drops it
     return np.tile(frame, (n_frames, 1))
 
 
-def _mp_list(landmark_list) -> list[list[float]] | None:
-    if landmark_list is None:
+def _mp_list(landmarks) -> list[list[float]] | None:
+    """MediaPipe landmarks → plain [[x,y,z], ...]. Tolerates the Tasks API's flat list,
+    a per-person nested list, and the legacy `.landmark` container."""
+    if landmarks is None:
         return None
-    return [[lm.x, lm.y, lm.z] for lm in landmark_list.landmark]
+    if hasattr(landmarks, "landmark"):  # legacy solutions API
+        landmarks = landmarks.landmark
+    if len(landmarks) == 0:
+        return None
+    if isinstance(landmarks[0], (list, tuple)):  # nested per person
+        landmarks = landmarks[0]
+        if len(landmarks) == 0:
+            return None
+    return [[lm.x, lm.y, lm.z] for lm in landmarks]
 
 
 if __name__ == "__main__":

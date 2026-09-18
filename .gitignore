@@ -24,3 +24,6 @@ tsconfig.tsbuildinfo
 ml/models/*.json
 ml/data/cache/
 ml/reports/
+
+# downloaded public datasets — keep out of git, they are gigabytes
+ml/data/raw/
