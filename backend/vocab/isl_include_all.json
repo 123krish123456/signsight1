@@ -1,0 +1,2119 @@
+{
+  "name": "isl_include_all",
+  "language": "Indian Sign Language",
+  "version": "pretrain",
+  "entries": [
+    {
+      "gloss": "ACTOR",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Actor"
+      ]
+    },
+    {
+      "gloss": "ADULT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Adult"
+      ]
+    },
+    {
+      "gloss": "AFTERNOON",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Afternoon"
+      ]
+    },
+    {
+      "gloss": "ALRIGHT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Alright"
+      ]
+    },
+    {
+      "gloss": "ANIMAL",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Animal"
+      ]
+    },
+    {
+      "gloss": "ARTIST",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Artist"
+      ]
+    },
+    {
+      "gloss": "ATTACK",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Attack"
+      ]
+    },
+    {
+      "gloss": "AUTHOR",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Author"
+      ]
+    },
+    {
+      "gloss": "BABY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Baby"
+      ]
+    },
+    {
+      "gloss": "BANK",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Bank"
+      ]
+    },
+    {
+      "gloss": "BEAUTIFUL",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Beautiful"
+      ]
+    },
+    {
+      "gloss": "BICYCLE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Bicycle"
+      ]
+    },
+    {
+      "gloss": "BIRD",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Bird"
+      ]
+    },
+    {
+      "gloss": "BLACK",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Black"
+      ]
+    },
+    {
+      "gloss": "BLIND",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Blind"
+      ]
+    },
+    {
+      "gloss": "BLUE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Blue"
+      ]
+    },
+    {
+      "gloss": "BOAT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Boat"
+      ]
+    },
+    {
+      "gloss": "BOY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Boy"
+      ]
+    },
+    {
+      "gloss": "BROTHER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Brother"
+      ]
+    },
+    {
+      "gloss": "BROWN",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Brown"
+      ]
+    },
+    {
+      "gloss": "BUS",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Bus"
+      ]
+    },
+    {
+      "gloss": "CAMERA",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Camera"
+      ]
+    },
+    {
+      "gloss": "CAR",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Car"
+      ]
+    },
+    {
+      "gloss": "CAT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Cat"
+      ]
+    },
+    {
+      "gloss": "CELL_PHONE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Cell phone"
+      ]
+    },
+    {
+      "gloss": "CHILD",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Child"
+      ]
+    },
+    {
+      "gloss": "CITY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "City"
+      ]
+    },
+    {
+      "gloss": "CLOCK",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Clock"
+      ]
+    },
+    {
+      "gloss": "CLOTHING",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Clothing"
+      ]
+    },
+    {
+      "gloss": "COLOUR",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Colour"
+      ]
+    },
+    {
+      "gloss": "COMPUTER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Computer"
+      ]
+    },
+    {
+      "gloss": "COURT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Court"
+      ]
+    },
+    {
+      "gloss": "COW",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Cow"
+      ]
+    },
+    {
+      "gloss": "CROWD",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Crowd"
+      ]
+    },
+    {
+      "gloss": "DAUGHTER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Daughter"
+      ]
+    },
+    {
+      "gloss": "DEAF",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Deaf"
+      ]
+    },
+    {
+      "gloss": "DOCTOR",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Doctor"
+      ]
+    },
+    {
+      "gloss": "DOG",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Dog"
+      ]
+    },
+    {
+      "gloss": "DRESS",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Dress"
+      ]
+    },
+    {
+      "gloss": "EVENING",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Evening"
+      ]
+    },
+    {
+      "gloss": "EX_MONSOON",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Ex. Monsoon"
+      ]
+    },
+    {
+      "gloss": "EXTRA",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Extra"
+      ]
+    },
+    {
+      "gloss": "FALL",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Fall"
+      ]
+    },
+    {
+      "gloss": "FAMILY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Family"
+      ]
+    },
+    {
+      "gloss": "FAN",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Fan"
+      ]
+    },
+    {
+      "gloss": "FATHER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Father"
+      ]
+    },
+    {
+      "gloss": "FISH",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Fish"
+      ]
+    },
+    {
+      "gloss": "FRIDAY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Friday"
+      ]
+    },
+    {
+      "gloss": "FRIEND",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Friend"
+      ]
+    },
+    {
+      "gloss": "GIRL",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Girl"
+      ]
+    },
+    {
+      "gloss": "GOOD_MORNING",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Good Morning"
+      ]
+    },
+    {
+      "gloss": "GOOD_AFTERNOON",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Good afternoon"
+      ]
+    },
+    {
+      "gloss": "GOOD_EVENING",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Good evening"
+      ]
+    },
+    {
+      "gloss": "GOOD_NIGHT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Good night"
+      ]
+    },
+    {
+      "gloss": "GRANDFATHER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Grandfather"
+      ]
+    },
+    {
+      "gloss": "GRANDMOTHER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Grandmother"
+      ]
+    },
+    {
+      "gloss": "GREEN",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Green"
+      ]
+    },
+    {
+      "gloss": "GREY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Grey"
+      ]
+    },
+    {
+      "gloss": "GROUND",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Ground"
+      ]
+    },
+    {
+      "gloss": "HAT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Hat"
+      ]
+    },
+    {
+      "gloss": "HELLO",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Hello"
+      ]
+    },
+    {
+      "gloss": "HORSE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Horse"
+      ]
+    },
+    {
+      "gloss": "HOSPITAL",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Hospital"
+      ]
+    },
+    {
+      "gloss": "HOUR",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Hour"
+      ]
+    },
+    {
+      "gloss": "HOUSE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "House"
+      ]
+    },
+    {
+      "gloss": "HOW_ARE_YOU",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "How are you"
+      ]
+    },
+    {
+      "gloss": "HUSBAND",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Husband"
+      ]
+    },
+    {
+      "gloss": "I",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "I"
+      ]
+    },
+    {
+      "gloss": "INDIA",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "India"
+      ]
+    },
+    {
+      "gloss": "JOB",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Job"
+      ]
+    },
+    {
+      "gloss": "KING",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "King"
+      ]
+    },
+    {
+      "gloss": "LAMP",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Lamp"
+      ]
+    },
+    {
+      "gloss": "LAPTOP",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Laptop"
+      ]
+    },
+    {
+      "gloss": "LAWYER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Lawyer"
+      ]
+    },
+    {
+      "gloss": "LIBRARY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Library"
+      ]
+    },
+    {
+      "gloss": "LOCATION",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Location"
+      ]
+    },
+    {
+      "gloss": "MAN",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Man"
+      ]
+    },
+    {
+      "gloss": "MANAGER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Manager"
+      ]
+    },
+    {
+      "gloss": "MARKET",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Market"
+      ]
+    },
+    {
+      "gloss": "MEAN",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Mean"
+      ]
+    },
+    {
+      "gloss": "MINUTE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Minute"
+      ]
+    },
+    {
+      "gloss": "MONDAY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Monday"
+      ]
+    },
+    {
+      "gloss": "MONTH",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Month"
+      ]
+    },
+    {
+      "gloss": "MORNING",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Morning"
+      ]
+    },
+    {
+      "gloss": "MOTHER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Mother"
+      ]
+    },
+    {
+      "gloss": "MOUSE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Mouse"
+      ]
+    },
+    {
+      "gloss": "NEIGHBOUR",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Neighbour"
+      ]
+    },
+    {
+      "gloss": "NIGHT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Night"
+      ]
+    },
+    {
+      "gloss": "OFFICE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Office"
+      ]
+    },
+    {
+      "gloss": "ORANGE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Orange"
+      ]
+    },
+    {
+      "gloss": "PANT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Pant"
+      ]
+    },
+    {
+      "gloss": "PARENT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Parent"
+      ]
+    },
+    {
+      "gloss": "PARK",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Park"
+      ]
+    },
+    {
+      "gloss": "PATIENT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Patient"
+      ]
+    },
+    {
+      "gloss": "PINK",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Pink"
+      ]
+    },
+    {
+      "gloss": "PLANE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Plane"
+      ]
+    },
+    {
+      "gloss": "PLAYER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Player"
+      ]
+    },
+    {
+      "gloss": "PLEASED",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Pleased"
+      ]
+    },
+    {
+      "gloss": "POCKET",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Pocket"
+      ]
+    },
+    {
+      "gloss": "POLICE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Police"
+      ]
+    },
+    {
+      "gloss": "PRESIDENT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "President"
+      ]
+    },
+    {
+      "gloss": "PRIEST",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Priest"
+      ]
+    },
+    {
+      "gloss": "QUEEN",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Queen"
+      ]
+    },
+    {
+      "gloss": "RADIO",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Radio"
+      ]
+    },
+    {
+      "gloss": "RED",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Red"
+      ]
+    },
+    {
+      "gloss": "REPORTER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Reporter"
+      ]
+    },
+    {
+      "gloss": "RESTAURANT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Restaurant"
+      ]
+    },
+    {
+      "gloss": "SATURDAY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Saturday"
+      ]
+    },
+    {
+      "gloss": "SCHOOL",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "School"
+      ]
+    },
+    {
+      "gloss": "SCREEN",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Screen"
+      ]
+    },
+    {
+      "gloss": "SEASON",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Season"
+      ]
+    },
+    {
+      "gloss": "SECRETARY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Secretary"
+      ]
+    },
+    {
+      "gloss": "SHIRT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Shirt"
+      ]
+    },
+    {
+      "gloss": "SHOES",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Shoes"
+      ]
+    },
+    {
+      "gloss": "SISTER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Sister"
+      ]
+    },
+    {
+      "gloss": "SKIRT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Skirt"
+      ]
+    },
+    {
+      "gloss": "SOLDIER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Soldier"
+      ]
+    },
+    {
+      "gloss": "SON",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Son"
+      ]
+    },
+    {
+      "gloss": "SPRING",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Spring"
+      ]
+    },
+    {
+      "gloss": "STORE_OR_SHOP",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Store or Shop"
+      ]
+    },
+    {
+      "gloss": "STREET_OR_ROAD",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Street or Road"
+      ]
+    },
+    {
+      "gloss": "STUDENT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Student"
+      ]
+    },
+    {
+      "gloss": "SUIT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Suit"
+      ]
+    },
+    {
+      "gloss": "SUMMER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Summer"
+      ]
+    },
+    {
+      "gloss": "SUNDAY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Sunday"
+      ]
+    },
+    {
+      "gloss": "T_SHIRT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "T-Shirt"
+      ]
+    },
+    {
+      "gloss": "TEACHER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Teacher"
+      ]
+    },
+    {
+      "gloss": "TELEVISION",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Television"
+      ]
+    },
+    {
+      "gloss": "TEMPLE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Temple"
+      ]
+    },
+    {
+      "gloss": "THANK_YOU",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Thank you"
+      ]
+    },
+    {
+      "gloss": "THURSDAY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Thursday"
+      ]
+    },
+    {
+      "gloss": "TIME",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Time"
+      ]
+    },
+    {
+      "gloss": "TODAY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Today"
+      ]
+    },
+    {
+      "gloss": "TOMORROW",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Tomorrow"
+      ]
+    },
+    {
+      "gloss": "TRAIN",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Train"
+      ]
+    },
+    {
+      "gloss": "TRAIN_STATION",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Train Station"
+      ]
+    },
+    {
+      "gloss": "TRANSPORTATION",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Transportation"
+      ]
+    },
+    {
+      "gloss": "TRUCK",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Truck"
+      ]
+    },
+    {
+      "gloss": "TUESDAY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Tuesday"
+      ]
+    },
+    {
+      "gloss": "UGLY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Ugly"
+      ]
+    },
+    {
+      "gloss": "UNIVERSITY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "University"
+      ]
+    },
+    {
+      "gloss": "WAITER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Waiter"
+      ]
+    },
+    {
+      "gloss": "WEDNESDAY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Wednesday"
+      ]
+    },
+    {
+      "gloss": "WEEK",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Week"
+      ]
+    },
+    {
+      "gloss": "WHITE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "White"
+      ]
+    },
+    {
+      "gloss": "WIFE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Wife"
+      ]
+    },
+    {
+      "gloss": "WINTER",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Winter"
+      ]
+    },
+    {
+      "gloss": "WOMAN",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Woman"
+      ]
+    },
+    {
+      "gloss": "YEAR",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Year"
+      ]
+    },
+    {
+      "gloss": "YELLOW",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Yellow"
+      ]
+    },
+    {
+      "gloss": "YESTERDAY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "Yesterday"
+      ]
+    },
+    {
+      "gloss": "ALIVE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "alive"
+      ]
+    },
+    {
+      "gloss": "BAD",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "bad"
+      ]
+    },
+    {
+      "gloss": "BIG_LARGE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "big large"
+      ]
+    },
+    {
+      "gloss": "CHEAP",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "cheap"
+      ]
+    },
+    {
+      "gloss": "CLEAN",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "clean"
+      ]
+    },
+    {
+      "gloss": "COLD",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "cold"
+      ]
+    },
+    {
+      "gloss": "COOL",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "cool"
+      ]
+    },
+    {
+      "gloss": "CURVED",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "curved"
+      ]
+    },
+    {
+      "gloss": "DEAD",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "dead"
+      ]
+    },
+    {
+      "gloss": "DEEP",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "deep"
+      ]
+    },
+    {
+      "gloss": "DIRTY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "dirty"
+      ]
+    },
+    {
+      "gloss": "DRY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "dry"
+      ]
+    },
+    {
+      "gloss": "EXPENSIVE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "expensive"
+      ]
+    },
+    {
+      "gloss": "FAMOUS",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "famous"
+      ]
+    },
+    {
+      "gloss": "FAST",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "fast"
+      ]
+    },
+    {
+      "gloss": "FEMALE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "female"
+      ]
+    },
+    {
+      "gloss": "FLAT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "flat"
+      ]
+    },
+    {
+      "gloss": "GOOD",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "good"
+      ]
+    },
+    {
+      "gloss": "HAPPY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "happy"
+      ]
+    },
+    {
+      "gloss": "HARD",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "hard"
+      ]
+    },
+    {
+      "gloss": "HE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "he"
+      ]
+    },
+    {
+      "gloss": "HEALTHY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "healthy"
+      ]
+    },
+    {
+      "gloss": "HEAVY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "heavy"
+      ]
+    },
+    {
+      "gloss": "HIGH",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "high"
+      ]
+    },
+    {
+      "gloss": "HOT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "hot"
+      ]
+    },
+    {
+      "gloss": "IT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "it"
+      ]
+    },
+    {
+      "gloss": "LIGHT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "light"
+      ]
+    },
+    {
+      "gloss": "LONG",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "long"
+      ]
+    },
+    {
+      "gloss": "LOOSE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "loose"
+      ]
+    },
+    {
+      "gloss": "LOUD",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "loud"
+      ]
+    },
+    {
+      "gloss": "LOW",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "low"
+      ]
+    },
+    {
+      "gloss": "MALE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "male"
+      ]
+    },
+    {
+      "gloss": "NARROW",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "narrow"
+      ]
+    },
+    {
+      "gloss": "NEW",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "new"
+      ]
+    },
+    {
+      "gloss": "OLD",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "old"
+      ]
+    },
+    {
+      "gloss": "POOR",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "poor"
+      ]
+    },
+    {
+      "gloss": "QUIET",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "quiet"
+      ]
+    },
+    {
+      "gloss": "RICH",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "rich"
+      ]
+    },
+    {
+      "gloss": "SAD",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "sad"
+      ]
+    },
+    {
+      "gloss": "SHALLOW",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "shallow"
+      ]
+    },
+    {
+      "gloss": "SHE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "she"
+      ]
+    },
+    {
+      "gloss": "SHORT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "short"
+      ]
+    },
+    {
+      "gloss": "SICK",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "sick"
+      ]
+    },
+    {
+      "gloss": "SLOW",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "slow"
+      ]
+    },
+    {
+      "gloss": "SMALL_LITTLE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "small little"
+      ]
+    },
+    {
+      "gloss": "SOFT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "soft"
+      ]
+    },
+    {
+      "gloss": "STRONG",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "strong"
+      ]
+    },
+    {
+      "gloss": "TALL",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "tall"
+      ]
+    },
+    {
+      "gloss": "THEY",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "they"
+      ]
+    },
+    {
+      "gloss": "THICK",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "thick"
+      ]
+    },
+    {
+      "gloss": "TIGHT",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "tight"
+      ]
+    },
+    {
+      "gloss": "TRAIN_TICKET",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "train ticket"
+      ]
+    },
+    {
+      "gloss": "WARM",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "warm"
+      ]
+    },
+    {
+      "gloss": "WE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "we"
+      ]
+    },
+    {
+      "gloss": "WEAK",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "weak"
+      ]
+    },
+    {
+      "gloss": "WET",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "wet"
+      ]
+    },
+    {
+      "gloss": "WIDE",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "wide"
+      ]
+    },
+    {
+      "gloss": "YOU",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "you"
+      ]
+    },
+    {
+      "gloss": "YOU_PLURAL",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "you (plural)"
+      ]
+    },
+    {
+      "gloss": "YOUNG",
+      "pos": "noun",
+      "mirror_safe": true,
+      "repeatable": false,
+      "reference_video": null,
+      "aliases": [
+        "young"
+      ]
+    }
+  ],
+  "templates": [],
+  "fallback": "join_with_spaces_and_capitalise"
+}
