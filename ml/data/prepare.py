@@ -18,6 +18,7 @@ picks up the archives that have finished since the last one.
 from __future__ import annotations
 
 import argparse
+import json
 import zipfile
 from pathlib import Path
 
@@ -30,10 +31,27 @@ MARKER = ".extracted"
 
 
 def is_complete(zip_path: Path) -> bool:
-    """A zip still being downloaded is not a valid archive yet."""
+    """Is this archive finished and intact?
+
+    Prefers the published size from expected.json (written by ml.data.verify_archives),
+    because it is instant and catches the failure that actually happens: a resumed
+    download appending to a file that was already complete, leaving an archive LARGER
+    than the original that still opens far enough to look valid.
+
+    Falls back to reading the central directory. Note that merely opening a zip proves
+    very little — an earlier version of this function returned `testzip() is None or True`,
+    which is unconditionally True, and duly "verified" a corrupt 130%-sized archive.
+    """
+    expected = zip_path.parent / "expected.json"
+    if expected.exists():
+        try:
+            want = json.loads(expected.read_text(encoding="utf-8"))[zip_path.name]["size"]
+            return zip_path.stat().st_size == want
+        except (KeyError, ValueError, OSError):
+            pass
     try:
         with zipfile.ZipFile(zip_path) as z:
-            return z.testzip() is None or True  # openable == complete enough
+            return z.namelist() != []
     except (zipfile.BadZipFile, OSError):
         return False
 
