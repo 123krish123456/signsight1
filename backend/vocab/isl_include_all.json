@@ -104,16 +104,6 @@
       ]
     },
     {
-      "gloss": "BEAUTIFUL",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "Beautiful"
-      ]
-    },
-    {
       "gloss": "BICYCLE",
       "pos": "noun",
       "mirror_safe": true,
@@ -141,16 +131,6 @@
       "reference_video": null,
       "aliases": [
         "Black"
-      ]
-    },
-    {
-      "gloss": "BLIND",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "Blind"
       ]
     },
     {
@@ -351,16 +331,6 @@
       "reference_video": null,
       "aliases": [
         "Daughter"
-      ]
-    },
-    {
-      "gloss": "DEAF",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "Deaf"
       ]
     },
     {
@@ -791,16 +761,6 @@
       "reference_video": null,
       "aliases": [
         "Market"
-      ]
-    },
-    {
-      "gloss": "MEAN",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "Mean"
       ]
     },
     {
@@ -1394,16 +1354,6 @@
       ]
     },
     {
-      "gloss": "UGLY",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "Ugly"
-      ]
-    },
-    {
       "gloss": "UNIVERSITY",
       "pos": "noun",
       "mirror_safe": true,
@@ -1514,16 +1464,6 @@
       ]
     },
     {
-      "gloss": "ALIVE",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "alive"
-      ]
-    },
-    {
       "gloss": "BAD",
       "pos": "noun",
       "mirror_safe": true,
@@ -1541,26 +1481,6 @@
       "reference_video": null,
       "aliases": [
         "big large"
-      ]
-    },
-    {
-      "gloss": "CHEAP",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "cheap"
-      ]
-    },
-    {
-      "gloss": "CLEAN",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "clean"
       ]
     },
     {
@@ -1584,46 +1504,6 @@
       ]
     },
     {
-      "gloss": "CURVED",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "curved"
-      ]
-    },
-    {
-      "gloss": "DEAD",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "dead"
-      ]
-    },
-    {
-      "gloss": "DEEP",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "deep"
-      ]
-    },
-    {
-      "gloss": "DIRTY",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "dirty"
-      ]
-    },
-    {
       "gloss": "DRY",
       "pos": "noun",
       "mirror_safe": true,
@@ -1634,26 +1514,6 @@
       ]
     },
     {
-      "gloss": "EXPENSIVE",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "expensive"
-      ]
-    },
-    {
-      "gloss": "FAMOUS",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "famous"
-      ]
-    },
-    {
       "gloss": "FAST",
       "pos": "noun",
       "mirror_safe": true,
@@ -1661,26 +1521,6 @@
       "reference_video": null,
       "aliases": [
         "fast"
-      ]
-    },
-    {
-      "gloss": "FEMALE",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "female"
-      ]
-    },
-    {
-      "gloss": "FLAT",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "flat"
       ]
     },
     {
@@ -1704,16 +1544,6 @@
       ]
     },
     {
-      "gloss": "HARD",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "hard"
-      ]
-    },
-    {
       "gloss": "HE",
       "pos": "noun",
       "mirror_safe": true,
@@ -1731,26 +1561,6 @@
       "reference_video": null,
       "aliases": [
         "healthy"
-      ]
-    },
-    {
-      "gloss": "HEAVY",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "heavy"
-      ]
-    },
-    {
-      "gloss": "HIGH",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "high"
       ]
     },
     {
@@ -1774,16 +1584,6 @@
       ]
     },
     {
-      "gloss": "LIGHT",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "light"
-      ]
-    },
-    {
       "gloss": "LONG",
       "pos": "noun",
       "mirror_safe": true,
@@ -1794,16 +1594,6 @@
       ]
     },
     {
-      "gloss": "LOOSE",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "loose"
-      ]
-    },
-    {
       "gloss": "LOUD",
       "pos": "noun",
       "mirror_safe": true,
@@ -1811,26 +1601,6 @@
       "reference_video": null,
       "aliases": [
         "loud"
-      ]
-    },
-    {
-      "gloss": "LOW",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "low"
-      ]
-    },
-    {
-      "gloss": "MALE",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "male"
       ]
     },
     {
@@ -1864,16 +1634,6 @@
       ]
     },
     {
-      "gloss": "POOR",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "poor"
-      ]
-    },
-    {
       "gloss": "QUIET",
       "pos": "noun",
       "mirror_safe": true,
@@ -1881,36 +1641,6 @@
       "reference_video": null,
       "aliases": [
         "quiet"
-      ]
-    },
-    {
-      "gloss": "RICH",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "rich"
-      ]
-    },
-    {
-      "gloss": "SAD",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "sad"
-      ]
-    },
-    {
-      "gloss": "SHALLOW",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "shallow"
       ]
     },
     {
@@ -1964,26 +1694,6 @@
       ]
     },
     {
-      "gloss": "SOFT",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "soft"
-      ]
-    },
-    {
-      "gloss": "STRONG",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "strong"
-      ]
-    },
-    {
       "gloss": "TALL",
       "pos": "noun",
       "mirror_safe": true,
@@ -2001,26 +1711,6 @@
       "reference_video": null,
       "aliases": [
         "they"
-      ]
-    },
-    {
-      "gloss": "THICK",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "thick"
-      ]
-    },
-    {
-      "gloss": "TIGHT",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "tight"
       ]
     },
     {
@@ -2051,16 +1741,6 @@
       "reference_video": null,
       "aliases": [
         "we"
-      ]
-    },
-    {
-      "gloss": "WEAK",
-      "pos": "noun",
-      "mirror_safe": true,
-      "repeatable": false,
-      "reference_video": null,
-      "aliases": [
-        "weak"
       ]
     },
     {
