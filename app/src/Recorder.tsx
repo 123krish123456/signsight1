@@ -6,7 +6,10 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { backendStore, pickLocalFolder, supportsLocalFolder, type ClipStore } from "./storage";
+import {
+  backendStore, pickLocalFolder, supportsLocalFolder,
+  type ClipStore, type StoredClip,
+} from "./storage";
 
 /** Talk to the backend on whichever host served this page, not to localhost.
  *  A teammate opening http://192.168.1.42:5173/record from their own laptop must reach
@@ -50,6 +53,7 @@ export default function Recorder() {
 
   const [signer, setSigner] = useState(() => localStorage.getItem("signsight.signer") ?? "");
   const [store, setStore] = useState<ClipStore | null>(null);
+  const [takes, setTakes] = useState<StoredClip[]>([]);
   const [started, setStarted] = useState(false);
   const [signs, setSigns] = useState<Sign[]>([]);
   const [current, setCurrent] = useState(0);
@@ -104,18 +108,37 @@ export default function Recorder() {
   }, [begin]);
 
   const startBackend = useCallback(async () => {
+    const who = signer.trim().toLowerCase();
     try {
-      const r = await fetch(`${API}/capture/plan?signer=${encodeURIComponent(signer.trim().toLowerCase())}`);
+      // fail here, with a clear message, rather than on the first save
+      const r = await fetch(`${API}/health`);
       if (!r.ok) throw new Error(`backend said ${r.status}`);
-      const data = await r.json();
-      const counts = new Map<string, number>(
-        data.signs.map((s: Sign) => [s.gloss, s.count] as [string, number]),
-      );
-      await begin(backendStore(API, counts));
+      await begin(backendStore(API, who));
     } catch (e) {
-      setError(`Backend unreachable: ${e instanceof Error ? e.message : String(e)}`);
+      setError(`Backend unreachable at ${API}: ${e instanceof Error ? e.message : String(e)}`);
     }
   }, [signer, begin]);
+
+  /** Reload the takes for whichever sign is showing, freeing the previous object URLs.
+   *  Without the release these leak a blob per clip every time you change sign. */
+  const refreshTakes = useCallback(async (gloss: string | undefined) => {
+    if (!store || !gloss) return;
+    setTakes((old) => { store.release(old); return []; });
+    try {
+      setTakes(await store.list(gloss));
+    } catch { /* folder not created until the first clip is saved */ }
+  }, [store]);
+
+  useEffect(() => { void refreshTakes(sign?.gloss); }, [sign?.gloss, refreshTakes]);
+  useEffect(() => () => { store?.release(takes); }, [store, takes]);
+
+  const discard = useCallback(async (name: string) => {
+    if (!store || !sign) return;
+    if (await store.remove(sign.gloss, name)) {
+      bump(sign.gloss, -1);
+      await refreshTakes(sign.gloss);
+    }
+  }, [store, sign, refreshTakes]);
 
   // Attach the camera AFTER the recording view mounts. Doing it inside start() set
   // srcObject on a ref that did not exist yet — the setup screen has no <video> — so the
@@ -170,7 +193,8 @@ export default function Recorder() {
           await store!.save(signer.trim().toLowerCase(), sign.gloss, blob);
           bump(sign.gloss, 1);
           setPhase("idle");
-          advance();
+          await refreshTakes(sign.gloss);
+          if (!auto) advance();
           if (auto) timersRef.current.push(window.setTimeout(() => record(), 900) as unknown as number);
         } catch (e) {
           setError(`Not saved: ${e instanceof Error ? e.message : String(e)}`);
@@ -182,12 +206,12 @@ export default function Recorder() {
       timersRef.current.push(window.setTimeout(() => rec.stop(), CLIP_MS) as unknown as number);
     }, COUNTDOWN_MS);
     timersRef.current.push(begin as unknown as number);
-  }, [sign, phase, signer, auto, advance, store]);
+  }, [sign, phase, signer, auto, advance, store, refreshTakes]);
 
   const undo = useCallback(async () => {
-    if (!sign || sign.count === 0 || !store) return;
-    if (await store.undo(signer.trim().toLowerCase(), sign.gloss)) bump(sign.gloss, -1);
-  }, [sign, signer, store]);
+    if (!sign || !takes.length) return;
+    await discard(takes[takes.length - 1].name);
+  }, [sign, takes, discard]);
 
   // keyboard: space records, u undoes, n skips
   useEffect(() => {
@@ -318,6 +342,30 @@ export default function Recorder() {
 
       {error && <p style={S.error}>{error}</p>}
 
+      <section style={S.takes}>
+        <div style={S.takesHead}>
+          <span style={S.capLabel}>Your takes of {sign?.gloss}</span>
+          <span style={S.muted}>
+            {takes.length ? "watch them, bin the bad ones, record again" : "none yet"}
+          </span>
+        </div>
+        {takes.length > 0 && (
+          <div style={S.takeRow}>
+            {takes.map((clip, i) => (
+              <figure key={clip.name} style={S.take}>
+                <video src={clip.url} style={S.takeVideo} controls muted playsInline
+                       preload="metadata" />
+                <figcaption style={S.takeCap}>
+                  <span>take {i + 1}</span>
+                  <button style={S.binBtn} onClick={() => discard(clip.name)}
+                          title={`delete ${clip.name}`}>delete</button>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        )}
+      </section>
+
       <details style={S.details}>
         <summary style={S.summary}>Progress by sign</summary>
         <div style={S.chips}>
@@ -384,6 +432,17 @@ const S: Record<string, React.CSSProperties> = {
   ghost: { padding: "11px 16px", borderRadius: 8, border: "1px solid #334155",
            background: "transparent", color: "#cbd5e1", fontSize: 14, cursor: "pointer" },
   error: { color: "#f87171", fontSize: 14, margin: 0 },
+  takes: { display: "flex", flexDirection: "column", gap: 8 },
+  takesHead: { display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" },
+  takeRow: { display: "flex", gap: 10, overflowX: "auto", paddingBottom: 6 },
+  take: { margin: 0, flex: "0 0 auto", width: 168, display: "flex",
+          flexDirection: "column", gap: 4 },
+  takeVideo: { width: 168, aspectRatio: "4/3", objectFit: "cover",
+               background: "#020617", borderRadius: 8, transform: "scaleX(-1)" },
+  takeCap: { display: "flex", justifyContent: "space-between", alignItems: "center",
+             fontSize: 11, color: "#94a3b8" },
+  binBtn: { fontSize: 11, padding: "2px 8px", borderRadius: 6, cursor: "pointer",
+            border: "1px solid #7f1d1d", background: "transparent", color: "#f87171" },
   details: { border: "1px solid #1e293b", borderRadius: 10, padding: "10px 12px" },
   summary: { cursor: "pointer", fontSize: 13, color: "#94a3b8" },
   chips: { display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 },

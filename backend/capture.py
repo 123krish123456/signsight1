@@ -15,6 +15,7 @@ import re
 from pathlib import Path
 
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi.responses import FileResponse
 
 from backend.config import ROOT, settings
 from backend.vocab.schema import load_pack
@@ -92,14 +93,61 @@ async def upload(
             "bytes": len(payload)}
 
 
+def _clip_dir(signer: str, gloss: str) -> Path:
+    """Validated path to one signer's clips of one sign.
+
+    Both parts come from the client, so both are checked: the signer against a strict
+    pattern and the gloss against the vocabulary. Neither may contain a separator, and
+    the result is confirmed to sit under the clips directory before anything touches it.
+    """
+    if not SAFE_NAME.match(signer):
+        raise HTTPException(400, "bad signer")
+    if gloss not in {e.gloss for e in load_pack(settings.vocab_pack).entries}:
+        raise HTTPException(400, f"{gloss!r} is not in the vocabulary")
+    path = (CLIPS_DIR / signer / gloss).resolve()
+    if not path.is_relative_to(CLIPS_DIR.resolve()):
+        raise HTTPException(400, "bad path")
+    return path
+
+
+@router.get("/capture/clips")
+def list_clips(signer: str, gloss: str) -> dict:
+    """Filenames of every clip this signer has of this sign, oldest first."""
+    d = _clip_dir(signer, gloss)
+    names = sorted(p.name for p in d.glob("*") if p.is_file()) if d.exists() else []
+    return {"clips": names}
+
+
+@router.get("/capture/file")
+def serve_clip(signer: str, gloss: str, name: str) -> FileResponse:
+    """Play back one clip so it can be reviewed before being kept or deleted."""
+    if "/" in name or "\\" in name or name.startswith("."):
+        raise HTTPException(400, "bad name")
+    path = _clip_dir(signer, gloss) / name
+    if not path.is_file():
+        raise HTTPException(404, "no such clip")
+    return FileResponse(path)
+
+
 @router.delete("/capture/clip")
-def undo(signer: str, gloss: str) -> dict:
-    """Remove that signer's most recent clip of a sign — the browser's undo."""
+def delete_clip(signer: str, gloss: str, name: str | None = None) -> dict:
+    """Delete one clip by name, or the most recent if no name is given."""
     clips = load()
-    for i in range(len(clips) - 1, -1, -1):
-        if clips[i].signer == signer and clips[i].gloss == gloss:
-            removed = clips.pop(i)
-            (ROOT / removed.clip).unlink(missing_ok=True)
-            save(clips)
-            return {"removed": removed.clip}
-    raise HTTPException(404, f"no clips of {gloss} by {signer}")
+    mine = [i for i, c in enumerate(clips) if c.signer == signer and c.gloss == gloss]
+    if not mine:
+        raise HTTPException(404, f"no clips of {gloss} by {signer}")
+
+    if name is None:
+        index = mine[-1]
+    else:
+        if "/" in name or "\\" in name:
+            raise HTTPException(400, "bad name")
+        match = [i for i in mine if Path(clips[i].clip).name == name]
+        if not match:
+            raise HTTPException(404, f"{name} not found")
+        index = match[0]
+
+    removed = clips.pop(index)
+    (ROOT / removed.clip).unlink(missing_ok=True)
+    save(clips)
+    return {"removed": removed.clip}

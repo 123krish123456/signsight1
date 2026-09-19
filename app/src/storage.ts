@@ -1,4 +1,4 @@
-/** Where recorded clips go.
+/** Where recorded clips go, and how to review them afterwards.
  *
  *  Two backends, chosen at runtime:
  *
@@ -12,13 +12,37 @@
  *  manifest is rebuilt from that structure, so a handed-over folder needs no merging.
  */
 
+export interface StoredClip {
+  name: string;
+  /** Playable URL. For local folders this is an object URL: call release() when done. */
+  url: string;
+}
+
 export interface ClipStore {
   readonly label: string;
-  /** How many clips of this sign already exist. */
   count(gloss: string): Promise<number>;
+  /** Every clip of a sign, oldest first, so they can be watched and thrown away. */
+  list(gloss: string): Promise<StoredClip[]>;
   save(signer: string, gloss: string, blob: Blob): Promise<void>;
-  /** Remove the most recent clip of a sign. Returns false if there was nothing to remove. */
-  undo(signer: string, gloss: string): Promise<boolean>;
+  remove(gloss: string, name: string): Promise<boolean>;
+  /** Free any object URLs handed out by list(). */
+  release(clips: StoredClip[]): void;
+}
+
+/** Next filename for a sign.
+ *
+ *  Numbered from the highest index already present, NOT from how many files there are.
+ *  Counting breaks as soon as anything is deleted: with 000-009 on disk, removing 005
+ *  leaves nine files, and the next clip would be written as 009 — on top of an existing
+ *  one. Silent data loss, and exactly what the review panel invites you to do.
+ */
+export function nextName(signer: string, gloss: string, existing: string[]): string {
+  let highest = -1;
+  for (const name of existing) {
+    const m = name.match(/_(\d+)\.[a-z0-9]+$/i);
+    if (m) highest = Math.max(highest, Number(m[1]));
+  }
+  return `${signer}_${gloss}_${String(highest + 1).padStart(3, "0")}.webm`;
 }
 
 // ---------------------------------------------------------------- local folder
@@ -31,6 +55,7 @@ interface DirHandle {
   values(): AsyncIterable<{ kind: string; name: string }>;
 }
 interface FileHandle {
+  getFile(): Promise<File>;
   createWritable(): Promise<{ write(d: Blob): Promise<void>; close(): Promise<void> }>;
 }
 
@@ -67,34 +92,56 @@ export async function pickLocalFolder(): Promise<ClipStore | null> {
     async count(gloss) {
       return (await namesIn(gloss)).length;
     },
+    async list(gloss) {
+      const dir = await folderFor(gloss);
+      const out: StoredClip[] = [];
+      for (const name of await namesIn(gloss)) {
+        const file = await (await dir.getFileHandle(name)).getFile();
+        out.push({ name, url: URL.createObjectURL(file) });
+      }
+      return out;
+    },
     async save(signer, gloss, blob) {
       const dir = await folderFor(gloss);
-      // Number from what is already on disk, so stopping and resuming never overwrites.
-      const n = (await namesIn(gloss)).length;
-      const name = `${signer}_${gloss}_${String(n).padStart(3, "0")}.webm`;
+      const name = nextName(signer, gloss, await namesIn(gloss));
       const writable = await (await dir.getFileHandle(name, { create: true })).createWritable();
       await writable.write(blob);
       await writable.close();
     },
-    async undo(_signer, gloss) {
-      const names = await namesIn(gloss);
-      if (!names.length) return false;
-      const dir = await folderFor(gloss);
-      await dir.removeEntry(names[names.length - 1]);
-      return true;
+    async remove(gloss, name) {
+      try {
+        await (await folderFor(gloss)).removeEntry(name);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    release(clips) {
+      clips.forEach((c) => URL.revokeObjectURL(c.url));
     },
   };
 }
 
 // ---------------------------------------------------------------- project backend
 
-export function backendStore(api: string, counts: Map<string, number>): ClipStore {
+export function backendStore(api: string, signer: string): ClipStore {
+  const names = async (gloss: string): Promise<string[]> => {
+    const r = await fetch(`${api}/capture/clips?signer=${encodeURIComponent(signer)}&gloss=${encodeURIComponent(gloss)}`);
+    return r.ok ? (await r.json()).clips : [];
+  };
+
   return {
     label: "the project backend",
     async count(gloss) {
-      return counts.get(gloss) ?? 0;
+      return (await names(gloss)).length;
     },
-    async save(signer, gloss, blob) {
+    async list(gloss) {
+      return (await names(gloss)).map((name) => ({
+        name,
+        url: `${api}/capture/file?signer=${encodeURIComponent(signer)}&gloss=${encodeURIComponent(gloss)}&name=${encodeURIComponent(name)}`,
+      }));
+    },
+    async save(_signer, gloss, blob) {
       const body = new FormData();
       body.append("signer", signer);
       body.append("gloss", gloss);
@@ -104,16 +151,14 @@ export function backendStore(api: string, counts: Map<string, number>): ClipStor
         const detail = await r.json().catch(() => ({}));
         throw new Error(detail.detail ?? `HTTP ${r.status}`);
       }
-      counts.set(gloss, (counts.get(gloss) ?? 0) + 1);
     },
-    async undo(signer, gloss) {
+    async remove(gloss, name) {
       const r = await fetch(
-        `${api}/capture/clip?signer=${encodeURIComponent(signer)}&gloss=${encodeURIComponent(gloss)}`,
+        `${api}/capture/clip?signer=${encodeURIComponent(signer)}&gloss=${encodeURIComponent(gloss)}&name=${encodeURIComponent(name)}`,
         { method: "DELETE" },
       );
-      if (!r.ok) return false;
-      counts.set(gloss, Math.max(0, (counts.get(gloss) ?? 1) - 1));
-      return true;
+      return r.ok;
     },
+    release() { /* plain URLs, nothing to revoke */ },
   };
 }
