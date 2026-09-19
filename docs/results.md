@@ -58,6 +58,47 @@ for the augmentation to earn its keep. Our normalisation is invariant to distanc
 horizontal position but not to angle, and a laptop lid at a different tilt is exactly what
 a webcam demo will meet. The benefit, if real, lands where this corpus cannot see it.
 
+## Would more data help?
+
+Answered by a learning curve rather than by intuition: the same cross-validation, run on
+a stratified fraction of each fold's training clips.
+
+| Training data | Clips per class | CV mean | Gain |
+|---|---|---|---|
+| 25% | ~5 | 66.0% | — |
+| 50% | ~10 | 73.8% | **+7.8** |
+| 75% | ~15 | 74.0% | +0.2 |
+| 100% | ~20 | 76.7% | +2.7 |
+
+**Yes, but with sharply diminishing returns.** Doubling from 5 to 10 clips per class bought
+7.8 points. Doubling again, from 10 to 20, bought 2.9. Each doubling returns roughly half
+the last, so the next doubling — 20 to 40 clips — is worth perhaps 1 to 2 points, and the
+whole remaining series converges somewhere around **80%**.
+
+More clips of the same kind will therefore not reach the 85% target. Anyone planning to
+get there by collecting more video of these signers should know that before they start.
+
+### What the remaining error actually is
+
+| Held-out signer | Accuracy |
+|---|---|
+| signer05 | 67.3% |
+| signer03 | 69.3% |
+| signer02 | 77.9% |
+| signer01 | 78.0% |
+| signer00 | 81.4% |
+| signer04 | 82.9% |
+
+The spread across signers is **15.7 points**, against 2.9 points for doubling the clips.
+Which person the model is tested on matters roughly five times more than how many clips it
+trained on.
+
+That reframes the requirement. The shortage is not clips, it is **people**: eight signers
+is too few for the model to learn what varies between signers and what is the sign itself.
+Twenty clips each from ten more signers would be worth far more than eighty clips each from
+the same eight — which is the argument for FDMSE-ISL (20 signers) over simply recording
+more of INCLUDE's seven.
+
 ## Shipping model
 
 `ml/models/signsight_isl24.onnx`, trained with the winning recipe.

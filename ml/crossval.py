@@ -54,6 +54,18 @@ def fold_arrays(clips, pack, held_out: str):
             np.asarray(te_x, np.float32), np.asarray(te_y, np.int64))
 
 
+def subsample(x, y, fraction: float, seed: int):
+    """Keep `fraction` of the training clips, stratified so no class disappears."""
+    rng = np.random.default_rng(seed)
+    keep = []
+    for cls in np.unique(y):
+        idx = np.flatnonzero(y == cls)
+        rng.shuffle(idx)
+        keep.extend(idx[: max(1, int(round(len(idx) * fraction)))])
+    keep = np.array(sorted(keep))
+    return x[keep], y[keep]
+
+
 def run_fold(pack, tr_x, tr_y, te_x, te_y, args, seed: int) -> float:
     import keras
 
@@ -96,6 +108,11 @@ def main() -> int:
     ap.add_argument("--min-clips", type=int, default=40,
                     help="skip signers with fewer clips than this; they make a meaningless fold")
     ap.add_argument("--tag", default="cv", help="name for the saved summary")
+    ap.add_argument("--train-fraction", type=float, default=1.0,
+                    help="use only this fraction of the training clips, stratified by class. "
+                         "Sweeping it draws a learning curve, which is what answers "
+                         "'would more data help?' with evidence instead of intuition.")
+    ap.add_argument("--folds", type=int, default=None, help="use only the first N folds")
     args = ap.parse_args()
 
     pack = load_pack(args.pack or settings.vocab_pack)
@@ -111,9 +128,14 @@ def main() -> int:
         print(f"each fold fine-tunes from {args.init_from.name}")
     print()
 
+    if args.folds:
+        signers = signers[: args.folds]
+
     results = {}
     for i, held in enumerate(signers, 1):
         tr_x, tr_y, te_x, te_y = fold_arrays(clips, pack, held)
+        if args.train_fraction < 1.0:
+            tr_x, tr_y = subsample(tr_x, tr_y, args.train_fraction, args.seed + i)
         seen = len(set(te_y.tolist()))
         acc = run_fold(pack, tr_x, tr_y, te_x, te_y, args, args.seed + i)
         results[held] = acc
@@ -133,6 +155,8 @@ def main() -> int:
         "init_from": args.init_from.name if args.init_from else None,
         "per_signer": {k: round(v, 4) for k, v in results.items()},
         "mean": round(mean, 4), "sd": round(sd, 4),
+        "train_fraction": args.train_fraction,
+        "train_clips_per_fold": int(len(tr_x)),
     }, indent=2), encoding="utf-8")
     print(f"\nwrote {out}")
     return 0
