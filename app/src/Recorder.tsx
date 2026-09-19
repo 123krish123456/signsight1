@@ -7,7 +7,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const API = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:8000";
+/** Talk to the backend on whichever host served this page, not to localhost.
+ *  A teammate opening http://192.168.1.42:5173/record from their own laptop must reach
+ *  the backend on .42 as well — pointing at 127.0.0.1 would silently address their own
+ *  machine, where nothing is running and no clips would ever be collected centrally. */
+const API =
+  import.meta.env.VITE_API_URL ?? `${location.protocol}//${location.hostname}:8000`;
 
 /** One tab each. Picking from a list instead of typing means nobody records half a
  *  session as "Krish" and half as "krish" — signer id is the split key, and a typo

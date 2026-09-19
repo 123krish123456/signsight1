@@ -124,7 +124,12 @@ That is 720 clips and takes the signer pool from 8 to 11.
 
 ### How — in the browser (easiest, no Python needed)
 
-With both servers running, open **http://127.0.0.1:5173/record**
+Each of us records **on our own laptop** — different cameras and rooms is variation we
+want. With both servers running, open **http://127.0.0.1:5173/record**
+
+> Use `localhost`, not your machine's network address. Browsers only grant camera access
+> on a secure origin, so `http://192.168.x.x:5173` will not work at all. Record locally
+> and hand the clips over; [`docs/recording.md`](docs/recording.md) covers that.
 
 1. Click **your own tab** — eashan, krish or arpit. This is your signer id; the tabs exist
    so nobody records half a session under a different spelling.

@@ -43,13 +43,21 @@ HOUSE  SCHOOL
 
 ## How to do it — in the browser
 
-No Python needed. Start both servers, then open **http://127.0.0.1:5173/record** and
-click your own tab.
+No Python needed beyond the backend. Each of us runs this **on our own laptop**, so we
+each contribute a different camera and room as well as a different pair of hands.
 
 ```bash
 uvicorn backend.main:app --reload     # terminal 1
 cd app && npm run dev                 # terminal 2
 ```
+
+Then open **http://127.0.0.1:5173/record** and click your own tab.
+
+> **It has to be `localhost` or `127.0.0.1`.** Browsers only expose the camera on a
+> secure origin, and a plain-HTTP address like `http://192.168.1.3:5173` is not one —
+> `navigator.mediaDevices` is not merely blocked there, it does not exist. So you cannot
+> record by pointing your laptop at someone else's machine over wifi. Run it locally and
+> hand the clips over afterwards, which is the next section.
 
 The tabs exist so nobody records half a session under a different spelling of their name
 — the signer id is the evaluation's split key, and a typo invents a phantom person.
@@ -101,6 +109,24 @@ learn what our real-world accuracy is, rather than our accuracy on someone else'
 
 **Be natural about speed.** Signs run 0.5–2 seconds. Do not hold a pose stiffly for the
 full 3 seconds; sign it, then relax.
+
+## Handing clips over
+
+Clips are not committed to git — a few hundred megabytes of video would be baked into
+every future clone. Krish and Arpit: zip your own folder and send it to Eashan.
+
+```bash
+# on your machine, after recording
+ml/data/clips/<yourname>/          <- zip this folder and send it
+```
+
+Eashan: drop those folders into `ml/data/clips/` alongside your own, then rebuild the
+manifest rows from the folder layout. There is nothing to merge by hand — the signer name
+is the folder name.
+
+```bash
+python -m ml.data.ingest videos ml/data/clips --source self     --signer-pattern '^([^/]+)/' --no-letters
+```
 
 ## When everyone is done
 

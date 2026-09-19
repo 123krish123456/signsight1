@@ -44,6 +44,7 @@ app = FastAPI(title="SignSight", version="0.1.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
+    allow_origin_regex=settings.cors_regex,
     allow_methods=["*"],
     allow_headers=["*"],
 )

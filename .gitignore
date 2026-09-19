@@ -13,6 +13,9 @@ app/public/models/
 extension/vendor/
 
 # data + artefacts
+# Recorded clips. Regenerable data, not source: 720 of them would be a few hundred MB
+# baked into git history forever, and removing them later means rewriting it. The
+# manifest tracks them by path, so the pipeline is unaffected.
 ml/data/clips/
 # Keras checkpoints are large and regenerable; the ONNX export is what ships, so it
 # and the evaluation outputs are versioned — a reader can run the system without

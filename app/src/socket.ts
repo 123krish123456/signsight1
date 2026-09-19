@@ -1,6 +1,9 @@
 /** WebSocket client for /ws/stream (PRD §5.1). Landmarks only — never video (§3.1). */
 
-const WS_URL = import.meta.env.VITE_WS_URL ?? "ws://127.0.0.1:8000/ws/stream";
+// Follow the serving host, so the app works when opened from another machine on the
+// same network rather than only from the one running the backend.
+const WS_URL =
+  import.meta.env.VITE_WS_URL ?? `ws://${location.hostname}:8000/ws/stream`;
 
 export type ServerEvent =
   | { type: "state"; value: "IDLE" | "SIGNING" }

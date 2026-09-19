@@ -13,9 +13,16 @@ class Settings(BaseSettings):
     )
 
     # --- server ---
+    # Bind to 0.0.0.0 (SIGNSIGHT_HOST=0.0.0.0) to let teammates on the same wifi record
+    # into one machine's clips directory from their own laptops — their own cameras and
+    # rooms, which is variation we want, with no file shuffling afterwards.
     host: str = "127.0.0.1"
     port: int = 8000
+    # A private-network origin is allowed so that setup works without editing config.
+    # Everything here writes to local disk and has no authentication, so do not expose
+    # this host to the internet.
     cors_origins: list[str] = ["http://localhost:5173", "http://127.0.0.1:5173"]
+    cors_allow_lan: bool = True
 
     # --- features (PRD §4.2) ---
     feature_dim: int = 261
@@ -54,6 +61,14 @@ class Settings(BaseSettings):
     vocab_pack: Path = ROOT / "backend" / "vocab" / "isl_v1.json"
     model_path: Path = ROOT / "ml" / "models" / "signsight_v1.onnx"
     db_path: Path = ROOT / "signsight.db"
+
+    @property
+    def cors_regex(self) -> str | None:
+        """Any host on a private network, on the dev port. RFC 1918 ranges only."""
+        if not self.cors_allow_lan:
+            return None
+        return (r"http://(localhost|127\.0\.0\.1|10\.\d+\.\d+\.\d+|"
+                r"192\.168\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+)(:\d+)?")
 
     @property
     def expected_dim(self) -> int:
