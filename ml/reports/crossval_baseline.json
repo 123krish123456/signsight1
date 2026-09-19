@@ -1,0 +1,16 @@
+{
+  "pack": "isl_v2_words",
+  "arch": "bilstm",
+  "epochs": 80,
+  "init_from": null,
+  "per_signer": {
+    "signer00": 0.6279,
+    "signer01": 0.6341,
+    "signer02": 0.6364,
+    "signer03": 0.6267,
+    "signer04": 0.7073,
+    "signer05": 0.6364
+  },
+  "mean": 0.6448,
+  "sd": 0.0309
+}
