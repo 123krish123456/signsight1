@@ -8,7 +8,7 @@
       "pos": "interjection",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Greetings/48. Hello/MVI_9914.MOV",
+      "reference_video": "assets/reference/HELLO.mp4",
       "aliases": [
         "Hello"
       ]
@@ -18,7 +18,7 @@
       "pos": "interjection",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Greetings/55. Thank you/MVI_0111.MOV",
+      "reference_video": "assets/reference/THANK-YOU.mp4",
       "aliases": [
         "Thank you"
       ]
@@ -28,7 +28,7 @@
       "pos": "interjection",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Greetings/51. Good Morning/MVI_9932.MOV",
+      "reference_video": "assets/reference/GOOD-MORNING.mp4",
       "aliases": [
         "Good Morning"
       ]
@@ -38,7 +38,7 @@
       "pos": "question",
       "mirror_safe": true,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Greetings/49. How are you/MVI_9918.MOV",
+      "reference_video": "assets/reference/HOW-ARE-YOU.mp4",
       "aliases": [
         "How are you"
       ]
@@ -48,7 +48,7 @@
       "pos": "interjection",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Greetings/50. Alright/MVI_9923.MOV",
+      "reference_video": "assets/reference/ALRIGHT.mp4",
       "aliases": [
         "Alright"
       ]
@@ -58,7 +58,7 @@
       "pos": "adj",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Greetings/56. Pleased/MVI_0114.MOV",
+      "reference_video": "assets/reference/PLEASED.mp4",
       "aliases": [
         "Pleased"
       ]
@@ -68,7 +68,7 @@
       "pos": "pronoun",
       "mirror_safe": true,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Pronouns/40. I/MVI_9879.MOV",
+      "reference_video": "assets/reference/ME.mp4",
       "aliases": [
         "I"
       ]
@@ -78,7 +78,7 @@
       "pos": "pronoun",
       "mirror_safe": true,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Pronouns/41. you/MVI_9923.MOV",
+      "reference_video": "assets/reference/YOU.mp4",
       "aliases": [
         "you"
       ]
@@ -88,7 +88,7 @@
       "pos": "pronoun",
       "mirror_safe": true,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Pronouns/42. he/MVI_9889.MOV",
+      "reference_video": "assets/reference/HE.mp4",
       "aliases": [
         "he"
       ]
@@ -98,7 +98,7 @@
       "pos": "pronoun",
       "mirror_safe": true,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Pronouns/43. she/MVI_9893.MOV",
+      "reference_video": "assets/reference/SHE.mp4",
       "aliases": [
         "she"
       ]
@@ -108,7 +108,7 @@
       "pos": "pronoun",
       "mirror_safe": true,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Pronouns/45. we/MVI_9901.MOV",
+      "reference_video": "assets/reference/WE.mp4",
       "aliases": [
         "we"
       ]
@@ -118,7 +118,7 @@
       "pos": "noun",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/People/60. Mother/MVI_4937.MOV",
+      "reference_video": "assets/reference/MOTHER.mp4",
       "aliases": [
         "Mother"
       ]
@@ -128,7 +128,7 @@
       "pos": "noun",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/People/61. Father/MVI_4940.MOV",
+      "reference_video": "assets/reference/FATHER.mp4",
       "aliases": [
         "Father"
       ]
@@ -138,7 +138,7 @@
       "pos": "noun",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/People/81. Friend/MVI_4997.MOV",
+      "reference_video": "assets/reference/FRIEND.mp4",
       "aliases": [
         "Friend"
       ]
@@ -148,7 +148,7 @@
       "pos": "noun",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/People/64. Man/MVI_4949.MOV",
+      "reference_video": "assets/reference/MAN.mp4",
       "aliases": [
         "Man"
       ]
@@ -158,7 +158,7 @@
       "pos": "noun",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/People/65. Woman/MVI_4952.MOV",
+      "reference_video": "assets/reference/WOMAN.mp4",
       "aliases": [
         "Woman"
       ]
@@ -168,7 +168,7 @@
       "pos": "adj",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Adjectives/3. happy/MVI_9296.MOV",
+      "reference_video": "assets/reference/HAPPY.mp4",
       "aliases": [
         "happy"
       ]
@@ -178,7 +178,7 @@
       "pos": "adj",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Adjectives/98. sick/MVI_9281.MOV",
+      "reference_video": "assets/reference/SICK.mp4",
       "aliases": [
         "sick"
       ]
@@ -188,7 +188,7 @@
       "pos": "adj",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Adjectives/99. healthy/MVI_9287.MOV",
+      "reference_video": "assets/reference/HEALTHY.mp4",
       "aliases": [
         "healthy"
       ]
@@ -198,7 +198,7 @@
       "pos": "adj",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Adjectives/83. big large/MVI_9234.MOV",
+      "reference_video": "assets/reference/BIG.mp4",
       "aliases": [
         "big large"
       ]
@@ -208,7 +208,7 @@
       "pos": "adj",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Adjectives/84. small little/MVI_9237.MOV",
+      "reference_video": "assets/reference/SMALL.mp4",
       "aliases": [
         "small little"
       ]
@@ -218,7 +218,7 @@
       "pos": "adj",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Adjectives/88. cold/MVI_9252.MOV",
+      "reference_video": "assets/reference/COLD.mp4",
       "aliases": [
         "cold"
       ]
@@ -228,7 +228,7 @@
       "pos": "noun",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Places/19. House/MVI_3437.MOV",
+      "reference_video": "assets/reference/HOUSE.mp4",
       "aliases": [
         "House"
       ]
@@ -238,7 +238,7 @@
       "pos": "noun",
       "mirror_safe": false,
       "repeatable": false,
-      "reference_video": "E:/datasets/INCLUDE/extracted/Places/24. School/MVI_3458.MOV",
+      "reference_video": "assets/reference/SCHOOL.mp4",
       "aliases": [
         "School"
       ]
