@@ -14,16 +14,16 @@ extension/vendor/
 
 # data + artefacts
 ml/data/clips/
-ml/models/*.onnx
+# Keras checkpoints are large and regenerable; the ONNX export is what ships, so it
+# and the evaluation outputs are versioned — a reader can run the system without
+# retraining, and the reported numbers have their artefacts next to them.
 ml/models/*.keras
 tests/fixtures/parity_frames.json
 signsight.db
 tsconfig.tsbuildinfo
 
 # training artefacts — models, metadata, cached features, generated reports
-ml/models/*.json
 ml/data/cache/
-ml/reports/
 
 # downloaded public datasets — keep out of git, they are gigabytes
 ml/data/raw/

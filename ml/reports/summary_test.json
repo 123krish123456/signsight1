@@ -1,0 +1,100 @@
+{
+  "model": "isl_words_pretrained_long.onnx",
+  "split": "test",
+  "ablation": "none",
+  "synthetic": false,
+  "samples": 75,
+  "top1": 0.6933,
+  "mean_confidence": 0.7038,
+  "latency_ms": {
+    "p50": 5.2,
+    "p95": 7.12
+  },
+  "per_signer": {
+    "signer03": 0.6933
+  },
+  "per_class_recall": {
+    "HELLO": 1.0,
+    "THANK-YOU": 1.0,
+    "GOOD-MORNING": 1.0,
+    "HOW-ARE-YOU": 1.0,
+    "ALRIGHT": 0.0,
+    "PLEASED": 0.0,
+    "ME": 1.0,
+    "YOU": 0.5,
+    "HE": 1.0,
+    "SHE": 1.0,
+    "WE": 1.0,
+    "MOTHER": 1.0,
+    "FATHER": 1.0,
+    "FRIEND": 1.0,
+    "MAN": 1.0,
+    "WOMAN": 0.0,
+    "HAPPY": 1.0,
+    "SICK": 1.0,
+    "HEALTHY": 0.0,
+    "BIG": 1.0,
+    "SMALL": 1.0,
+    "COLD": 0.6667,
+    "HOUSE": 0.0,
+    "SCHOOL": 0.0,
+    "UNKNOWN": null
+  },
+  "top_confusions": [
+    {
+      "true": "SCHOOL",
+      "predicted": "FRIEND",
+      "count": 4
+    },
+    {
+      "true": "PLEASED",
+      "predicted": "FRIEND",
+      "count": 3
+    },
+    {
+      "true": "HEALTHY",
+      "predicted": "COLD",
+      "count": 3
+    },
+    {
+      "true": "ALRIGHT",
+      "predicted": "HAPPY",
+      "count": 2
+    },
+    {
+      "true": "ALRIGHT",
+      "predicted": "COLD",
+      "count": 2
+    },
+    {
+      "true": "YOU",
+      "predicted": "PLEASED",
+      "count": 2
+    },
+    {
+      "true": "HOUSE",
+      "predicted": "THANK-YOU",
+      "count": 2
+    },
+    {
+      "true": "HOUSE",
+      "predicted": "BIG",
+      "count": 2
+    },
+    {
+      "true": "PLEASED",
+      "predicted": "ME",
+      "count": 1
+    },
+    {
+      "true": "WOMAN",
+      "predicted": "MAN",
+      "count": 1
+    },
+    {
+      "true": "COLD",
+      "predicted": "SMALL",
+      "count": 1
+    }
+  ]
+}
