@@ -6,6 +6,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { backendStore, pickLocalFolder, supportsLocalFolder, type ClipStore } from "./storage";
 
 /** Talk to the backend on whichever host served this page, not to localhost.
  *  A teammate opening http://192.168.1.42:5173/record from their own laptop must reach
@@ -13,6 +14,16 @@ import { useCallback, useEffect, useRef, useState } from "react";
  *  machine, where nothing is running and no clips would ever be collected centrally. */
 const API =
   import.meta.env.VITE_API_URL ?? `${location.protocol}//${location.hostname}:8000`;
+
+/** The 24 signs, and where their reference clips live. Served by the dev server from
+ *  assets/reference, so recording works with `npm run dev` alone — no Python. */
+const SIGNS = [
+  "HELLO", "THANK-YOU", "GOOD-MORNING", "HOW-ARE-YOU", "ALRIGHT", "PLEASED",
+  "ME", "YOU", "HE", "SHE", "WE",
+  "MOTHER", "FATHER", "FRIEND", "MAN", "WOMAN",
+  "HAPPY", "SICK", "HEALTHY", "BIG", "SMALL", "COLD",
+  "HOUSE", "SCHOOL",
+];
 
 /** One tab each. Picking from a list instead of typing means nobody records half a
  *  session as "Krish" and half as "krish" — signer id is the split key, and a typo
@@ -38,7 +49,7 @@ export default function Recorder() {
   const timersRef = useRef<number[]>([]);
 
   const [signer, setSigner] = useState(() => localStorage.getItem("signsight.signer") ?? "");
-  const [others, setOthers] = useState<Record<string, number>>({});
+  const [store, setStore] = useState<ClipStore | null>(null);
   const [started, setStarted] = useState(false);
   const [signs, setSigns] = useState<Sign[]>([]);
   const [current, setCurrent] = useState(0);
@@ -52,21 +63,25 @@ export default function Recorder() {
   const done = signs.reduce((n, s) => n + Math.min(s.count, target), 0);
   const goal = signs.length * target;
 
-  const loadPlan = useCallback(async (who: string) => {
-    const r = await fetch(`${API}/capture/plan?signer=${encodeURIComponent(who)}`);
-    if (!r.ok) throw new Error(`backend said ${r.status}`);
-    const data = await r.json();
-    setSigns(data.signs);
-    // resume where they left off: first sign still short of target
-    const next = data.signs.findIndex((s: Sign) => s.count < target);
+  const loadPlan = useCallback(async (where: ClipStore) => {
+    const counted = await Promise.all(
+      SIGNS.map(async (gloss) => ({
+        gloss,
+        pos: "",
+        count: await where.count(gloss),
+        reference: `/reference/${gloss}.mp4`,
+      })),
+    );
+    setSigns(counted);
+    const next = counted.findIndex((s) => s.count < target);
     setCurrent(next === -1 ? 0 : next);
   }, [target]);
 
-  const start = useCallback(async () => {
+  const begin = useCallback(async (where: ClipStore) => {
     setError("");
     const who = signer.trim().toLowerCase();
     if (!/^[a-z0-9_-]{1,32}$/.test(who)) {
-      setError("Use letters, digits, _ or - only. This becomes your signer id and must never change.");
+      setError("Pick your tab first.");
       return;
     }
     try {
@@ -75,12 +90,32 @@ export default function Recorder() {
       });
       streamRef.current = media;
       localStorage.setItem("signsight.signer", who);
-      await loadPlan(who);
+      setStore(where);
+      await loadPlan(where);
       setStarted(true);
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
     }
   }, [signer, loadPlan]);
+
+  const startLocal = useCallback(async () => {
+    const where = await pickLocalFolder();
+    if (where) await begin(where);
+  }, [begin]);
+
+  const startBackend = useCallback(async () => {
+    try {
+      const r = await fetch(`${API}/capture/plan?signer=${encodeURIComponent(signer.trim().toLowerCase())}`);
+      if (!r.ok) throw new Error(`backend said ${r.status}`);
+      const data = await r.json();
+      const counts = new Map<string, number>(
+        data.signs.map((s: Sign) => [s.gloss, s.count] as [string, number]),
+      );
+      await begin(backendStore(API, counts));
+    } catch (e) {
+      setError(`Backend unreachable: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }, [signer, begin]);
 
   // Attach the camera AFTER the recording view mounts. Doing it inside start() set
   // srcObject on a ref that did not exist yet — the setup screen has no <video> — so the
@@ -89,23 +124,6 @@ export default function Recorder() {
     if (!started || !camRef.current || !streamRef.current) return;
     camRef.current.srcObject = streamRef.current;
     camRef.current.play().catch((e) => setError(`Camera preview: ${e.message}`));
-  }, [started]);
-
-  // how much everyone has done, so the tabs show progress before you start
-  useEffect(() => {
-    if (started) return;
-    let cancelled = false;
-    (async () => {
-      const totals: Record<string, number> = {};
-      for (const name of TEAM) {
-        try {
-          const r = await fetch(`${API}/capture/plan?signer=${name}`);
-          if (r.ok) totals[name] = (await r.json()).recorded;
-        } catch { /* backend not up yet; tabs simply show no count */ }
-      }
-      if (!cancelled) setOthers(totals);
-    })();
-    return () => { cancelled = true; };
   }, [started]);
 
   // stop every timer and the camera when leaving
@@ -148,13 +166,8 @@ export default function Recorder() {
       rec.onstop = async () => {
         setPhase("saving");
         const blob = new Blob(chunksRef.current, { type: rec.mimeType });
-        const body = new FormData();
-        body.append("signer", signer.trim().toLowerCase());
-        body.append("gloss", sign.gloss);
-        body.append("video", blob, "clip");
         try {
-          const r = await fetch(`${API}/capture/clip`, { method: "POST", body });
-          if (!r.ok) throw new Error((await r.json()).detail ?? `HTTP ${r.status}`);
+          await store!.save(signer.trim().toLowerCase(), sign.gloss, blob);
           bump(sign.gloss, 1);
           setPhase("idle");
           advance();
@@ -169,16 +182,12 @@ export default function Recorder() {
       timersRef.current.push(window.setTimeout(() => rec.stop(), CLIP_MS) as unknown as number);
     }, COUNTDOWN_MS);
     timersRef.current.push(begin as unknown as number);
-  }, [sign, phase, signer, auto, advance]);
+  }, [sign, phase, signer, auto, advance, store]);
 
   const undo = useCallback(async () => {
-    if (!sign || sign.count === 0) return;
-    const r = await fetch(
-      `${API}/capture/clip?signer=${encodeURIComponent(signer.trim().toLowerCase())}&gloss=${sign.gloss}`,
-      { method: "DELETE" },
-    );
-    if (r.ok) bump(sign.gloss, -1);
-  }, [sign, signer]);
+    if (!sign || sign.count === 0 || !store) return;
+    if (await store.undo(signer.trim().toLowerCase(), sign.gloss)) bump(sign.gloss, -1);
+  }, [sign, signer, store]);
 
   // keyboard: space records, u undoes, n skips
   useEffect(() => {
@@ -208,25 +217,53 @@ export default function Recorder() {
               style={{ ...S.tab, ...(signer === name ? S.tabOn : {}) }}
             >
               {name}
-              <span style={S.tabCount}>
-                {others[name] === undefined ? "" : `${others[name]} clips`}
-              </span>
             </button>
           ))}
         </div>
         <p style={S.hint}>
-          Pick your own tab. This is your signer id and the model is evaluated by holding
+          Pick your own tab. This is your signer id, and the model is evaluated by holding
           one person out, so it has to be the same every session — that is why it is a
           list and not a text box.
         </p>
+
         <label style={S.label}>
           Clips per sign
           <input style={S.input} type="number" min={1} max={50} value={target}
                  onChange={(e) => setTarget(Math.max(1, Number(e.target.value) || 10))} />
         </label>
-        <button style={S.primary} onClick={start} disabled={!signer}>
-          {signer ? `Start as ${signer}` : "Pick your tab first"}
-        </button>
+
+        {supportsLocalFolder() ? (
+          <>
+            <button style={S.primary} onClick={startLocal} disabled={!signer}>
+              {signer ? "Choose a folder and start" : "Pick your tab first"}
+            </button>
+            <p style={S.hint}>
+              Clips are written straight into a folder you choose on this laptop — nothing
+              is uploaded anywhere. When you are done, zip that folder and send it over.
+              Pick the same folder next time and it carries on from where you stopped.
+            </p>
+            <details style={S.details}>
+              <summary style={S.summary}>Send to the project backend instead</summary>
+              <p style={{ ...S.hint, marginTop: 8 }}>
+                Only useful on the machine running this project — it writes into the
+                repository's own clips directory.
+              </p>
+              <button style={{ ...S.ghost, marginTop: 8 }} onClick={startBackend} disabled={!signer}>
+                Start, saving to the backend
+              </button>
+            </details>
+          </>
+        ) : (
+          <>
+            <button style={S.primary} onClick={startBackend} disabled={!signer}>
+              {signer ? "Allow camera and start" : "Pick your tab first"}
+            </button>
+            <p style={S.hint}>
+              This browser cannot write to a folder directly, so clips go to the project
+              backend, which must be running. Chrome can save locally instead.
+            </p>
+          </>
+        )}
         {error && <p style={S.error}>{error}</p>}
       </main>
     );
@@ -237,6 +274,7 @@ export default function Recorder() {
       <header style={S.bar}>
         <b style={S.who}>{signer}</b>
         <span style={S.muted}>{done} / {goal} clips</span>
+        <span style={S.muted}>saving to {store?.label}</span>
         <div style={S.progress}><div style={{ ...S.progressFill, width: `${goal ? (done / goal) * 100 : 0}%` }} /></div>
         <label style={S.check}>
           <input type="checkbox" checked={auto} onChange={(e) => setAuto(e.target.checked)} />

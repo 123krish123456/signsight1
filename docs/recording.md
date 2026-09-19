@@ -41,51 +41,73 @@ HAPPY  SICK  HEALTHY  BIG  SMALL  COLD
 HOUSE  SCHOOL
 ```
 
-## How to do it — in the browser
+## How to do it
 
-No Python needed beyond the backend. Each of us runs this **on our own laptop**, so we
-each contribute a different camera and room as well as a different pair of hands.
+You need **Node only** — no Python, no backend. Clone the repo and:
 
 ```bash
-uvicorn backend.main:app --reload     # terminal 1
-cd app && npm run dev                 # terminal 2
+cd app
+npm install
+npm run dev
 ```
 
-Then open **http://127.0.0.1:5173/record** and click your own tab.
+Open **http://127.0.0.1:5173/record**, click **your own tab**, then **Choose a folder and
+start**. Pick any folder on your laptop; clips are written straight into it and nothing
+is uploaded anywhere.
 
-> **It has to be `localhost` or `127.0.0.1`.** Browsers only expose the camera on a
-> secure origin, and a plain-HTTP address like `http://192.168.1.3:5173` is not one —
-> `navigator.mediaDevices` is not merely blocked there, it does not exist. So you cannot
-> record by pointing your laptop at someone else's machine over wifi. Run it locally and
-> hand the clips over afterwards, which is the next section.
+> **It has to be `localhost` or `127.0.0.1`.** Browsers only expose the camera on a secure
+> origin, and a plain-HTTP address like `http://192.168.1.3:5173` is not one —
+> `navigator.mediaDevices` there is not merely blocked, it does not exist. So you cannot
+> record by pointing your laptop at someone else's machine over wifi.
 
-The tabs exist so nobody records half a session under a different spelling of their name
-— the signer id is the evaluation's split key, and a typo invents a phantom person.
+The reference sign plays on the left, your camera on the right.
 
-Press **Record** or the spacebar: 1.5 s countdown, 3 s clip, saved automatically, then it
-moves to the sign you have fewest of. `u` undoes, `n` skips. Tick **keep going
-automatically** to record continuously.
+| Key | Action |
+|---|---|
+| `SPACE` or **Record** | 1.5 s countdown, records 3 s, saves, moves on |
+| `u` | undo the last clip (deletes the file) |
+| `n` | skip to another sign |
 
-## Or on the desktop
+Tick **keep going automatically** to record continuously with a pause between clips. Stop
+whenever — pick the same folder next time and it carries on from where you left off, since
+it counts the files already there.
+
+The tabs exist so nobody records half a session under a different spelling of their name:
+the signer id is the evaluation's split key, and a typo invents a phantom person.
+
+### Sending your clips over
+
+Your folder ends up looking like this:
+
+```
+<the folder you picked>/
+  HELLO/        eashan_HELLO_000.webm, eashan_HELLO_001.webm, ...
+  THANK-YOU/    ...
+  ...
+```
+
+Zip it and send it to Eashan however you like — Drive, WhatsApp, a USB stick. Roughly
+100–250 MB for 240 clips.
+
+Eashan: drop each person's folder into `ml/data/clips/<their-name>/` and rebuild the
+manifest from the folder layout. Nothing needs merging by hand.
+
+```bash
+python -m ml.data.ingest videos ml/data/clips --source self     --signer-pattern '^([^/]+)/' --no-letters
+```
+
+### On the machine running the project
+
+If you are on Eashan's laptop with the backend running, the recorder can write into the
+repository's clips directory directly — it is behind "Send to the project backend
+instead". Firefox and Safari have no folder API, so they always use this route.
+
+### Or the desktop recorder
 
 ```bash
 pip install -e ".[ml]"
 python -m ml.data.record --signer <yourname> --target 10
 ```
-
-The window shows **your camera on the left and the reference sign on the right**, looping.
-None of us knows Indian Sign Language, so copy what the reference shows. It comes from
-INCLUDE — the same corpus the model trains on — so copying it is exactly right.
-
-| Key | Action |
-|---|---|
-| `SPACE` | 1.5 s countdown, then records 3 s |
-| `N` | skip to another sign |
-| `U` | undo the last clip (deletes the file too) |
-| `Q` | quit — progress is saved as you go |
-
-The tool always offers whichever sign you have fewest clips of, so just keep pressing
-SPACE and coverage stays even. Stop and resume whenever; it picks up where you left off.
 
 ## Getting it right
 

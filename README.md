@@ -122,25 +122,25 @@ sign.
 
 That is 720 clips and takes the signer pool from 8 to 11.
 
-### How — in the browser (easiest, no Python needed)
+### How — in the browser (Node only, no Python, no backend)
 
-Each of us records **on our own laptop** — different cameras and rooms is variation we
-want. With both servers running, open **http://127.0.0.1:5173/record**
+```bash
+cd app && npm install && npm run dev
+```
+
+Open **http://127.0.0.1:5173/record**, click **your own tab**, then **Choose a folder and
+start**. Clips are written into a folder you pick on your own laptop — nothing is uploaded.
+Zip that folder afterwards and send it over.
 
 > Use `localhost`, not your machine's network address. Browsers only grant camera access
-> on a secure origin, so `http://192.168.x.x:5173` will not work at all. Record locally
-> and hand the clips over; [`docs/recording.md`](docs/recording.md) covers that.
+> on a secure origin, so `http://192.168.x.x:5173` will not work at all.
 
-1. Click **your own tab** — eashan, krish or arpit. This is your signer id; the tabs exist
-   so nobody records half a session under a different spelling.
-2. Press **Start**, allow the camera.
-3. The sign to copy plays on the left, your camera is on the right.
-4. Press **Record** (or the spacebar): 1.5 second countdown, then it records 3 seconds and
-   saves automatically, then moves to the next sign.
+Press **Record** or the spacebar: 1.5 s countdown, 3 s clip, saved automatically, then it
+moves to whichever sign you have fewest of. `u` undoes, `n` skips, and **keep going
+automatically** records continuously. Pick the same folder next session and it resumes.
 
-`u` undoes the last clip, `n` skips a sign. Tick **keep going automatically** and it will
-record continuously, leaving a pause between clips. Close the tab whenever you like —
-progress is saved as you go and it resumes where you stopped.
+Full detail, including how Eashan merges everyone's folders:
+[`docs/recording.md`](docs/recording.md).
 
 ### How — on the desktop instead
 
