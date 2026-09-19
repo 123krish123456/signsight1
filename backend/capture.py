@@ -81,15 +81,23 @@ async def upload(
     out_dir = CLIPS_DIR / signer / gloss
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    # Number from the highest index on disk, not from how many clips exist. Counting
+    # breaks the moment one is deleted: with 000-009 present, removing 005 leaves nine
+    # files and the next upload would be written as 009, over an existing clip.
+    highest = -1
+    for f in out_dir.glob("*"):
+        m = re.search(r"_(\d+)\.[a-z0-9]+$", f.name, re.IGNORECASE)
+        if m:
+            highest = max(highest, int(m.group(1)))
     clips = load()
-    existing = sum(1 for c in clips if c.signer == signer and c.gloss == gloss)
-    path = out_dir / f"{signer}_{gloss}_{existing:03d}{ext}"
+    path = out_dir / f"{signer}_{gloss}_{highest + 1:03d}{ext}"
     path.write_bytes(payload)
 
     clips.append(Clip(clip=path.relative_to(ROOT).as_posix(), gloss=gloss,
                       signer=signer, source="self"))
     save(clips)
-    return {"saved": path.relative_to(ROOT).as_posix(), "count": existing + 1,
+    count = sum(1 for c in clips if c.signer == signer and c.gloss == gloss) + 1
+    return {"saved": path.relative_to(ROOT).as_posix(), "count": count,
             "bytes": len(payload)}
 
 

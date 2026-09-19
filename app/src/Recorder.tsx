@@ -1,8 +1,9 @@
 /** Browser capture: reference clip on one side, your camera on the other.
  *
- *  Exists so recording does not require a Python toolchain — a teammate opens a URL,
- *  types their name and records. Clips post straight to the backend, which writes them
- *  into the same clips directory and manifest the desktop recorder uses.
+ *  Exists so recording needs no Python toolchain — a teammate clones the repo, runs
+ *  `npm run dev`, picks their tab and a folder, and records. Clips are written straight
+ *  into that folder; see storage.ts for the fallback used by browsers without the
+ *  File System Access API.
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -61,6 +62,7 @@ export default function Recorder() {
   const [countdown, setCountdown] = useState(0);
   const [target, setTarget] = useState(10);
   const [auto, setAuto] = useState(false);
+  const autoRef = useRef(false);
   const [error, setError] = useState("");
 
   const sign = signs[current];
@@ -194,8 +196,13 @@ export default function Recorder() {
           bump(sign.gloss, 1);
           setPhase("idle");
           await refreshTakes(sign.gloss);
-          if (!auto) advance();
-          if (auto) timersRef.current.push(window.setTimeout(() => record(), 900) as unknown as number);
+          // read the ref, not the captured value: the closure that schedules the next
+          // take was built when auto was last true, so checking `auto` here would keep
+          // the loop running forever after the box is unticked
+          if (!autoRef.current) advance();
+          if (autoRef.current) {
+            timersRef.current.push(window.setTimeout(() => record(), 900) as unknown as number);
+          }
         } catch (e) {
           setError(`Not saved: ${e instanceof Error ? e.message : String(e)}`);
           setPhase("idle");
@@ -206,7 +213,7 @@ export default function Recorder() {
       timersRef.current.push(window.setTimeout(() => rec.stop(), CLIP_MS) as unknown as number);
     }, COUNTDOWN_MS);
     timersRef.current.push(begin as unknown as number);
-  }, [sign, phase, signer, auto, advance, store, refreshTakes]);
+  }, [sign, phase, signer, advance, store, refreshTakes]);
 
   const undo = useCallback(async () => {
     if (!sign || !takes.length) return;
@@ -301,7 +308,8 @@ export default function Recorder() {
         <span style={S.muted}>saving to {store?.label}</span>
         <div style={S.progress}><div style={{ ...S.progressFill, width: `${goal ? (done / goal) * 100 : 0}%` }} /></div>
         <label style={S.check}>
-          <input type="checkbox" checked={auto} onChange={(e) => setAuto(e.target.checked)} />
+          <input type="checkbox" checked={auto}
+                 onChange={(e) => { setAuto(e.target.checked); autoRef.current = e.target.checked; }} />
           keep going automatically
         </label>
       </header>
@@ -310,7 +318,7 @@ export default function Recorder() {
         <figure style={S.panel}>
           <figcaption style={S.capLabel}>Copy this</figcaption>
           {sign?.reference ? (
-            <video ref={refRef} src={`${API}${sign.reference}`} autoPlay loop muted playsInline style={S.video} />
+            <video ref={refRef} src={sign.reference} autoPlay loop muted playsInline style={S.video} />
           ) : (
             <div style={{ ...S.video, ...S.noRef }}>no reference clip for this sign</div>
           )}

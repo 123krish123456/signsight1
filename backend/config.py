@@ -58,7 +58,11 @@ class Settings(BaseSettings):
     mock_recognition: bool = False
 
     # --- paths ---
-    vocab_pack: Path = ROOT / "backend" / "vocab" / "isl_v1.json"
+    # The shipped vocabulary. isl_v1 is the specification's original 50, which the
+    # available corpus covered 3 of; isl_v2_words is the 24 the data actually supports
+    # and what the model, the recorder and the docs all use. Leaving the default on v1
+    # meant the recorder offered 24 signs the backend would reject 20 of.
+    vocab_pack: Path = ROOT / "backend" / "vocab" / "isl_v2_words.json"
     model_path: Path = ROOT / "ml" / "models" / "signsight_v1.onnx"
     db_path: Path = ROOT / "signsight.db"
 
