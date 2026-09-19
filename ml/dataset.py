@@ -134,20 +134,46 @@ def jitter(seq: np.ndarray, rng: np.random.Generator, sigma: float = 0.01) -> np
     return out
 
 
+def rotate(seq: np.ndarray, radians: float) -> np.ndarray:
+    """Rotate every landmark in the x-y plane about the shoulder midpoint.
+
+    Normalisation makes the features invariant to how far away and how far to the side
+    the signer is, but NOT to camera angle — the spec calls that out as a limitation.
+    A signer leaning, or a laptop lid tilted back, rotates the whole skeleton and the
+    model has never seen that. Coordinates are already centred on the shoulder midpoint,
+    so a plain rotation about the origin is the right transform.
+
+    z is left alone: it is a depth estimate in a different, noisier frame of reference,
+    and rotating it against x/y would fabricate geometry rather than simulate a tilt.
+    """
+    c, s = np.cos(radians), np.sin(radians)
+    out = seq.copy()
+    x = out[:, 0::3].copy()
+    y = out[:, 1::3].copy()
+    out[:, 0::3] = c * x - s * y
+    out[:, 1::3] = s * x + c * y
+    # an all-zero frame means "nothing detected" and must stay exactly zero
+    out[~np.any(seq != 0, axis=1)] = 0.0
+    return out
+
+
 def augment(
     seq: np.ndarray,
     gloss: str,
     pack: VocabPack,
     rng: np.random.Generator,
+    strength: float = 1.0,
 ) -> np.ndarray:
     """The PRD §4.4 stack. Mirroring is skipped for signs whose meaning depends on
     handedness — the vocab pack's `mirror_safe` flag decides, not this code."""
     mirror_safe = {e.gloss: e.mirror_safe for e in pack.entries}
-    seq = time_warp(seq, rng)
+    seq = time_warp(seq, rng, max_pct=strength * 0.15)
     if mirror_safe.get(gloss, False) and rng.random() < 0.5:
         seq = mirror(seq)
-    seq = jitter(seq, rng)
-    seq = frame_dropout(seq, rng)
+    if strength > 1.0 or rng.random() < 0.5:
+        seq = rotate(seq, np.deg2rad(rng.uniform(-12, 12) * strength))
+    seq = jitter(seq, rng, sigma=0.01 * strength)
+    seq = frame_dropout(seq, rng, p=0.10 * strength)
     return seq.astype(np.float32)
 
 
@@ -157,6 +183,7 @@ def augmented_batches(
     pack: VocabPack,
     batch_size: int,
     seed: int = 0,
+    strength: float = 1.0,
 ):
     """Infinite shuffled generator of augmented batches, for model.fit()."""
     rng = np.random.default_rng(seed)
@@ -166,7 +193,7 @@ def augmented_batches(
         order = rng.permutation(n)
         for i in range(0, n - batch_size + 1, batch_size):
             pick = order[i : i + batch_size]
-            batch = np.stack([augment(x[j], labels[y[j]], pack, rng) for j in pick])
+            batch = np.stack([augment(x[j], labels[y[j]], pack, rng, strength) for j in pick])
             if settings.use_velocity_features:
                 batch = np.stack([with_velocity(b) for b in batch]).astype(np.float32)
             yield batch, y[pick]
