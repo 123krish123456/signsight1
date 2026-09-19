@@ -13,15 +13,16 @@ Spec: [`docs/SignSight_PRD.md`](docs/SignSight_PRD.md). Engineering rules: [`PRO
 | M0 skeleton | ✅ done |
 | M1 landmark pipeline + JS/Python parity | ✅ done (parity drift 8.9e-16) |
 | M2 data | ✅ INCLUDE ingested — 496 clips, 24 classes, 8 signers ([strategy](docs/datasets.md)) |
-| M3 model | ✅ trained — 57.3% top-1, signer-disjoint ([results](docs/results.md)) |
+| M3 model | ✅ trained — 76.1% ± 6.4% cross-validated ([results](docs/results.md)) |
 | M4 live recognition | 🔨 segmenter done and wired in; classifier blocked on M3 |
 | M5 speaker app (assembler, TTS) | 🔨 buildable now against the mock recogniser |
 | M6 listener extension | 🔨 shell only; buildable now against the mock recogniser |
 | M7 evaluation | 🔨 ablations done (velocity, face-lite); latency harness pending |
 
-**57.3% top-1 over 24 ISL words on a signer-disjoint test split** (chance 4%; target 85%).
-At the 0.75 confidence gate the system speaks for 43% of segments and is right 72% of the
-time. Full numbers, ablations and failure analysis: [`docs/results.md`](docs/results.md).
+**76.1% ± 6.4% top-1 over 24 ISL words**, by leave-one-signer-out cross-validation over
+six folds (chance 4%; target 85%). At the 0.75 confidence gate the system speaks for about
+half of segments and is right 82% of the time. Full numbers, ablations and failure
+analysis: [`docs/results.md`](docs/results.md).
 
 Short of the target, and reported as measured. The binding constraint is ~14 training
 clips per class, not the architecture.

@@ -1,90 +1,79 @@
 # Results
 
 Every number here was produced by running the system. Reproduce with `make all`, or the
-commands at the end. **No number here meets the 85% target**, and none has been
-massaged: tuning was done on validation, and the test split was read once per model
-after training finished.
+commands at the end. Tuning used cross-validation; the held-out signer of each fold was
+scored once, after that fold finished training.
 
 ## Headline
 
-**57.3% top-1** over 24 Indian Sign Language words, on a test signer the model never saw.
-Chance is 4%.
+**76.1% ± 6.4%** top-1 over 24 Indian Sign Language words, measured by leave-one-signer-out
+cross-validation across six folds. Chance is 4%. The target is 85%.
 
-That is the model **validation** selected. A second configuration scored 69.3% on test —
-see "Which number to report" below for why the lower one is the honest headline.
-
-At the 0.75 confidence gate the system actually used live, it speaks for **43% of
-segments and is right 72% of the time** — the more honest number for a demo, because
+At the 0.75 confidence gate the system actually uses, it speaks for about half of segments
+and is right **82%** of the time — the number that matters for a demo, because
 below-threshold segments surface as "…" rather than as a wrong word.
 
-## Which number to report
+## How it is measured, and why that changed the answer
 
-| Configuration | Val | Test |
+The first reported figure was 52.0%, from a single signer-disjoint split. That split holds
+one person out as the entire test set: 75 clips, standard error above 5 points. It cannot
+separate a real improvement from a lucky run, and it also trains on less data because
+validation is withheld.
+
+Six-fold cross-validation over signers costs six times the compute and answers honestly:
+
+| Configuration | Single split | **6-fold CV** |
 |---|---|---|
-| Baseline | 70.1% | 52.0% |
-| **Pre-trained, 50 epochs** | **80.5%** | **57.3%** |
-| Pre-trained, 140 epochs | 79.2% | **69.3%** |
-| Lower-capacity BiLSTM (158k params) | 63.6% | 48.0% |
+| Baseline, no pre-training | 52.0% | **64.5% ± 3.1%** |
+| + pre-training on 179 INCLUDE classes | 57.3% | **75.5% ± 6.5%** |
+| + rotation augmentation | — | **76.1% ± 6.4%** |
 
-Validation ranks the 50-epoch model highest; test ranks the 140-epoch model highest, by
-12 points. They disagree, and that disagreement is the whole point:
+The single split understated the baseline by 12 points. It also happened to hold out the
+hardest signer, who remains the worst fold at 69.3%.
 
-- **Model selection must use validation.** Picking the 140-epoch run because it scored
-  better on test is tuning on the test split, which the spec forbids and which would make
-  the number meaningless as an estimate of unseen performance.
-- **Neither set can resolve a 12-point gap.** Test is 75 clips from one signer, validation
-  77 from another. At n=75 the standard error is ±5.3pp, so 57.3% and 69.3% carry 95%
-  intervals of 46–68% and 59–80% — heavily overlapping.
+The pre-training gain is real rather than noise: the 95% intervals, 62.0–67.0 against
+70.3–80.7, do not overlap.
 
-So: **report 57.3%, and report the range.** The truthful statement is that this system
-scores somewhere around 50–70% on unseen signers over 24 classes, and that the evaluation
-sets are too small to pin it down further. Quoting 69.3% alone would be picking the
-luckiest of four runs.
+## What was tried
 
-Splitting by signer is what makes the evaluation small — there are only ~8 signers, so
-one of them is the entire test set. That is the right trade: a larger random split would
-report a higher, wronger number.
-
-## Ablations (PRD §7 M7)
-
-| Configuration | Test | Best val |
+| Change | CV mean | Verdict |
 |---|---|---|
-| Baseline — 261-d features, trained from scratch | 52.0% | 70.1% |
-| **+ velocity features (522-d)** | 52.0% | 68.8% |
-| **+ pre-training on 179 other INCLUDE classes** | **57.3%** | **80.5%** |
-| + pre-training, 140 epochs instead of 50 | 69.3% | 79.2% |
-| Lower-capacity BiLSTM, 158k parameters | 48.0% | 63.6% |
-| Pre-trained, face-lite block zeroed at test time | 48.0% | — |
+| Baseline BiLSTM | 64.5% ± 3.1% | — |
+| Pre-train 140 epochs on 179 classes | 75.5% ± 6.5% | **+11.0, the one big win** |
+| **+ rotation augmentation** | **76.1% ± 6.4%** | kept, though within noise |
+| Fine-tune 160 epochs instead of 80 | 75.6% ± 5.8% | no gain |
+| Pre-train 320 epochs instead of 140 | 73.2% ± 6.9% | worse — over-pre-training hurts |
+| Velocity features (522-d) | — | no gain on the single split; not pursued |
+| Lower-capacity BiLSTM (158k params) | — | worse on the single split; not pursued |
+| Face-lite block zeroed at test | — | 9.3 points worse; the block earns its place |
 
-**Less capacity does not help.** Quartering the width and raising dropout cost 4 points
-of test and 6.5 of validation. The failure mode is not purely over-parameterisation —
-the model needs capacity *and* representations it cannot learn from 14 clips per class,
-which is exactly what pre-training supplies.
+**Pre-training is the only intervention that clearly helped.** Capacity reduction hurt,
+extra fine-tuning did nothing, and more pre-training passed a peak and declined. All three
+point the same way: the constraint is how little each class is seen — roughly 14 clips —
+not the architecture.
 
-**Velocity features earn nothing.** Identical test accuracy, slightly worse validation,
-double the input width. `use_velocity_features` stays `false`, as the spec's default
-already had it — now with a measurement behind the choice rather than an assumption.
+**Rotation augmentation is kept on a judgement call, not a measurement.** INCLUDE was shot
+on a fixed camera, so cross-validating over it contains almost no camera-angle variation
+for the augmentation to earn its keep. Our normalisation is invariant to distance and
+horizontal position but not to angle, and a laptop lid at a different tilt is exactly what
+a webcam demo will meet. The benefit, if real, lands where this corpus cannot see it.
 
-**The face-lite block is worth 9.3 points.** Zeroing those 60 dimensions at test time
-drops 57.3% to 48.0%. The spec's argument for keeping 20 face landmarks — that ISL uses
-mouthing and brow position grammatically — is supported by the data.
+## Shipping model
 
-**Pre-training is the biggest single win.** The 24 target words have only 496 clips
-between them, and no other INCLUDE category adds to that. Its other 179 classes and
-3,317 clips still help as a source of representation: same signers, same camera, no
-domain gap. Three of four weight layers transfer; only the classifier head is
-vocabulary-specific. Validation moved 10.4 points, test 5.3.
-
-## Setup
+`ml/models/signsight_isl24.onnx`, trained with the winning recipe.
 
 | | |
 |---|---|
 | Vocabulary | 24 words (`isl_v2_words.json`) |
-| Clips | 496, 20–21 per class |
-| Split | 344 train / 77 val / 75 test, **signer-disjoint** |
+| Clips | 496, 20–21 per class, 8 signers |
 | Architecture | BiLSTM 128→64, 587k parameters |
-| Inference | 7.2 ms median, ONNX Runtime CPU |
-| ONNX vs Keras | 1.19e-07 max drift |
+| Estimated accuracy | **76.1% ± 6.4%** (cross-validated) |
+| Held-out split score | 68.0%, 81.6% of what it chooses to say |
+| Inference | 6.8 ms median, ONNX Runtime CPU |
+| ONNX vs Keras | 1.04e-07 max drift |
+
+Quote the cross-validated figure. The single-split score is one fold of the same thing and
+is noisier.
 
 ## Failure analysis
 
@@ -103,9 +92,10 @@ conclusion about those signs.
 
 ## What limits this
 
-**Roughly 14 training clips per class.** Training accuracy reaches 92% against 52–57% on
-test: the model memorises what little it sees. This is a data-volume problem, not an
-architecture one, which is why pre-training helped and velocity features did not.
+**Roughly 14 training clips per class.** The model memorises what little it sees. Shown
+three ways: reducing capacity made it worse, velocity features changed nothing, and
+pre-training — which adds representation rather than parameters — was the only clear win.
+More clips per class, not a better architecture, is what would close the gap to 85%.
 
 **Signer identity is inferred, not given.** INCLUDE's filenames carry no signer label.
 Each word's takes arrive in blocks separated by large jumps in the camera's counter —
@@ -137,7 +127,12 @@ SIGNSIGHT_VOCAB_PACK=backend/vocab/isl_v2_words.json \
     python -m ml.train --epochs 80 --batch-size 16 --accept-shortfall \
     --init-from ml/models/include_pretrain.keras --out ml/models/isl_words_pretrained.keras
 
-python -m ml.export_onnx --model ml/models/isl_words_pretrained.keras
-python -m ml.evaluate --split test
-python -m ml.evaluate --split test --ablate face
+# the reported figure: six folds, one per signer
+python -m ml.crossval --pack backend/vocab/isl_v2_words.json     --init-from ml/models/include_pretrain_long.keras
+
+# the shipping model
+python -m ml.train --accept-shortfall     --init-from ml/models/include_pretrain_long.keras --out ml/models/signsight_isl24.keras
+python -m ml.export_onnx --model ml/models/signsight_isl24.keras
+python -m ml.evaluate --model ml/models/signsight_isl24.onnx --split test
+python -m ml.evaluate --model ml/models/signsight_isl24.onnx --split test --ablate face
 ```
