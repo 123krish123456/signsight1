@@ -41,7 +41,24 @@ HAPPY  SICK  HEALTHY  BIG  SMALL  COLD
 HOUSE  SCHOOL
 ```
 
-## How to do it
+## How to do it — in the browser
+
+No Python needed. Start both servers, then open **http://127.0.0.1:5173/record** and
+click your own tab.
+
+```bash
+uvicorn backend.main:app --reload     # terminal 1
+cd app && npm run dev                 # terminal 2
+```
+
+The tabs exist so nobody records half a session under a different spelling of their name
+— the signer id is the evaluation's split key, and a typo invents a phantom person.
+
+Press **Record** or the spacebar: 1.5 s countdown, 3 s clip, saved automatically, then it
+moves to the sign you have fewest of. `u` undoes, `n` skips. Tick **keep going
+automatically** to record continuously.
+
+## Or on the desktop
 
 ```bash
 pip install -e ".[ml]"

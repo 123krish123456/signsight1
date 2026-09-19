@@ -15,8 +15,10 @@ from contextlib import asynccontextmanager
 import numpy as np
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
-from backend.config import settings
+from backend.capture import REFERENCE_DIR, router as capture_router
+from backend.config import ROOT, settings
 from backend.pipeline.buffer import Frame, FrameBuffer
 from backend.mock import MockRecogniser
 from backend.pipeline.segmenter import Segmenter
@@ -45,6 +47,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+app.include_router(capture_router)
+# Reference clips for the browser recorder. Versioned in the repo so a fresh clone
+# can record without the 57 GB corpus.
+if REFERENCE_DIR.exists():
+    app.mount("/reference", StaticFiles(directory=REFERENCE_DIR), name="reference")
 
 
 @app.get("/health")
