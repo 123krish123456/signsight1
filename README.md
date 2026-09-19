@@ -72,7 +72,24 @@ python -m backend.pipeline.buffer        # ring-buffer self-check
 | **Krish** | Backend inference path — everything between a landmark frame and a gloss | `backend/pipeline/`, `backend/storage/` |
 | **Arpit** | Both front ends — speaker app and listener extension | `app/src/`, `extension/` |
 
-### Step 1 — load the public datasets (blocks everything else)
+### Step 1 — each of us records the 24 signs
+
+Not for volume: another doubling of clips is worth 1–2 points. Accuracy swings **15.7
+points** depending on which signer is held out, so three new people is the highest-value
+thing we can add — and the only way to find out how the model behaves on our own cameras.
+
+**All three of us record all 24 signs**, 10 clips each, about 45 minutes. Splitting the
+vocabulary between us would make signer-disjoint evaluation impossible. Full instructions,
+including how to sign them: [`docs/recording.md`](docs/recording.md).
+
+```bash
+python -m ml.data.record --signer <yourname> --target 10
+```
+
+The recorder plays the reference sign from INCLUDE beside your camera, so you copy it
+rather than invent it.
+
+### Step 1b — load the public datasets
 
 Self-recording is not happening, so v1 trains on public data. The strategy, the
 datasets surveyed, and the compromises that must reach the report are in
