@@ -49,7 +49,9 @@ export default function App() {
     setError("");
     try {
       const media = await navigator.mediaDevices.getUserMedia({
-        video: { width: 640, height: 480, frameRate: 30 },
+        // See Recorder.tsx: hand detection falls off a cliff below 720p, and the
+        // live path has to match the resolution the training clips were captured at.
+        video: { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: 30 },
       });
       const video = videoRef.current!;
       video.srcObject = media;

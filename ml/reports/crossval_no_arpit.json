@@ -1,0 +1,19 @@
+{
+  "pack": "isl_v2_words",
+  "arch": "bilstm",
+  "epochs": 80,
+  "init_from": "include_pretrain_long.keras",
+  "per_signer": {
+    "krish": 0.3891,
+    "signer00": 0.8023,
+    "signer01": 0.8171,
+    "signer02": 0.7922,
+    "signer03": 0.6933,
+    "signer04": 0.9146,
+    "signer05": 0.8
+  },
+  "mean": 0.7441,
+  "sd": 0.1692,
+  "train_fraction": 1.0,
+  "train_clips_per_fold": 680
+}

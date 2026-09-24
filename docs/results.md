@@ -6,12 +6,69 @@ scored once, after that fold finished training.
 
 ## Headline
 
-**76.1% ± 6.4%** top-1 over 24 Indian Sign Language words, measured by leave-one-signer-out
-cross-validation across six folds. Chance is 4%. The target is 85%.
+**76.1% ± 7.2%** top-1 over 24 Indian Sign Language words, measured by leave-one-signer-out
+cross-validation across eight folds — 1,001 clips from ten people. Chance is 4%. The
+target is 85%.
 
 At the 0.75 confidence gate the system actually uses, it speaks for about half of segments
 and is right **82%** of the time — the number that matters for a demo, because
 below-threshold segments surface as "…" rather than as a wrong word.
+
+That mean hides the finding below, which matters more than the mean: **the two folds
+recorded on our own laptop webcams only work because there are two of them.**
+
+## The camera the clip was shot on decides everything
+
+Eight of the ten signers come from the INCLUDE corpus: 1920x1080, studio lighting, a
+tripod. Two are ours: 640x480 laptop webcams, at a desk. Holding out each of ours in turn,
+and then removing the other one from training:
+
+| Held out | Other webcam signer in training | Only studio signers in training |
+|---|---|---|
+| krish (webcam) | **68.2%** | **38.9%** |
+| arpit (webcam) | **71.3%** | **29.4%** |
+| the six studio signers, mean | 78.2% | 79.2 – 80.3% |
+
+Removing one webcam signer costs the other **29 and 42 points**. Removing the same clips
+costs the studio folds nothing — if anything they improve slightly, because 505 poorly
+tracked clips dilute that domain.
+
+For scale, every other lever measured on this project is worth single digits: pre-training
+on 179 extra classes bought 11 points, doubling the clip count 2.9, rotation augmentation
+0.6. **Domain match is worth 30 to 40.** Eight studio signers at 1080p do not teach the
+model to read a person on a laptop; one other person on a laptop does.
+
+The practical consequence is blunt. Anyone who will sign at the demo must have recorded,
+and must have recorded on the machine they will demo on. This is not about the model
+having seen more people — it is about it having seen that kind of picture at all.
+
+### Why our own footage is weak, and what was done about it
+
+`python -m ml.data.precompute --report` gives the tracking rate per signer:
+
+| signer | clips | frames with a hand tracked |
+|---|---|---|
+| the eight INCLUDE signers | 496 | 86 – 92% |
+| krish | 240 | 61% |
+| arpit | 265 | 35% |
+
+The cause was measured, not guessed: for **92% of arpit's and 95% of krish's** undetected
+hands, the pose model still reported a wrist, and that wrist was at or past the edge of
+the frame. They sat at ordinary laptop distance, so the shot is head-and-shoulders and
+their hands leave the bottom of the picture as they sign. Not lighting, not motion blur,
+not resolution.
+
+Two bugs were found alongside it and fixed, neither of which changed accuracy measurably:
+
+- `extract_video` decimated every clip by a fixed stride of 2, correct for a 25 FPS corpus
+  but arpit recorded at 15 FPS, so half of every one of his clips was discarded. The
+  stride now derives from the clip's own frame rate.
+- MediaRecorder writes WebM that reports 1000 FPS for a three-second clip, which fed
+  MediaPipe's video tracker timestamps one millisecond apart. Implausible metadata is now
+  rejected in favour of a sane default.
+
+The recorder now draws the safe area on the camera preview, shows exactly what it
+captures rather than a cropped version of it, and asks for 720p instead of VGA.
 
 ## How it is measured, and why that changed the answer
 
@@ -144,8 +201,12 @@ Each word's takes arrive in blocks separated by large jumps in the camera's coun
 so the Nth block of every word is taken to be the same person. It is checkable and it is
 consistent, but it is a heuristic, and the split is only as trustworthy as it is.
 
-**Nothing was recorded in our own conditions.** Every clip comes from INCLUDE's camera,
-lighting and framing. Live accuracy on a laptop webcam will be lower than these numbers.
+**Only two people have recorded in our own conditions, and both framed it badly.** Hands
+are tracked in 35% and 61% of their frames against 86-92% for the studio corpus, because
+their hands leave the bottom of the shot. Their folds, 71.3% and 68.2%, are the two
+lowest of the eight, and they only reach that because each supports the other — see the
+domain-transfer table above. Live accuracy for a third person on a laptop is unmeasured
+and, on this evidence, would be far lower until they too have recorded.
 
 **Fingerspelling is untrained.** The 26 letters need alphabet image datasets, which are
 not yet ingested. Any letter accuracy will additionally not be signer-disjoint, because
@@ -168,8 +229,21 @@ SIGNSIGHT_VOCAB_PACK=backend/vocab/isl_v2_words.json \
     python -m ml.train --epochs 80 --batch-size 16 --accept-shortfall \
     --init-from ml/models/include_pretrain.keras --out ml/models/isl_words_pretrained.keras
 
-# the reported figure: six folds, one per signer
-python -m ml.crossval --pack backend/vocab/isl_v2_words.json     --init-from ml/models/include_pretrain_long.keras
+# our own clips, recorded in the browser and handed over as folders
+python -m ml.data.ingest videos ml/data/clips --source self \
+    --signer-pattern '^([^/]+)/' --no-letters
+python -m ml.data.precompute --workers 6
+python -m ml.data.precompute --report     # tracking rate per signer — check this first
+
+# the reported figure: eight folds, one per signer
+python -m ml.crossval --pack backend/vocab/isl_v2_words.json \
+    --init-from ml/models/include_pretrain_long.keras
+
+# the domain-transfer result: drop one webcam signer, watch the other collapse
+python -m ml.crossval --pack backend/vocab/isl_v2_words.json \
+    --init-from ml/models/include_pretrain_long.keras --exclude arpit --tag no_arpit
+python -m ml.crossval --pack backend/vocab/isl_v2_words.json \
+    --init-from ml/models/include_pretrain_long.keras --exclude krish --tag no_krish
 
 # the shipping model
 python -m ml.train --accept-shortfall     --init-from ml/models/include_pretrain_long.keras --out ml/models/signsight_isl24.keras

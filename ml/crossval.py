@@ -113,10 +113,15 @@ def main() -> int:
                          "Sweeping it draws a learning curve, which is what answers "
                          "'would more data help?' with evidence instead of intuition.")
     ap.add_argument("--folds", type=int, default=None, help="use only the first N folds")
+    ap.add_argument("--exclude", action="append", default=[], metavar="SIGNER",
+                    help="drop a signer from training and from the folds. Re-running with "
+                         "one person excluded is how you find out whether their clips are "
+                         "helping — badly framed footage can cost more than it adds.")
     args = ap.parse_args()
 
     pack = load_pack(args.pack or settings.vocab_pack)
-    clips = [c for c in load_manifest() if c.gloss in {e.gloss for e in pack.entries}]
+    clips = [c for c in load_manifest() if c.gloss in {e.gloss for e in pack.entries}
+             and c.signer not in set(args.exclude)]
     counts = Counter(c.signer for c in clips)
     signers = sorted(s for s, n in counts.items() if n >= args.min_clips)
     if len(signers) < 3:

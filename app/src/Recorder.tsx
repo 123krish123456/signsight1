@@ -92,7 +92,11 @@ export default function Recorder() {
     }
     try {
       const media = await navigator.mediaDevices.getUserMedia({
-        video: { width: 640, height: 480 }, audio: false,
+        // 720p, not VGA. The public corpus we train against is 1080p and MediaPipe
+        // finds a hand in ~90% of its frames; at 640x480 our own clips managed 34-60%,
+        // because the hand ROI is derived from the pose and a small hand is a few dozen
+        // pixels. `ideal` so a webcam that cannot do it still works.
+        video: { width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false,
       });
       streamRef.current = media;
       localStorage.setItem("signsight.signer", who);
@@ -238,7 +242,8 @@ export default function Recorder() {
         <h1 style={S.h1}>SignSight — record</h1>
         <p style={S.lede}>
           Your camera on one side, the sign to copy on the other. Roughly 45 minutes for
-          all 24 signs.
+          all 24 signs. Push your chair back first — your waist should be visible, or your
+          hands will leave the frame and the clip teaches the model nothing.
         </p>
         <div style={S.tabs}>
           {TEAM.map((name) => (
@@ -327,7 +332,14 @@ export default function Recorder() {
         <figure style={S.panel}>
           <figcaption style={S.capLabel}>You</figcaption>
           <div style={{ position: "relative" }}>
-            <video ref={camRef} muted playsInline style={{ ...S.video, transform: "scaleX(-1)" }} />
+            <video ref={camRef} muted playsInline style={{ ...S.camVideo, transform: "scaleX(-1)" }} />
+            {/* The first 505 clips lost most of their hand tracking to one mistake: sitting
+                close enough that hands left the bottom of the frame. 92% of every frame
+                MediaPipe could not find a hand in had the wrist at or past an edge. Nobody
+                notices while recording, so the safe area is drawn on the preview. */}
+            <div style={S.guide} aria-hidden>
+              <span style={S.guideTag}>keep both hands inside</span>
+            </div>
             {phase === "counting" && <div style={S.overlay}>{countdown || "go"}</div>}
             {phase === "recording" && <div style={{ ...S.overlay, color: "#f87171" }}>● REC</div>}
             {phase === "saving" && <div style={S.overlay}>saving…</div>}
@@ -387,8 +399,11 @@ export default function Recorder() {
       </details>
 
       <p style={S.note}>
-        Mirror what the reference does — your view is flipped, so if they use their right
-        hand, use yours. Change room or lighting halfway through: variety is the point.
+        <b>Sit back until your waist is in frame.</b> In the first 505 clips two thirds of
+        all hand tracking was lost to hands dropping out of the bottom of the picture, and
+        no amount of training fixes that. Then: mirror what the reference does — your view
+        is flipped, so if they use their right hand, use yours. Change room or lighting
+        halfway through: variety is the point.
       </p>
     </main>
   );
@@ -429,6 +444,14 @@ const S: Record<string, React.CSSProperties> = {
   panel: { margin: 0, display: "flex", flexDirection: "column", gap: 6 },
   capLabel: { fontSize: 12, textTransform: "uppercase", letterSpacing: 1, color: "#64748b" },
   video: { width: "100%", aspectRatio: "4/3", objectFit: "cover", background: "#020617", borderRadius: 12 },
+  // No fixed ratio and no cropping: the preview has to show exactly what is recorded,
+  // or the framing guide below is drawn over an edge that is not the real one.
+  camVideo: { width: "100%", display: "block", objectFit: "contain",
+              background: "#020617", borderRadius: 12 },
+  guide: { position: "absolute", inset: "6% 8% 4%", border: "2px dashed #38bdf8aa",
+           borderRadius: 10, pointerEvents: "none" },
+  guideTag: { position: "absolute", left: 8, bottom: 6, fontSize: 11, letterSpacing: 0.5,
+              color: "#38bdf8", background: "#020617cc", padding: "2px 6px", borderRadius: 4 },
   noRef: { display: "grid", placeItems: "center", color: "#64748b", fontSize: 13 },
   overlay: { position: "absolute", inset: 0, display: "grid", placeItems: "center",
              fontSize: 64, fontWeight: 700, color: "#e2e8f0", textShadow: "0 2px 12px #000" },

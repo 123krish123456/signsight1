@@ -169,19 +169,35 @@ def _landmarker(running_mode):
     ), mp
 
 
-def extract_video(path: str, every_nth: int = 2) -> np.ndarray:
+def source_fps(reported: float) -> float:
+    """The clip's frame rate, with implausible metadata rejected.
+
+    WebM written by MediaRecorder is often variable-rate and reports nonsense here —
+    1000 FPS over 2912 frames for a three-second clip that actually holds 88. Anything
+    outside a range a camera could produce is not worth trusting, so fall back to the
+    commonest capture rate rather than deriving a stride from a fiction.
+    """
+    return reported if 5.0 <= reported <= 120.0 else 30.0
+
+
+def extract_video(path: str, every_nth: int | None = None) -> np.ndarray:
     """Video file → (T,261). Needs the `ml` extra (mediapipe, opencv).
 
-    `every_nth=2` decimates 30 FPS source clips to the 15 FPS the clients run at
-    (PRD §4.1) so training features match inference features. Pass 1 for footage that
-    is already at or below 15 FPS, or you throw away half of a short clip.
+    Frames are decimated to the 15 FPS the clients run at (PRD §4.1) so that training
+    features match inference features. The stride is derived from the clip's own frame
+    rate: a fixed one is wrong for any corpus that is not 30 FPS, and silently halved
+    every clip our own 15 FPS recorder produced. Pass `every_nth` only to override.
     """
     import cv2  # noqa: PLC0415 — heavy, import only when actually extracting
     from mediapipe.tasks.python import vision  # noqa: PLC0415
 
+    from backend.config import settings  # noqa: PLC0415
+
     landmarker, mp = _landmarker(vision.RunningMode.VIDEO)
     cap = cv2.VideoCapture(str(path))
-    fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
+    fps = source_fps(cap.get(cv2.CAP_PROP_FPS))
+    if every_nth is None:
+        every_nth = max(1, round(fps / settings.target_fps))
     frames, i = [], 0
     try:
         while True:
@@ -283,4 +299,8 @@ if __name__ == "__main__":
 
     assert resample(np.arange(20 * FEATURE_DIM).reshape(20, FEATURE_DIM), 45).shape == (45, FEATURE_DIM)
     assert with_velocity(np.zeros((5, FEATURE_DIM))).shape == (5, 522)
+
+    assert source_fps(25.0) == 25.0 and source_fps(15.1) == 15.1
+    assert source_fps(1000.0) == 30.0, "MediaRecorder's bogus rate must not set the stride"
+    assert source_fps(0.0) == 30.0
     print("extract.py self-check ok")

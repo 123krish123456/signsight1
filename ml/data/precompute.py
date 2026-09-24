@@ -48,11 +48,46 @@ def one(clip: str) -> tuple[str, int, float, str]:
     return clip, len(seq), hands, ""
 
 
+def report(clips: list[Clip]) -> int:
+    """Hand and face tracking rate per signer.
+
+    The one number that says whether a batch of footage is worth anything. Arpit's first
+    265 clips averaged 34% against the public corpus's 90%, because his hands left the
+    bottom of the frame — invisible in every other check, and fatal to the fold.
+    """
+    from collections import defaultdict
+
+    from ml.features.extract import FEATURE_DIM, HAND_DIM, POSE_DIM
+
+    by: dict[str, list[tuple[float, float, int]]] = defaultdict(list)
+    for c in clips:
+        seq = features_for_clip(c.clip)
+        if len(seq) == 0:
+            by[c.signer].append((0.0, 0.0, 0))
+            continue
+        hands = np.any(seq[:, POSE_DIM : POSE_DIM + 2 * HAND_DIM] != 0, axis=1)
+        face = np.any(seq[:, POSE_DIM + 2 * HAND_DIM : FEATURE_DIM] != 0, axis=1)
+        by[c.signer].append((float(hands.mean()), float(face.mean()), len(seq)))
+
+    print(f"{'signer':<12} {'clips':>6} {'hands':>7} {'face':>7} {'frames':>7}")
+    for signer in sorted(by):
+        rows = by[signer]
+        hands = float(np.mean([r[0] for r in rows]))
+        flag = "  <- suspect" if hands < 0.70 else ""
+        print(f"{signer:<12} {len(rows):>6} {hands:>6.0%} "
+              f"{np.mean([r[1] for r in rows]):>6.0%} "
+              f"{np.mean([r[2] for r in rows]):>7.0f}{flag}")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--split", default=None, choices=["train", "val", "test"])
+    ap.add_argument("--report", action="store_true",
+                    help="summarise the cache per signer instead of extracting. A signer "
+                         "well below the others is a recording problem, not a hard signer.")
     args = ap.parse_args()
 
     clips: list[Clip] = load()
@@ -60,6 +95,9 @@ def main() -> int:
         clips = [c for c in clips if c.split == args.split]
     if not clips:
         raise SystemExit("manifest is empty — run `python -m ml.data.prepare` first")
+
+    if args.report:
+        return report(clips)
 
     CACHE.mkdir(parents=True, exist_ok=True)
     todo = [c.clip for c in clips if not _cache_key(c.clip).exists()]

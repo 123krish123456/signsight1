@@ -14,10 +14,15 @@ Minor project. Specification: [`docs/SignSight_PRD.md`](docs/SignSight_PRD.md).
 
 ## Where it stands
 
-**76.1% ± 6.4%** top-1 over 24 ISL signs, measured by leave-one-signer-out
-cross-validation — that is, tested on people the model has never seen. Chance is 4%; the
-project's target is 85%. At the confidence threshold the system actually uses, **82% of
-what it chooses to say is correct.**
+**76.1% ± 7.2%** top-1 over 24 ISL signs, measured by leave-one-signer-out
+cross-validation over 1,001 clips from ten people — that is, tested on people the model
+has never seen. Chance is 4%; the project's target is 85%. At the confidence threshold the
+system actually uses, **82% of what it chooses to say is correct.**
+
+The mean is the least interesting number we have. **A signer recorded on a laptop webcam
+scores 29-39% if the training set contains only studio footage, and 68-71% if it contains
+one other laptop webcam.** Domain match is worth 30-40 points; every other change measured
+on this project is worth single digits. Whoever signs at the demo has to have recorded.
 
 Full numbers, ablations and failure analysis: [`docs/results.md`](docs/results.md).
 
@@ -25,7 +30,7 @@ Full numbers, ablations and failure analysis: [`docs/results.md`](docs/results.m
 |---|---|
 | M0 Skeleton | done — backend, app, extension shell, CI |
 | M1 Landmark pipeline | done — browser and Python agree to 8.9e-16, 15 FPS sustained |
-| M2 Data | done — 496 clips, 24 signs, 8 signers, from the public INCLUDE corpus |
+| M2 Data | done — 1,001 clips, 24 signs, 10 signers: the INCLUDE corpus plus our own |
 | M3 Model | done — 76.1%, exported to ONNX at 7 ms |
 | M4 Live recognition | **half** — sign boundaries detected live; the classifier is not yet connected |
 | M5 Speaker app | not started — transcript, speech, reference sheet |
@@ -100,13 +105,14 @@ demo** — it does not look at the camera.
 
 ### Why
 
-Accuracy swings **15.7 points** depending on which person the model is tested on, against
-2.9 points for doubling the number of clips. The model has only seen eight people, so it
-cannot yet tell what varies between signers from what is the sign itself.
+Two of us have recorded. Holding each of them out, the model reads them at 68-71% — but
+take the *other* one's clips out of training and that drops to **29-39%**, because the
+remaining eight signers were all filmed at 1080p on a tripod and the model has then never
+seen what a laptop webcam looks like. Nothing else measured on this project moves accuracy
+by more than single digits.
 
-**More people is worth far more than more clips.** Recording also produces the first clips
-ever taken on our own cameras — everything so far comes from someone else's studio, so we
-have no idea yet how the system behaves on a laptop webcam in our own room.
+So this is not "more data would be nice". **If you are going to sign in front of the demo,
+your clips have to be in the training set**, recorded on the machine you will demo on.
 
 ### Who records what
 
@@ -114,13 +120,22 @@ have no idea yet how the system behaves on a laptop webcam in our own room.
 evaluation works by holding one person out, so a held-out person needs examples of every
 sign.
 
-| Who | Signs | Clips each | Time |
+| Who | Signs | Clips each | State |
 |---|---|---|---|
-| Eashan | all 24 | 10 | ~45 min |
-| Krish | all 24 | 10 | ~45 min |
-| Arpit | all 24 | 10 | ~45 min |
+| Krish | all 24 | 10 | done — 240 clips, but hands tracked in only 61% of frames |
+| Arpit | all 24 | 11-12 | done — 265 clips, hands tracked in only 35% of frames |
+| Eashan | all 24 | 10 | **outstanding** |
 
-That is 720 clips and takes the signer pool from 8 to 11.
+Krish's and Arpit's are usable but weak, for one avoidable reason: they sat at normal
+laptop distance, so their hands drop out of the bottom of the frame. 92% of every frame
+where the hand tracker failed had the wrist at or past an edge. The recorder now draws the
+safe area on the preview — **push your chair back until your waist is in shot.**
+
+Check any batch before trusting it:
+
+```bash
+python -m ml.data.precompute --report    # tracking rate per signer; below 70% is a problem
+```
 
 ### How — in the browser (Node only, no Python, no backend)
 
@@ -169,15 +184,17 @@ in the pipeline can detect it.
 ### After everyone has recorded
 
 ```bash
-python -m ml.data.manifest --assign --check    # should now show 11 signers
-python -m ml.data.precompute --workers 6       # ~6 minutes for 720 clips
+python -m ml.data.ingest videos ml/data/clips --source self \
+    --signer-pattern '^([^/]+)/' --no-letters
+python -m ml.data.manifest --assign --check
+python -m ml.data.precompute --workers 6       # ~4 minutes for 500 clips
+python -m ml.data.precompute --report          # tracking rate — check before training
 python -m ml.crossval --pack backend/vocab/isl_v2_words.json \
     --init-from ml/models/include_pretrain_long.keras
 ```
 
-Watch the three new folds especially. Those are the first measurements on our own cameras;
-if they come in well below the others, we have quantified the domain gap, which is a real
-finding rather than a failure.
+Read the webcam folds, not the mean. They are the only ones that predict what the demo
+will do.
 
 ---
 
@@ -274,8 +291,12 @@ during a demo. See [`.env.example`](.env.example).
 - **76.1% is short of the 85% target**, and a learning curve shows more clips of the same
   kind converge around 80%. More *signers* would help; more footage of the same eight
   would not.
+- **It does not transfer across cameras.** A laptop-webcam signer scores 29-39% against a
+  training set of studio footage alone. Two of us have recorded, so the system works for
+  the two of us; it has no claim to working for anyone else.
 - **Signer identity in the public corpus is inferred**, not labelled — recovered from the
   camera's file numbering. Consistent and checkable, but a heuristic.
-- **Nothing is trained on our own cameras yet**, so real-world accuracy is unmeasured.
+- **Our own footage is poorly framed** — hands tracked in 35% and 61% of frames against
+  86-92% for the studio corpus, because hands leave the bottom of the shot.
 - **Fingerspelling is untrained.** 26 of the 50 planned classes have no data.
 - Normalisation is invariant to distance and horizontal position, **not** to camera angle.
