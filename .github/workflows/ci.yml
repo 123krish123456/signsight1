@@ -38,6 +38,7 @@ jobs:
           python -m ml.features.extract
           python -m backend.pipeline.buffer
           python -m backend.mock
+          python -m backend.pipeline.assembler
 
       - name: Typecheck the app
         working-directory: app

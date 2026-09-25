@@ -10,6 +10,10 @@ dependencies = [
     "pydantic-settings>=2.6",
     "numpy>=1.26,<2.0",
     "onnxruntime>=1.18",
+    # backend/capture.py takes clip uploads as form data, and FastAPI refuses to build
+    # that route without this. It fails at import, not on the first request, so the whole
+    # app will not start -- which CI found only once a test imported backend.main.
+    "python-multipart>=0.0.9",
 ]
 
 [project.optional-dependencies]

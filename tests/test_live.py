@@ -104,16 +104,22 @@ def test_reset_clears_state(client):
 def test_the_classifier_is_actually_connected(client):
     """A real clip replayed through the socket must come back as its own gloss.
 
-    Skipped without the corpus. When it runs it is the only check that the model, the
-    feature spec and the wire format all agree — each is fine in isolation and the
-    system is useless if any pair disagrees.
+    Skipped without the corpus — the clips are gitignored, so on CI there is nothing to
+    replay. When it does run it is the only check that the model, the feature spec and
+    the wire format all agree: each is fine in isolation and the system is useless if
+    any pair disagrees.
     """
+    from backend.config import ROOT
     from ml.data.manifest import load
     from ml.dataset import features_for_clip
 
-    clips = [c for c in load() if c.signer.startswith("signer")]
+    # Only clips actually present on disk. The manifest is versioned but the footage is
+    # not, so without this the test tries to extract from files that are not there and
+    # errors instead of skipping.
+    clips = [c for c in load()
+             if c.signer.startswith("signer") and (ROOT / c.clip).exists()]
     if not clips:
-        pytest.skip("no ingested clips")
+        pytest.skip("no clips on disk — the corpus is not checked in")
 
     hits = 0
     tried = 0
