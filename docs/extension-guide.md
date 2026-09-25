@@ -28,29 +28,63 @@ Less is missing than it looks. Open `extension/` and you will find:
 So: finish one button, and write the piece in the middle that turns pixels into
 landmarks.
 
-### Get set up
+### Get set up, from nothing
+
+You need **Python 3.11 or newer** and **Node 22.18 or newer** (`python --version`,
+`node --version`). Windows, macOS and Linux all work.
 
 ```bash
-git fetch origin && git reset --hard origin/main   # history was rewritten; do this once
-cd app && npm install && npm run fetch-assets
+git clone https://github.com/5C3PT3R/signsight
+cd signsight
+
+pip install -e ".[dev]"      # backend and tests. You do not need the [ml] extra
+cd app
+npm install
+npm run fetch-assets         # ~14 MB, once
+cd ..
 ```
 
-`fetch-assets` is not optional. It downloads the 13.7 MB tracking model and copies
-MediaPipe into `extension/vendor/`. Those files are gitignored, so cloning does not give
-them to you.
+**`npm run fetch-assets` is not optional.** It downloads the tracking model and copies
+MediaPipe into `extension/vendor/`. Those files are deliberately not in git — they are
+large and regenerable — so a fresh clone does not have them and nothing will work until
+you run it.
 
-Then load the extension: `chrome://extensions` → **Developer mode** on → **Load
-unpacked** → pick the `extension/` folder.
+Check the clone is sound before you write anything:
 
-And start the backend in a terminal, which you will need running throughout:
+```bash
+pytest                       # 60 tests, a couple of seconds
+```
+
+Now load the extension: `chrome://extensions` → **Developer mode** on (top right) →
+**Load unpacked** → select the `extension/` folder. It should appear with no errors.
+
+Start the backend in its own terminal and leave it running:
 
 ```bash
 uvicorn backend.main:app --reload
 ```
 
-Click the extension icon, hit **Connect to backend**. If it says
-`Connected · vocab isl_v2_words · model signsight_isl24.onnx`, everything on the other
-side of your work is functioning.
+Click the extension icon → **Connect to backend**. If it says
+
+```
+Connected · vocab isl_v2_words · model signsight_isl24.onnx
+```
+
+then everything on the far side of your work is already functioning, and the backend
+terminal is where you will watch your frames arrive.
+
+### See what you are building towards
+
+Worth five minutes before you start. Run the speaker app:
+
+```bash
+cd app && npm run dev        # then open http://127.0.0.1:5173
+```
+
+Press **Start camera** and sign one of the 24 signs — they are listed in the app under
+**Signs it knows**. Glosses appear, sentences appear, the browser speaks them.
+
+Your extension produces exactly that, from a video call instead of a webcam.
 
 ---
 
@@ -306,6 +340,21 @@ must be able to tell "not understood" from "not signing."
 A live Google Meet call with a signer on another machine produces overlay captions
 matching what the speaker app would say for the same signs. That is the M6 definition of
 done in PRD §7.
+
+## Pushing your work
+
+You have read access right now, which is enough to clone but **not enough to push.** Ask
+Eashan to raise it to write before you have a day's work sitting in a local branch.
+
+Work on a branch, not `main`:
+
+```bash
+git checkout -b extension-capture
+# ... commits ...
+git push -u origin extension-capture
+```
+
+CI runs `pytest` and typechecks the app on every push.
 
 ## If you get stuck
 
