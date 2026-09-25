@@ -330,9 +330,20 @@ manifest whose splits are not signer-disjoint.
 
 ---
 
+### On the numbers in this document
+
+Several of them replaced earlier figures that were wrong in our favour: a single-split
+accuracy that understated the baseline by 12 points, a latency measurement eighty times
+too good because it timed the wrong interval, and a per-signer score computed over a
+convenience sample. The corrections, along with the bugs that silently corrupted data and
+the six hypotheses we tested and abandoned, are recorded in
+[`engineering-log.md`](engineering-log.md). It is kept deliberately: the finished results
+look tidier than the work was.
+
 ### Project documents
 
 - Specification: [`SignSight_PRD.md`](SignSight_PRD.md)
 - Full results, ablations and failure analysis: [`results.md`](results.md)
 - Data strategy and corpus selection: [`datasets.md`](datasets.md)
 - Recording protocol: [`recording.md`](recording.md)
+- Bugs, dead ends and corrected measurements: [`engineering-log.md`](engineering-log.md)

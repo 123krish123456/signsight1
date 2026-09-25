@@ -35,6 +35,8 @@ one other laptop webcam.** Domain match is worth 30-40 points; every other chang
 on this project is worth single digits. Whoever signs at the demo has to have recorded.
 
 Full numbers, ablations and failure analysis: [`docs/results.md`](docs/results.md).
+The bugs, dead ends and wrong turns behind them:
+[`docs/engineering-log.md`](docs/engineering-log.md).
 
 | Milestone | State |
 |---|---|
@@ -43,7 +45,7 @@ Full numbers, ablations and failure analysis: [`docs/results.md`](docs/results.m
 | M2 Data | done — 1,245 clips, 24 signs, 11 signers: the INCLUDE corpus plus all three of us |
 | M3 Model | done — exported to ONNX at 13.3 ms. **Short of the 85% target** |
 | M4 Live recognition | done — classifier, confidence gating and sentence assembly wired in |
-| M5 Speaker app | done — transcript, speech and reference sheet; the extension is M6 |
+| M5 Speaker app | done — transcript, speech, reference sheet, live correction |
 | M6 Listener extension | shell only — screen capture not written |
 | M7 Evaluation | done bar the final write-up — ablations, failure analysis, latency measured |
 
@@ -230,6 +232,27 @@ Read the webcam folds, not the mean. They are the only ones that predict what th
 will do.
 
 ---
+
+## Correcting it while it runs
+
+The speaker app offers every recognised sign for judgement: **✓ correct**, or **✗ wrong**
+and pick the right one. Each judgement is stored as a labelled training example and takes
+effect twice — immediately, through a nearest-neighbour memory the recogniser consults
+when the classifier is unsure, and again at the next retrain.
+
+This exists because a signer's recorded clips and their live signing are not the same
+thing. The clips here score 97.6% through the live pipeline offline while the same person
+in front of the camera produced half that confidence, and nothing in the corpus captured
+the difference.
+
+Measured on one signer: **coverage rises from 67% to 96% of segments answered, and
+saturates after about 60 corrections** — two or three per sign. It is a deployment
+feature, kept out of the headline deliberately; 74.9% is measured with the memory switched
+out. Details and the held-out curve are in [`docs/results.md`](docs/results.md).
+
+```bash
+curl http://127.0.0.1:8000/feedback/count      # what has been taught, per sign
+```
 
 ## The 24 signs
 
