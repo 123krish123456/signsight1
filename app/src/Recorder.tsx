@@ -36,6 +36,20 @@ const TEAM = ["eashan", "krish", "arpit"] as const;
 const CLIP_MS = 3000;
 const COUNTDOWN_MS = 1500;
 
+/** Mean absolute change per pixel, per sample, below which a clip is treated as "nobody
+ *  moved" and thrown away rather than saved.
+ *
+ *  Auto mode is a timer, not a motion detector: it recorded, saved and recorded again
+ *  regardless of whether anything happened, so a pause to read the reference became a
+ *  saved clip of someone sitting still. Those are worse than no clip — they are labelled
+ *  with a real word and teach the model that the sign means "do nothing".
+ *
+ *  Deliberately forgiving. A missed real take costs seconds; a wrongly discarded one
+ *  costs trust in the tool. The live reading is on screen so the number can be judged
+ *  rather than believed. */
+const MOTION_MIN = 1.2;
+const PROBE_MS = 100;
+
 interface Sign {
   gloss: string;
   pos: string;
@@ -64,6 +78,9 @@ export default function Recorder() {
   const [auto, setAuto] = useState(false);
   const autoRef = useRef(false);
   const [error, setError] = useState("");
+  const [motion, setMotion] = useState(0);
+  const motionRef = useRef(0);
+  const probeRef = useRef<HTMLCanvasElement | null>(null);
 
   const sign = signs[current];
   const done = signs.reduce((n, s) => n + Math.min(s.count, target), 0);
@@ -164,6 +181,48 @@ export default function Recorder() {
   const bump = (gloss: string, by: number) =>
     setSigns((prev) => prev.map((s) => (s.gloss === gloss ? { ...s, count: s.count + by } : s)));
 
+  /** Mean absolute luma change per pixel while recording.
+   *
+   *  A 64x48 greyscale difference, not MediaPipe: distinguishing "signing" from "sitting
+   *  still" needs nothing more, and the recorder deliberately has no model in it so a
+   *  teammate can record with Node alone. Returns a stop function that yields the score.
+   */
+  const startMotionProbe = useCallback(() => {
+    const video = camRef.current;
+    if (!video) return () => 0;
+    const canvas = probeRef.current ?? (probeRef.current = document.createElement("canvas"));
+    canvas.width = 64;
+    canvas.height = 48;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    if (!ctx) return () => 0;
+
+    let previous: Uint8ClampedArray | null = null;
+    let total = 0;
+    let samples = 0;
+    motionRef.current = 0;
+    setMotion(0);
+
+    const id = window.setInterval(() => {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const frame = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      if (previous) {
+        let sum = 0;
+        for (let i = 0; i < frame.length; i += 4) sum += Math.abs(frame[i] - previous[i]);
+        total += sum / (frame.length / 4);
+        samples += 1;
+        motionRef.current = total / samples;
+        setMotion(motionRef.current);
+      }
+      previous = frame;
+    }, PROBE_MS);
+    timersRef.current.push(id as unknown as number);
+
+    return () => {
+      window.clearInterval(id);
+      return samples ? total / samples : 0;
+    };
+  }, []);
+
   const advance = useCallback(() => {
     setSigns((prev) => {
       const from = (current + 1) % prev.length;
@@ -191,8 +250,27 @@ export default function Recorder() {
       window.clearInterval(tick);
       const rec = new MediaRecorder(streamRef.current!, { mimeType: pickMime() });
       chunksRef.current = [];
+      const stopProbe = startMotionProbe();
       rec.ondataavailable = (e) => e.data.size && chunksRef.current.push(e.data);
       rec.onstop = async () => {
+        const moved = stopProbe();
+        // read the ref, not the captured value: this closure was built when auto was
+        // last true, so checking `auto` here would keep the loop running forever after
+        // the box is unticked
+        const looping = autoRef.current;
+
+        if (moved < MOTION_MIN) {
+          setError(
+            `Nothing moved (${moved.toFixed(1)} of ${MOTION_MIN} needed) — not saved. ` +
+            `Sign during the three seconds after the countdown.`,
+          );
+          setPhase("idle");
+          if (looping) {
+            timersRef.current.push(window.setTimeout(() => record(), 1500) as unknown as number);
+          }
+          return;
+        }
+
         setPhase("saving");
         const blob = new Blob(chunksRef.current, { type: rec.mimeType });
         try {
@@ -200,11 +278,13 @@ export default function Recorder() {
           bump(sign.gloss, 1);
           setPhase("idle");
           await refreshTakes(sign.gloss);
-          // read the ref, not the captured value: the closure that schedules the next
-          // take was built when auto was last true, so checking `auto` here would keep
-          // the loop running forever after the box is unticked
-          if (!autoRef.current) advance();
-          if (autoRef.current) {
+
+          // Move on once this sign has enough. Auto mode used to skip advance()
+          // entirely, so "keep going automatically" sat on one sign forever instead of
+          // working through the list.
+          const enough = (sign.count + 1) >= target;
+          if (!looping || enough) advance();
+          if (looping) {
             timersRef.current.push(window.setTimeout(() => record(), 900) as unknown as number);
           }
         } catch (e) {
@@ -217,7 +297,7 @@ export default function Recorder() {
       timersRef.current.push(window.setTimeout(() => rec.stop(), CLIP_MS) as unknown as number);
     }, COUNTDOWN_MS);
     timersRef.current.push(begin as unknown as number);
-  }, [sign, phase, signer, advance, store, refreshTakes]);
+  }, [sign, phase, signer, advance, store, refreshTakes, startMotionProbe, target]);
 
   const undo = useCallback(async () => {
     if (!sign || !takes.length) return;
@@ -341,7 +421,16 @@ export default function Recorder() {
               <span style={S.guideTag}>keep both hands inside</span>
             </div>
             {phase === "counting" && <div style={S.overlay}>{countdown || "go"}</div>}
-            {phase === "recording" && <div style={{ ...S.overlay, color: "#f87171" }}>● REC</div>}
+            {phase === "recording" && (
+              <>
+                <div style={{ ...S.overlay, color: "#f87171" }}>● REC</div>
+                {/* The reading the save decision is made on, so a wrong threshold is
+                    visible rather than mysterious. Green once the clip will be kept. */}
+                <div style={{ ...S.motion, color: motion >= MOTION_MIN ? "#4ade80" : "#f87171" }}>
+                  motion {motion.toFixed(1)} / {MOTION_MIN}
+                </div>
+              </>
+            )}
             {phase === "saving" && <div style={S.overlay}>saving…</div>}
           </div>
         </figure>
@@ -448,6 +537,9 @@ const S: Record<string, React.CSSProperties> = {
   // or the framing guide below is drawn over an edge that is not the real one.
   camVideo: { width: "100%", display: "block", objectFit: "contain",
               background: "#020617", borderRadius: 12 },
+  motion: { position: "absolute", right: 10, top: 10, fontSize: 12, fontWeight: 600,
+            background: "#020617cc", padding: "3px 8px", borderRadius: 6,
+            fontVariantNumeric: "tabular-nums" },
   guide: { position: "absolute", inset: "6% 8% 4%", border: "2px dashed #38bdf8aa",
            borderRadius: 10, pointerEvents: "none" },
   guideTag: { position: "absolute", left: 8, bottom: 6, fontSize: 11, letterSpacing: 0.5,
