@@ -156,6 +156,28 @@ Twenty clips each from ten more signers would be worth far more than eighty clip
 the same eight — which is the argument for FDMSE-ISL (20 signers) over simply recording
 more of INCLUDE's seven.
 
+## Latency
+
+Measured, not estimated, over a real WebSocket with clips replayed at 15 FPS — the rate
+the browser actually sends (`python -m ml.latency --clips 24`).
+
+| | |
+|---|---|
+| p50, sign end → gloss event | **409 ms** |
+| p95 | **534 ms** |
+| Budget (PRD M4) | 600 ms — **met** |
+| ONNX inference alone | 12.3 ms |
+
+Almost all of that 409 ms is not compute. The classifier takes 12 ms; the rest is the
+segmenter waiting to be sure the sign has ended, which needs `exit_frames` of stillness
+seen through a `energy_smoothing_frames` window — about nine frames, or 600 ms of video,
+before a boundary can be declared. Measuring from the last frame *sent* rather than from
+the end of the sign reports 7 ms, which is true and useless: it is the server's response
+time, not what a signer waits.
+
+Lowering it means lowering `exit_frames`, and that trades directly against cutting signs
+in half. It is a tuning decision, not an optimisation problem.
+
 ## Shipping model
 
 `ml/models/signsight_isl24.onnx`, trained with the winning recipe.

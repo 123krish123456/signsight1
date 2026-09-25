@@ -33,14 +33,15 @@ Full numbers, ablations and failure analysis: [`docs/results.md`](docs/results.m
 | M1 Landmark pipeline | done — browser and Python agree to 8.9e-16, 15 FPS sustained |
 | M2 Data | done — 1,001 clips, 24 signs, 10 signers: the INCLUDE corpus plus our own |
 | M3 Model | done — 76.1%, exported to ONNX at 7 ms |
-| M4 Live recognition | **half** — sign boundaries detected live; the classifier is not yet connected |
-| M5 Speaker app | not started — transcript, speech, reference sheet |
+| M4 Live recognition | done — classifier, confidence gating and sentence assembly wired in |
+| M5 Speaker app | done — transcript, speech and reference sheet; the extension is M6 |
 | M6 Listener extension | shell only — screen capture not written |
-| M7 Evaluation | mostly — ablations and analysis done; end-to-end latency needs M4 |
+| M7 Evaluation | done bar the final write-up — ablations, failure analysis, latency measured |
 
-So today the app knows **when** you are signing, not yet **what**. Connecting the trained
-model to the live stream is the next change, and it is the one that makes the system
-demonstrable.
+The system runs end to end today: sign at the camera and it speaks an English sentence.
+**409 ms p50** from the end of a sign to the gloss appearing, against a 600 ms budget.
+
+What remains is the Chrome extension (M6) and a third signer's recordings.
 
 ---
 

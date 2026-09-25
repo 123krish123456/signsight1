@@ -1,0 +1,10 @@
+{
+  "segments": 24,
+  "clips": 24,
+  "fps": 15,
+  "p50_ms": 409.0,
+  "p95_ms": 533.7,
+  "max_ms": 533.8,
+  "budget_ms": 600,
+  "within_budget": true
+}
