@@ -343,9 +343,6 @@ done in PRD §7.
 
 ## Pushing your work
 
-You have read access right now, which is enough to clone but **not enough to push.** Ask
-Eashan to raise it to write before you have a day's work sitting in a local branch.
-
 Work on a branch, not `main`:
 
 ```bash
