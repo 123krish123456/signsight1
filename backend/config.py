@@ -63,7 +63,9 @@ class Settings(BaseSettings):
     # and what the model, the recorder and the docs all use. Leaving the default on v1
     # meant the recorder offered 24 signs the backend would reject 20 of.
     vocab_pack: Path = ROOT / "backend" / "vocab" / "isl_v2_words.json"
-    model_path: Path = ROOT / "ml" / "models" / "signsight_v1.onnx"
+    # The shipped classifier. signsight_v1.onnx was a name from the plan that nothing
+    # ever wrote; the exporter has always produced signsight_isl24.onnx.
+    model_path: Path = ROOT / "ml" / "models" / "signsight_isl24.onnx"
     db_path: Path = ROOT / "signsight.db"
 
     @property

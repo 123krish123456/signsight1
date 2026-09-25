@@ -30,15 +30,13 @@
   "seq_len": 45,
   "n_features": 261,
   "synthetic": false,
-  "train_clips": 344,
+  "train_clips": 848,
   "pack": "isl_v2_words",
   "init_from": "include_pretrain_long.keras",
-  "m2_deviations": [
-    "24 classes below 25 clips (worst: [('COLD', 20), ('MOTHER', 20), ('FATHER', 20), ('MAN', 20), ('WOMAN', 20)])"
-  ],
-  "test_top1": 0.68,
-  "best_val_acc": 0.7792,
+  "m2_deviations": [],
+  "test_top1": 0.6933,
+  "best_val_acc": 0.8442,
   "onnx": "signsight_isl24.onnx",
-  "onnx_drift": 1.043081283569336e-07,
-  "onnx_ms": 6.78
+  "onnx_drift": 1.6391277313232422e-07,
+  "onnx_ms": 12.35
 }

@@ -1,8 +1,8 @@
 """SignSight backend — FastAPI + the landmark WebSocket (PRD §5).
 
-Accepts landmark frames, buffers them, and runs the motion-energy segmenter over the
-stream so sign boundaries are detected live. Classification and sentence assembly hang
-off the same path once a model exists (M3/M4).
+Accepts landmark frames, buffers them, runs the motion-energy segmenter over the stream
+to find sign boundaries, classifies each segment, and assembles the recognised glosses
+into English with the vocab pack's templates. That is the whole live path (M4).
 """
 
 from __future__ import annotations
@@ -19,15 +19,17 @@ from fastapi.staticfiles import StaticFiles
 
 from backend.capture import REFERENCE_DIR, router as capture_router
 from backend.config import ROOT, settings
+from backend.pipeline.assembler import Assembler
 from backend.pipeline.buffer import Frame, FrameBuffer
 from backend.mock import MockRecogniser
+from backend.pipeline.recogniser import Recogniser
 from backend.pipeline.segmenter import Segmenter
-from backend.vocab.schema import load_pack
+from backend.vocab.schema import UNKNOWN, load_pack
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("signsight")
 
-MODEL_NAME = "none — segmenter only, classifier arrives in M3"
+MODEL_NAME = "none — set SIGNSIGHT_MODEL_PATH or export one"
 
 
 @asynccontextmanager
@@ -37,6 +39,26 @@ async def lifespan(app: FastAPI):
         "vocab %s loaded: %d classes (+UNKNOWN), expecting %d-d frames",
         app.state.pack.name, len(app.state.pack.entries), settings.expected_dim,
     )
+
+    # Loaded once for the process: an ONNX session is a few MB and thread-safe to call,
+    # so building one per WebSocket would add a second of latency to every connection
+    # for nothing. A missing model is not fatal — the segmenter still works and every
+    # segment reports UNKNOWN, which is exactly the pre-M4 behaviour.
+    app.state.recogniser = None
+    if settings.mock_recognition:
+        log.warning("MOCK RECOGNITION IS ON — glosses are scripted, the camera is ignored")
+    elif not settings.model_path.exists():
+        log.warning(
+            "no model at %s — segmentation only, every segment will report UNKNOWN. "
+            "Run: python -m ml.export_onnx --model ml/models/signsight_isl24.keras",
+            settings.model_path,
+        )
+    else:
+        try:
+            app.state.recogniser = Recogniser(pack=app.state.pack)
+        except Exception:
+            log.exception("could not load %s — continuing without a classifier",
+                          settings.model_path)
     yield
 
 
@@ -61,7 +83,8 @@ if REFERENCE_DIR.exists():
 def health() -> dict:
     return {
         "status": "ok",
-        "model": MODEL_NAME,
+        "model": settings.model_path.name if app.state.recogniser else MODEL_NAME,
+        "mock": settings.mock_recognition,
         "vocab": app.state.pack.name,
         "feature_dim": settings.expected_dim,
         "target_fps": settings.target_fps,
@@ -81,6 +104,8 @@ async def stream(ws: WebSocket) -> None:
     buf = FrameBuffer(capacity=settings.max_queue_frames)
     segmenter = Segmenter()
     mock = MockRecogniser() if settings.mock_recognition else None
+    recogniser = app.state.recogniser
+    assembler = Assembler(pack=app.state.pack)
     last_state = "IDLE"
     segments_seen = 0
     warned_drop = False
@@ -136,18 +161,43 @@ async def stream(ws: WebSocket) -> None:
                         session_id[:8], segments_seen, segment.raw_length,
                         segment.duration_ms, " [truncated]" if segment.truncated else "",
                     )
-                    # No classifier until M3. The PRD requires the user be able to tell
-                    # "not understood" from "not signing", so an unclassified segment
-                    # surfaces as UNKNOWN, which the UI renders as "…" (§4.5).
-                    gloss, confidence = mock.classify(segment) if mock else ("UNKNOWN", 0.0)
+                    # With no classifier loaded every segment is UNKNOWN, which the UI
+                    # renders as "…". The PRD requires the user be able to tell "not
+                    # understood" from "not signing", so it is never silently dropped.
+                    took = 0.0
+                    if mock:
+                        gloss, confidence = mock.classify(segment)
+                    elif recogniser:
+                        # ONNX is ~12 ms and blocks the event loop. At 15 FPS that is a
+                        # fifth of one frame interval and only on a segment boundary, so
+                        # a thread pool would cost more in complexity than it saves.
+                        gloss, confidence, took = recogniser.classify(segment)
+                    else:
+                        gloss, confidence = UNKNOWN, 0.0
+
                     await ws.send_json({
                         "type": "gloss", "value": gloss,
-                        "confidence": confidence, "segment_ms": round(segment.duration_ms),
+                        "confidence": round(confidence, 3),
+                        "segment_ms": round(segment.duration_ms),
                     })
-                    if mock and (sentence := mock.advance()) is not None:
+                    log.info(
+                        "session %s   -> %s (%.2f)%s",
+                        session_id[:8], gloss, confidence,
+                        f" {took:.0f} ms" if took else "",
+                    )
+
+                    sentence = mock.advance() if mock else assembler.push(gloss)
+                    if sentence is not None:
                         await ws.send_json({
                             "type": "transcript", "text": sentence, "is_final": True,
                         })
+
+                # A gloss run the templates never match must not strand the signer
+                # waiting for a sentence that is not coming (PRD §4.6).
+                if not mock and assembler.due() and (text := assembler.flush()):
+                    await ws.send_json({
+                        "type": "transcript", "text": text, "is_final": True,
+                    })
 
                 if buf.received % (settings.target_fps * 5) == 0:
                     log.info("session %s %s", session_id[:8], buf.stats())
@@ -157,6 +207,9 @@ async def stream(ws: WebSocket) -> None:
                 if action == "reset_buffer":
                     buf.clear()
                     segmenter.reset()
+                    assembler.reset()
+                    if recogniser:
+                        recogniser.reset()
                     if mock:
                         mock.reset()
                     last_state = "IDLE"
