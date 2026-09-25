@@ -3,6 +3,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { LandmarkStream } from "./landmarks";
+import { drawLandmarks } from "./overlay";
 import { SignSocket, type ServerEvent } from "./socket";
 import { FEATURE_DIM } from "./normalise";
 
@@ -20,6 +21,11 @@ export default function App() {
   const [signing, setSigning] = useState(false);
   const [fps, setFps] = useState(0);
   const [hands, setHands] = useState<[boolean, boolean]>([false, false]);
+  const overlayRef = useRef<HTMLCanvasElement>(null);
+  // What the segmenter is seeing right now, against the threshold it enters SIGNING at.
+  // Those thresholds were tuned on studio footage; on a different camera in a different
+  // room they need checking, and this is how you check them.
+  const [meter, setMeter] = useState<{ energy: number; enter: number } | null>(null);
   const [glosses, setGlosses] = useState<string[]>([]);
   const [lines, setLines] = useState<string[]>([]);
   const [speak, setSpeak] = useState(true);
@@ -44,6 +50,7 @@ export default function App() {
 
   const onEvent = useCallback((e: ServerEvent) => {
     if (e.type === "state") setSigning(e.value === "SIGNING");
+    else if (e.type === "meter") setMeter({ energy: e.energy, enter: e.enter });
     // "…" means a sign was detected but not understood — the user must be able to
     // tell that apart from "not signing at all" (PRD §4.5).
     else if (e.type === "gloss")
@@ -96,9 +103,19 @@ export default function App() {
       await stream.init();
       streamRef.current = stream;
 
-      stopRef.current = stream.start(video, ({ vector, handsPresent }) => {
+      stopRef.current = stream.start(video, ({ vector, handsPresent, raw }) => {
         socket.sendFrame(vector, handsPresent);
         setHands(handsPresent);
+
+        const canvas = overlayRef.current;
+        if (canvas && video.videoWidth) {
+          if (canvas.width !== video.videoWidth) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+          }
+          const ctx = canvas.getContext("2d");
+          if (ctx) drawLandmarks(ctx, raw, canvas.width, canvas.height);
+        }
         const f = fpsRef.current;
         f.count++;
         const dt = performance.now() - f.since;
@@ -127,9 +144,20 @@ export default function App() {
 
       <div style={S.stage}>
         <video ref={videoRef} muted playsInline style={S.video} />
+        {/* Mirrored like the video under it, and purely a preview — the landmarks that
+            go to the server come from the stream, not from this canvas. */}
+        <canvas ref={overlayRef} style={S.skeleton} />
         <div style={{ ...S.badge, background: signing ? "#16a34a" : "#334155" }}>
           {signing ? "SIGNING" : "IDLE"}
         </div>
+        {meter && (
+          <div style={S.meter}>
+            <span style={{ color: meter.energy >= meter.enter ? "#f87171" : "#4ade80" }}>
+              motion {meter.energy.toFixed(3)}
+            </span>
+            <span style={{ color: "#94a3b8" }}> / starts at {meter.enter}</span>
+          </div>
+        )}
       </div>
 
       <div style={S.row}>
@@ -189,6 +217,11 @@ const S: Record<string, React.CSSProperties> = {
   sub: { fontSize: 13, color: "#94a3b8" },
   stage: { position: "relative", width: "100%", aspectRatio: "4/3", background: "#020617", borderRadius: 12, overflow: "hidden" },
   video: { width: "100%", height: "100%", objectFit: "cover", transform: "scaleX(-1)" },
+  skeleton: { position: "absolute", inset: 0, width: "100%", height: "100%",
+              objectFit: "cover", transform: "scaleX(-1)", pointerEvents: "none" },
+  meter: { position: "absolute", top: 12, right: 12, fontSize: 12, fontWeight: 600,
+           background: "#020617cc", padding: "4px 9px", borderRadius: 6,
+           fontVariantNumeric: "tabular-nums" },
   badge: { position: "absolute", top: 12, left: 12, padding: "4px 10px", borderRadius: 999, fontSize: 12, fontWeight: 600, letterSpacing: 1 },
   row: { display: "flex", alignItems: "center", gap: 16, margin: "16px 0" },
   button: { padding: "10px 18px", borderRadius: 8, border: 0, background: "#2563eb", color: "white", fontSize: 15, cursor: "pointer" },

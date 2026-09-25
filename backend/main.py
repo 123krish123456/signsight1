@@ -220,6 +220,17 @@ async def stream(ws: WebSocket) -> None:
                         "type": "transcript", "text": text, "is_final": True,
                     })
 
+                # Once a second, tell the client what the segmenter is seeing. Without
+                # this the thresholds can only be tuned by reading the server log, and
+                # they are exactly the settings that need tuning per camera and room.
+                if buf.received % settings.target_fps == 0:
+                    await ws.send_json({
+                        "type": "meter",
+                        "energy": round(segmenter.energy, 4),
+                        "enter": settings.enter_thresh,
+                        "exit": settings.exit_thresh,
+                    })
+
                 if buf.received % (settings.target_fps * 5) == 0:
                     log.info("session %s %s", session_id[:8], buf.stats())
 
