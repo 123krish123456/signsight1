@@ -70,6 +70,27 @@ def test_rejects_wrong_dimension(client):
         assert str(settings.expected_dim) in err["message"]
 
 
+def test_malformed_input_does_not_kill_the_session(client):
+    """Bad JSON, and a payload that is not an object, must both be survivable.
+
+    Either used to raise out of the handler: the socket closed abruptly with a stack
+    trace in the log and nothing sent to the client, which is the worst way to debug
+    your own client code.
+    """
+    with client.websocket_connect("/ws/stream") as ws:
+        assert ws.receive_json()["value"] == "IDLE"
+
+        ws.send_text("{not json")
+        assert ws.receive_json()["code"] == "BAD_MESSAGE"
+
+        ws.send_text('"a bare string"')
+        assert ws.receive_json()["code"] == "BAD_MESSAGE"
+
+        # Still usable afterwards, which is the actual point.
+        ws.send_json({"type": "frame", "seq": 0, "landmarks": [0.0] * 3})
+        assert ws.receive_json()["code"] == "BAD_DIMENSION"
+
+
 def test_a_moving_signer_produces_a_gloss(client):
     """Motion then stillness must yield exactly one gloss event for the segment.
 

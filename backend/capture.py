@@ -96,7 +96,9 @@ async def upload(
     clips.append(Clip(clip=path.relative_to(ROOT).as_posix(), gloss=gloss,
                       signer=signer, source="self"))
     save(clips)
-    count = sum(1 for c in clips if c.signer == signer and c.gloss == gloss) + 1
+    # No +1 here: `clips` already contains the row appended above, so adding one
+    # reported a clip that does not exist — one upload, "count": 2.
+    count = sum(1 for c in clips if c.signer == signer and c.gloss == gloss)
     return {"saved": path.relative_to(ROOT).as_posix(), "count": count,
             "bytes": len(payload)}
 

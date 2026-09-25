@@ -7,6 +7,7 @@ into English with the vocab pack's templates. That is the whole live path (M4).
 
 from __future__ import annotations
 
+import json
 import logging
 import time
 import uuid
@@ -115,7 +116,24 @@ async def stream(ws: WebSocket) -> None:
     try:
         await ws.send_json({"type": "state", "value": "IDLE"})
         while True:
-            msg = await ws.receive_json()
+            try:
+                msg = await ws.receive_json()
+            except json.JSONDecodeError:
+                # A client sending malformed JSON used to take the whole session down
+                # with an unhandled exception and no explanation, which is a miserable
+                # way to find a bug in your own client. Every other bad input already
+                # gets an error event; this one should too.
+                await ws.send_json({
+                    "type": "error", "code": "BAD_MESSAGE",
+                    "message": "not valid JSON",
+                })
+                continue
+            if not isinstance(msg, dict):
+                await ws.send_json({
+                    "type": "error", "code": "BAD_MESSAGE",
+                    "message": f"expected an object, got {type(msg).__name__}",
+                })
+                continue
             kind = msg.get("type")
 
             if kind == "frame":
