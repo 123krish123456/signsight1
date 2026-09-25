@@ -19,6 +19,11 @@ Proposal, background, literature review and planning: [`docs/first-review.md`](d
 cross-validation over 1,245 clips from eleven signers — that is, tested on people the
 model has never seen. Chance is 4%; the project's target is 85%.
 
+The system also **learns from whoever is using it**: confirm or correct what it heard and
+the correction is recognised on the very next sign, through a nearest-neighbour memory,
+as well as feeding the next retrain. That is a deployment feature and is deliberately
+kept out of the headline — 74.9% is measured without it.
+
 Eight of the nine folds sit between 72.7% and 87.0% and average **79.6%**. The ninth is
 37.3%, from the signer with the best-tracked footage in the corpus, and four explanations
 for it have been tested and ruled out. It stays in the mean rather than being excused:

@@ -30,13 +30,13 @@
   "seq_len": 45,
   "n_features": 261,
   "synthetic": false,
-  "train_clips": 1196,
+  "train_clips": 1382,
   "pack": "isl_v2_words",
   "init_from": "include_pretrain_long.keras",
   "m2_deviations": [],
-  "test_top1": 0.64,
+  "test_top1": 0.6533,
   "best_val_acc": 0.8571,
   "onnx": "signsight_isl24.onnx",
-  "onnx_drift": 1.4901161193847656e-07,
-  "onnx_ms": 7.61
+  "onnx_drift": 1.9371509552001953e-07,
+  "onnx_ms": 6.6
 }

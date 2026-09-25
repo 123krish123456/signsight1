@@ -201,6 +201,80 @@ Twenty clips each from ten more signers would be worth far more than eighty clip
 the same eight — which is the argument for FDMSE-ISL (20 signers) over simply recording
 more of INCLUDE's seven.
 
+## Learning from the person using it
+
+The 9-fold figure measures what the system does for someone it has never seen. Deployment
+is a different question, and this project answers it separately rather than by quietly
+improving the headline.
+
+A signer's recorded clips and their live signing are not the same thing. The 244 clips
+recorded here score 97.6% through the live pipeline offline, while the same person in
+front of the camera produced roughly half that confidence. Nothing in the corpus captures
+that difference, because nothing in the corpus was recorded live.
+
+So the speaker app offers every detected segment for judgement: confirm what it heard, or
+correct it. Each judgement stores the 45x261 segment under its true label, and those
+become ordinary manifest rows — `features_for_clip` treats a `.npy` path as features
+already, so splits, cross-validation and training need no special case.
+
+Corrections take effect twice, on different timescales:
+
+- **Immediately**, through a nearest-neighbour memory the recogniser consults whenever the
+  classifier falls below the confidence gate. Measured on 158 confirmed segments, the
+  nearest neighbour is the same sign 79% of the time, rising to 85% above a cosine
+  similarity of 0.97.
+- **At the next retrain**, as ordinary labelled training data.
+
+The memory is a fallback, never a replacement. A confident classifier is trusted first:
+the memory holds one person's examples, the model holds eleven signers.
+
+### How much correction is enough
+
+Held-out test, a third of the confirmed segments withheld and the memory grown from the
+rest, so nothing being scored is also remembered:
+
+| segments in memory | says something | of those, correct |
+|---|---|---|
+| 0 | 67% | 90% |
+| 20 | 89% | 85% |
+| 40 | 91% | 83% |
+| 60 | **96%** | 86% |
+| 80 | 96% | 89% |
+| 112 | 96% | 89% |
+
+Coverage saturates at roughly **60 corrections**, or two or three per sign. Beyond that
+another example of a sign already taught adds nothing measurable.
+
+### What it costs
+
+Every clip through the live pipeline, after 290 corrections from one signer:
+
+| group | clips | says something | of those, correct |
+|---|---|---|---|
+| the corrected signer, recorded | 244 | 90% | 93% |
+| the corrected signer, live segments | 158 | 100% | 97% |
+| second home signer | 265 | 71% | 91% |
+| third home signer | 239 | 56% | 99% |
+| INCLUDE studio corpus | 496 | **48%** | 96% |
+
+The studio corpus, which the model was originally built on, is now the **worst served**.
+Precision holds at 96% — it is not wrong more often, it is silent more often. Adapting to
+one deployment domain costs the source domain, which is the same finding as the
+cross-camera result above, seen from the other side.
+
+**None of these are generalisation numbers.** Every clip is in the model's training set
+and the live segments are in the memory, so they measure recall. They are reported because
+"will this work at the demo" is a real question with a different answer from "does this
+work for people we have never met" — which remains 74.9%.
+
+### Why not reinforcement learning
+
+The feedback is a label, not a reward: the signer says which sign it was, not merely that
+the guess was wrong. Converting that to a scalar reward would discard information, and
+classifying one sign does not change the next, so there is no sequential credit assignment
+for RL to solve. This is active learning with human-in-the-loop labelling, and calling it
+that is both accurate and a stronger claim.
+
 ## Latency
 
 Measured, not estimated, over a real WebSocket with clips replayed at 15 FPS — the rate
