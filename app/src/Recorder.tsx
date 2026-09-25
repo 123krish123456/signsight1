@@ -352,11 +352,11 @@ export default function Recorder() {
             );
           }
 
-          // Move on once this sign has enough. Auto mode used to skip advance()
-          // entirely, so "keep going automatically" sat on one sign forever instead of
-          // working through the list.
-          const enough = (sign.count + 1) >= target;
-          if (!looping || enough) advance();
+          // Stay on the sign. Recording is mostly retrying the same one until a take
+          // looks right, and jumping away after every clip fights that — you lose your
+          // place and the reference restarts. Only the auto loop moves on, and only
+          // once this sign has as many as it needs.
+          if (looping && (sign.count + 1) >= target) advance();
           if (looping) {
             timersRef.current.push(window.setTimeout(() => record(), 900) as unknown as number);
           }
@@ -540,7 +540,7 @@ export default function Recorder() {
           {phase === "idle" ? "Record (space)" : phase === "counting" ? "Get ready…" : phase === "recording" ? "Recording…" : "Saving…"}
         </button>
         <button style={S.ghost} onClick={undo} disabled={!sign?.count}>Undo (u)</button>
-        <button style={S.ghost} onClick={advance}>Skip (n)</button>
+        <button style={S.ghost} onClick={advance}>Next sign (n)</button>
       </div>
 
       {error && <p style={S.error}>{error}</p>}
@@ -569,8 +569,8 @@ export default function Recorder() {
         )}
       </section>
 
-      <details style={S.details}>
-        <summary style={S.summary}>Progress by sign</summary>
+      <details style={S.details} open>
+        <summary style={S.summary}>Progress by sign — click one to jump to it</summary>
         <div style={S.chips}>
           {signs.map((s, i) => (
             <button key={s.gloss} onClick={() => setCurrent(i)}

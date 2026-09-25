@@ -198,10 +198,18 @@ async def stream(ws: WebSocket) -> None:
                         "confidence": round(confidence, 3),
                         "segment_ms": round(segment.duration_ms),
                     })
+                    # The runners-up, because a rejected segment is only diagnosable
+                    # if you can see what it nearly was: the right sign in second place
+                    # is a threshold problem, the right sign nowhere is a wrong gesture.
+                    ranked = ""
+                    if recogniser and not mock:
+                        ranked = "   " + ", ".join(
+                            f"{g} {p:.2f}" for g, p in recogniser.top(segment.frames)
+                        )
                     log.info(
-                        "session %s   -> %s (%.2f)%s",
+                        "session %s   -> %s (%.2f)%s%s",
                         session_id[:8], gloss, confidence,
-                        f" {took:.0f} ms" if took else "",
+                        f" {took:.0f} ms" if took else "", ranked,
                     )
 
                     # One path for both: the mock emits glosses and the real assembler

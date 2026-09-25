@@ -66,6 +66,13 @@ class Recogniser:
         batch = frames[None].astype(np.float32)
         return self._session.run(None, {self._input: batch})[0][0]
 
+    def top(self, frames: np.ndarray, n: int = 3) -> list[tuple[str, float]]:
+        """The n most likely labels. Only useful for diagnosis, but very: "UNKNOWN 0.70"
+        says nothing about whether the right sign came second or nowhere at all."""
+        probs = self.probabilities(frames)
+        return [(self.pack.labels[i], float(probs[i]))
+                for i in np.argsort(probs)[::-1][:n]]
+
     def classify(self, segment) -> tuple[str, float, float]:
         """One segment → (gloss, confidence, inference_ms), after gating.
 
