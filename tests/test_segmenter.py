@@ -12,23 +12,30 @@ from backend.pipeline.segmenter import Segmenter, State
 from ml.features.extract import FEATURE_DIM, L_WRIST, R_WRIST
 
 
-def frame(wrist_offset: float, valid: bool = True) -> np.ndarray:
-    """A frame whose wrists sit at a given position. Successive offsets create velocity."""
+def frame(wrist_offset: float, valid: bool = True, hands: bool = True) -> np.ndarray:
+    """A frame whose wrists sit at a given position. Successive offsets create velocity.
+
+    `hands` fills the hand blocks. It defaults on because a real signing frame has a
+    hand in it: the pose model reports a wrist whether or not the hand is in shot, and
+    motion from a wrist with no hand attached is the segmenter's worst false positive.
+    """
     v = np.zeros(FEATURE_DIM)
     if not valid:
         return v  # all-zero == no pose detected
     v[:75] = 0.01  # non-zero pose block marks the frame valid
+    if hands:
+        v[75:75 + 63] = 0.02  # left hand detected
     for idx in (L_WRIST, R_WRIST):
         v[idx * 3] = wrist_offset
     return v
 
 
-def trace(seg, velocities, valid=True):
+def trace(seg, velocities, valid=True, hands=True):
     """Drive the segmenter along a velocity profile; collect emitted segments."""
     out, pos = [], 0.0
     for i, vel in enumerate(velocities):
         pos += vel
-        s = seg.push(frame(pos, valid=valid), seq=i)
+        s = seg.push(frame(pos, valid=valid, hands=hands), seq=i)
         if s:
             out.append(s)
     return out
@@ -137,3 +144,21 @@ def test_thresholds_are_tunable_without_code_changes(monkeypatch, enter, exit_):
     seg = Segmenter()
     segments = trace(seg, [LOW] * 3 + [HIGH] * 20 + [LOW] * 12)
     assert len(segments) == 1
+
+
+def test_wrist_motion_without_a_detected_hand_is_never_signing():
+    """The bug this guards: someone sitting still, hands in their lap, read as SIGNING.
+
+    MediaPipe reports a wrist position whether or not the hand is in shot. Out of shot
+    the estimate is unconstrained and jitters hard, and that jitter is indistinguishable
+    from signing if you only look at wrist velocity. A sign needs a hand.
+    """
+    seg = Segmenter()
+    emitted = trace(seg, [HIGH] * 40, hands=False)
+
+    assert seg.state is State.IDLE, "phantom wrist motion entered SIGNING"
+    assert emitted == [], f"phantom wrist motion produced {len(emitted)} segments"
+    assert seg.energy == 0.0
+
+    # And the same movement with hands visible must still work, or the guard is too broad.
+    assert trace(Segmenter(), [HIGH] * 20 + [LOW] * 20, hands=True), "real signing was suppressed"

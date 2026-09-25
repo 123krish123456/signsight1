@@ -15,9 +15,15 @@ from ml.features.extract import FEATURE_DIM, L_WRIST, R_WRIST
 
 
 def frame(offset: float) -> list[float]:
-    """A valid frame with both wrists at a given x. Successive offsets make motion."""
+    """A valid frame with both wrists at a given x. Successive offsets make motion.
+
+    The hand block is filled because the segmenter now ignores wrist motion when no hand
+    is detected — a wrist with no hand on it is the pose model guessing, and its jitter
+    used to read as signing.
+    """
     v = np.zeros(FEATURE_DIM)
     v[:75] = 0.01  # a non-zero pose block is what marks the frame valid
+    v[75:75 + 63] = 0.02  # left hand detected
     for idx in (L_WRIST, R_WRIST):
         v[idx * 3] = offset
     return v.tolist()

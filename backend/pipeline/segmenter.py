@@ -14,7 +14,7 @@ from enum import Enum
 import numpy as np
 
 from backend.config import settings
-from ml.features.extract import L_WRIST, R_WRIST, resample
+from ml.features.extract import HAND_DIM, L_WRIST, POSE_DIM, R_WRIST, resample
 
 
 class State(str, Enum):
@@ -44,7 +44,19 @@ def _wrists(vec: np.ndarray) -> np.ndarray:
 
 def _is_valid(vec: np.ndarray) -> bool:
     """A frame with no usable pose normalises to all zeros (PRD §4.2 step 3)."""
-    return bool(np.any(vec[:75]))
+    return bool(np.any(vec[:POSE_DIM]))
+
+
+def has_hand(vec: np.ndarray) -> bool:
+    """Is either hand actually detected in this frame?
+
+    The pose model reports wrist positions whether or not the hands are in shot — when
+    they are not, the estimate is unconstrained and jitters hard. That jitter looks
+    exactly like motion, which is how someone sitting perfectly still with their hands
+    in their lap gets read as SIGNING. A sign needs a hand, so a frame without one
+    contributes nothing.
+    """
+    return bool(np.any(vec[POSE_DIM : POSE_DIM + 2 * HAND_DIM]))
 
 
 @dataclass
@@ -79,9 +91,11 @@ class Segmenter:
 
         An invalid frame contributes no motion rather than a spike: the jump between a
         real position and the all-zero vector is an artefact of detection dropping out,
-        not the signer moving, and it would otherwise trigger a false segment.
+        not the signer moving, and it would otherwise trigger a false segment. A frame
+        with no hand detected is treated the same way, for the same reason — see
+        `has_hand`.
         """
-        if not _is_valid(vec):
+        if not _is_valid(vec) or not has_hand(vec):
             self._prev_wrists = None
             raw = 0.0
         else:
