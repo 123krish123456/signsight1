@@ -11,6 +11,8 @@ import {
   backendStore, pickLocalFolder, supportsLocalFolder,
   type ClipStore, type StoredClip,
 } from "./storage";
+import { LandmarkStream } from "./landmarks";
+import { drawLandmarks } from "./overlay";
 
 /** Talk to the backend on whichever host served this page, not to localhost.
  *  A teammate opening http://192.168.1.42:5173/record from their own laptop must reach
@@ -81,6 +83,17 @@ export default function Recorder() {
   const [motion, setMotion] = useState(0);
   const motionRef = useRef(0);
   const probeRef = useRef<HTMLCanvasElement | null>(null);
+
+  const overlayRef = useRef<HTMLCanvasElement>(null);
+  const trackerRef = useRef<LandmarkStream | null>(null);
+  const stopTrackerRef = useRef<(() => void) | null>(null);
+  const [showSkeleton, setShowSkeleton] = useState(true);
+  const [hands, setHands] = useState<[boolean, boolean]>([false, false]);
+  // Hand-visible frames over the clip just recorded. This, not the motion score, is what
+  // predicts whether a clip is worth anything: the corpus manages 86-92%, and the two
+  // batches recorded here before the preview existed came in at 35% and 61%.
+  const handTally = useRef({ seen: 0, frames: 0 });
+  const [handRate, setHandRate] = useState<number | null>(null);
 
   const sign = signs[current];
   const done = signs.reduce((n, s) => n + Math.min(s.count, target), 0);
@@ -172,9 +185,58 @@ export default function Recorder() {
     camRef.current.play().catch((e) => setError(`Camera preview: ${e.message}`));
   }, [started]);
 
+  // Hand and body tracking for the preview only — nothing here is recorded or uploaded.
+  // It is the same MediaPipe the app runs, so what you see is exactly what the training
+  // pipeline will later extract from the clip.
+  useEffect(() => {
+    if (!started || !showSkeleton) return;
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const tracker = new LandmarkStream(15);
+        await tracker.init();
+        if (cancelled) { tracker.close(); return; }
+        trackerRef.current = tracker;
+
+        stopTrackerRef.current = tracker.start(camRef.current!, ({ raw }) => {
+          const canvas = overlayRef.current;
+          const video = camRef.current;
+          if (!canvas || !video || !video.videoWidth) return;
+          if (canvas.width !== video.videoWidth) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+          }
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return;
+          const present = drawLandmarks(ctx, raw, canvas.width, canvas.height);
+          setHands(present);
+          const tally = handTally.current;
+          tally.frames += 1;
+          if (present[0] || present[1]) tally.seen += 1;
+        });
+      } catch (e) {
+        // Recording must not depend on the tracker. If the model will not load, say so
+        // once and carry on without it rather than blocking a session.
+        setError(`Tracking preview unavailable: ${e instanceof Error ? e.message : String(e)}`);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      stopTrackerRef.current?.();
+      stopTrackerRef.current = null;
+      trackerRef.current?.close();
+      trackerRef.current = null;
+      overlayRef.current?.getContext("2d")?.clearRect(0, 0, 9999, 9999);
+    };
+  }, [started, showSkeleton]);
+
   // stop every timer and the camera when leaving
   useEffect(() => () => {
     timersRef.current.forEach(clearTimeout);
+    stopTrackerRef.current?.();
+    trackerRef.current?.close();
     streamRef.current?.getTracks().forEach((t) => t.stop());
   }, []);
 
@@ -251,9 +313,13 @@ export default function Recorder() {
       const rec = new MediaRecorder(streamRef.current!, { mimeType: pickMime() });
       chunksRef.current = [];
       const stopProbe = startMotionProbe();
+      handTally.current = { seen: 0, frames: 0 };
       rec.ondataavailable = (e) => e.data.size && chunksRef.current.push(e.data);
       rec.onstop = async () => {
         const moved = stopProbe();
+        const tally = handTally.current;
+        const rate = tally.frames ? tally.seen / tally.frames : null;
+        setHandRate(rate);
         // read the ref, not the captured value: this closure was built when auto was
         // last true, so checking `auto` here would keep the loop running forever after
         // the box is unticked
@@ -278,6 +344,13 @@ export default function Recorder() {
           bump(sign.gloss, 1);
           setPhase("idle");
           await refreshTakes(sign.gloss);
+          if (rate !== null && rate < 0.7) {
+            setError(
+              `Saved, but a hand was only visible in ${Math.round(rate * 100)}% of frames ` +
+              `(the reference corpus manages 86-92%). Sit further back so your hands stay ` +
+              `in the picture, and delete this take below if it looked wrong.`,
+            );
+          }
 
           // Move on once this sign has enough. Auto mode used to skip advance()
           // entirely, so "keep going automatically" sat on one sign forever instead of
@@ -397,6 +470,11 @@ export default function Recorder() {
                  onChange={(e) => { setAuto(e.target.checked); autoRef.current = e.target.checked; }} />
           keep going automatically
         </label>
+        <label style={S.check}>
+          <input type="checkbox" checked={showSkeleton}
+                 onChange={(e) => setShowSkeleton(e.target.checked)} />
+          show tracking
+        </label>
       </header>
 
       <div style={S.stage}>
@@ -413,6 +491,10 @@ export default function Recorder() {
           <figcaption style={S.capLabel}>You</figcaption>
           <div style={{ position: "relative" }}>
             <video ref={camRef} muted playsInline style={{ ...S.camVideo, transform: "scaleX(-1)" }} />
+            {/* Mirrored to match the preview underneath it, and never captured: the
+                MediaRecorder reads the camera stream, not what is drawn on top of it. */}
+            <canvas ref={overlayRef} style={{ ...S.skeleton, transform: "scaleX(-1)",
+                                              display: showSkeleton ? "block" : "none" }} />
             {/* The first 505 clips lost most of their hand tracking to one mistake: sitting
                 close enough that hands left the bottom of the frame. 92% of every frame
                 MediaPipe could not find a hand in had the wrist at or past an edge. Nobody
@@ -420,6 +502,18 @@ export default function Recorder() {
             <div style={S.guide} aria-hidden>
               <span style={S.guideTag}>keep both hands inside</span>
             </div>
+            {showSkeleton && (
+              <div style={S.handTag}>
+                <span style={{ color: hands[0] ? "#38bdf8" : "#475569" }}>● left</span>
+                {"  "}
+                <span style={{ color: hands[1] ? "#fbbf24" : "#475569" }}>● right</span>
+                {handRate !== null && (
+                  <span style={{ marginLeft: 8, color: handRate < 0.7 ? "#f87171" : "#4ade80" }}>
+                    last clip {Math.round(handRate * 100)}%
+                  </span>
+                )}
+              </div>
+            )}
             {phase === "counting" && <div style={S.overlay}>{countdown || "go"}</div>}
             {phase === "recording" && (
               <>
@@ -537,6 +631,11 @@ const S: Record<string, React.CSSProperties> = {
   // or the framing guide below is drawn over an edge that is not the real one.
   camVideo: { width: "100%", display: "block", objectFit: "contain",
               background: "#020617", borderRadius: 12 },
+  skeleton: { position: "absolute", inset: 0, width: "100%", height: "100%",
+              pointerEvents: "none" },
+  handTag: { position: "absolute", left: 10, top: 10, fontSize: 12, fontWeight: 600,
+             background: "#020617cc", padding: "3px 8px", borderRadius: 6,
+             fontVariantNumeric: "tabular-nums" },
   motion: { position: "absolute", right: 10, top: 10, fontSize: 12, fontWeight: 600,
             background: "#020617cc", padding: "3px 8px", borderRadius: 6,
             fontVariantNumeric: "tabular-nums" },
