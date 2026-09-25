@@ -6,9 +6,31 @@ scored once, after that fold finished training.
 
 ## Headline
 
-**76.1% ± 7.2%** top-1 over 24 Indian Sign Language words, measured by leave-one-signer-out
-cross-validation across eight folds — 1,001 clips from ten people. Chance is 4%. The
+**74.9% ± 15.3%** top-1 over 24 Indian Sign Language words, measured by leave-one-signer-out
+cross-validation across nine folds — 1,245 clips from eleven people. Chance is 4%. The
 target is 85%.
+
+That mean is dragged down and its spread tripled by one fold. Eight of the nine sit
+between 72.7% and 87.0% and average **79.6%**; the ninth, the third of us to record, sits
+at **37.3%**. See "The fold we cannot explain" below — it is left in the mean rather than
+excused, because excluding an inconvenient fold is how a signer-independent number stops
+meaning anything.
+
+| fold | before the third signer | after |
+|---|---|---|
+| arpit | 71.3% | 73.6% |
+| krish | 68.2% | 74.1% |
+| signer00 | 73.3% | 79.1% |
+| signer01 | 74.4% | 86.6% |
+| signer02 | 83.1% | 87.0% |
+| signer03 | 72.0% | 77.3% |
+| signer04 | 90.2% | 86.6% |
+| signer05 | 76.4% | 72.7% |
+| **those eight** | **76.1%** | **79.6%** |
+| eashan | — | 37.3% |
+
+Adding 244 clips lifted six of the eight existing folds, one of them by 12 points. It is
+the largest gain from data this project has measured.
 
 At the 0.75 confidence gate the system actually uses, it speaks for about half of segments
 and is right **82%** of the time — the number that matters for a demo, because
@@ -16,6 +38,29 @@ below-threshold segments surface as "…" rather than as a wrong word.
 
 That mean hides the finding below, which matters more than the mean: **the two folds
 recorded on our own laptop webcams only work because there are two of them.**
+
+## The fold we cannot explain
+
+One signer's held-out fold came in at 37.3% against 72.7-87.0% for everyone else, despite
+having the best-tracked footage in the corpus — hands visible in 98% of frames, against
+86-92% for the studio recordings and 35% and 61% for the other two of us.
+
+Four explanations were tested and all four are wrong:
+
+| hypothesis | test | result |
+|---|---|---|
+| The badly-tracked clips poison the webcam domain | retrain without them | **worse**: 37.3% → 32.8%, and → 20.5% with both removed |
+| The clips are mirrored | score them flipped | **worse**: 11.2% → 6.2% on a studio-only model |
+| Reclining or unusual framing | shoulder tilt and torso geometry per signer | **closest of the three to the studio corpus** |
+| The signs blur into each other | between-sign distance over within-clip motion | **highest ratio of anyone**, 4.12 |
+
+What is left is that the signs are executed differently from the corpus in a way that is
+consistent within that signer's own clips and unlike anyone else's. On a model trained
+only on INCLUDE, 56% of their 244 clips are predicted as a single class, and the clips
+still improve every other fold — data that teaches well but cannot be read back.
+
+It is recorded here unresolved. The alternative, quietly dropping the fold, would make
+every other number in this document less trustworthy.
 
 ## The camera the clip was shot on decides everything
 

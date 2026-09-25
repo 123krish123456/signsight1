@@ -15,14 +15,14 @@ Proposal, background, literature review and planning: [`docs/first-review.md`](d
 
 ## Where it stands
 
-**76.1% ± 7.2%** top-1 over 24 ISL signs, measured by leave-one-signer-out
-cross-validation — that is, tested on people the model has never seen. Chance is 4%; the
-project's target is 85%. At the confidence threshold the system actually uses, **82% of
-what it chooses to say is correct.**
+**74.9% ± 15.3%** top-1 over 24 ISL signs, measured by leave-one-signer-out
+cross-validation over 1,245 clips from eleven signers — that is, tested on people the
+model has never seen. Chance is 4%; the project's target is 85%.
 
-> That figure is from eight folds over 1,001 clips. The corpus is now **1,245 clips from
-> eleven signers** — all three of us have recorded — and the nine-fold re-run is in
-> progress. The shipping model is already retrained on the full set.
+Eight of the nine folds sit between 72.7% and 87.0% and average **79.6%**. The ninth is
+37.3%, from the signer with the best-tracked footage in the corpus, and four explanations
+for it have been tested and ruled out. It stays in the mean rather than being excused:
+[`docs/results.md`](docs/results.md) has the whole investigation.
 
 The mean is the least interesting number we have. **A signer recorded on a laptop webcam
 scores 29-39% if the training set contains only studio footage, and 68-71% if it contains
