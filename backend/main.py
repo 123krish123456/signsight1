@@ -14,7 +14,7 @@ import uuid
 from contextlib import asynccontextmanager
 
 import numpy as np
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -27,6 +27,7 @@ from backend.pipeline.memory import MEMORY
 from backend.mock import MockRecogniser
 from backend.pipeline.recogniser import Recogniser
 from backend.pipeline.segmenter import Segmenter
+from backend.storage import session_log
 from backend.vocab.schema import UNKNOWN, load_pack
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -105,6 +106,15 @@ def vocab() -> dict:
     return app.state.pack.model_dump()
 
 
+@app.get("/sessions/{session_id}")
+def session(session_id: str) -> dict:
+    """The transcript log for one session, read back from SQLite (PRD §5.2)."""
+    record = session_log.get_session(session_id)
+    if record is None:
+        raise HTTPException(404, f"no session {session_id}")
+    return record
+
+
 @app.websocket("/ws/stream")
 async def stream(ws: WebSocket) -> None:
     await ws.accept()
@@ -118,6 +128,7 @@ async def stream(ws: WebSocket) -> None:
     segments_seen = 0
     warned_drop = False
     t_open = time.monotonic()
+    session_log.open_session(session_id)
     log.info("session %s open", session_id[:8])
 
     try:
@@ -211,6 +222,7 @@ async def stream(ws: WebSocket) -> None:
                         "via": "memory" if (recogniser and recogniser.last_from_memory)
                                else "model",
                     })
+                    session_log.log_gloss(session_id, gloss, confidence)
                     # The runners-up, because a rejected segment is only diagnosable
                     # if you can see what it nearly was: the right sign in second place
                     # is a threshold problem, the right sign nowhere is a wrong gesture.
@@ -234,6 +246,7 @@ async def stream(ws: WebSocket) -> None:
                         await ws.send_json({
                             "type": "transcript", "text": sentence, "is_final": True,
                         })
+                        session_log.log_sentence(session_id, sentence)
 
                 # A gloss run the templates never match must not strand the signer
                 # waiting for a sentence that is not coming (PRD §4.6).
@@ -241,6 +254,7 @@ async def stream(ws: WebSocket) -> None:
                     await ws.send_json({
                         "type": "transcript", "text": text, "is_final": True,
                     })
+                    session_log.log_sentence(session_id, text)
 
                 # Once a second, tell the client what the segmenter is seeing. Without
                 # this the thresholds can only be tuned by reading the server log, and
@@ -280,6 +294,7 @@ async def stream(ws: WebSocket) -> None:
     except WebSocketDisconnect:
         pass
     finally:
+        session_log.close_session(session_id)
         secs = time.monotonic() - t_open
         log.info(
             "session %s closed after %.1fs — %s, mean %.1f FPS",

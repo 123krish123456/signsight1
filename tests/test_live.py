@@ -62,7 +62,11 @@ def still(n: int, at: float = 0.0) -> list[list[float]]:
 
 
 @pytest.fixture
-def client():
+def client(tmp_path, monkeypatch):
+    # Every connection now opens a session in SQLite (PRD §5.2). Without this, every
+    # test in this file writes into the real `signsight.db` next to the checkout instead
+    # of a throwaway one, and tests running in the same process would share that file.
+    monkeypatch.setattr(settings, "db_path", tmp_path / "test.db")
     with TestClient(app) as c:
         yield c
 
