@@ -28,6 +28,7 @@ from pathlib import Path
 import numpy as np
 
 from backend.config import settings
+from backend.pipeline.memory import MEMORY
 from backend.vocab.schema import UNKNOWN, VocabPack
 
 log = logging.getLogger("signsight")
@@ -40,6 +41,7 @@ class Recogniser:
 
     pack: VocabPack
     model_path: Path = field(default_factory=lambda: settings.model_path)
+    signer: str | None = None
     _session: object | None = field(default=None, repr=False)
     _input: str = ""
     _last_gloss: str = ""
@@ -73,6 +75,11 @@ class Recogniser:
         return [(self.pack.labels[i], float(probs[i]))
                 for i in np.argsort(probs)[::-1][:n]]
 
+    # Set when the last answer came from the memory rather than the model. The number
+    # returned alongside it is a cosine similarity, not a probability, and anything that
+    # later measures accuracy has to be able to tell the two apart.
+    last_from_memory: bool = False
+
     def classify(self, segment) -> tuple[str, float, float]:
         """One segment → (gloss, confidence, inference_ms), after gating.
 
@@ -83,11 +90,22 @@ class Recogniser:
         probs = self.probabilities(segment.frames)
         took = (time.perf_counter() - t0) * 1000
 
+        self.last_from_memory = False
         top = int(np.argmax(probs))
         confidence = float(probs[top])
         gloss = self.pack.labels[top]
 
         if confidence < settings.confidence_thresh:
+            # Before giving up, ask whether this signer has already corrected this sign.
+            # A correction should hold on the next sign, not after the next retrain.
+            recalled = MEMORY.lookup(segment.frames, signer=self.signer)
+            if recalled is not None:
+                gloss, similarity = recalled
+                if gloss != self._last_gloss or self._cooldown_expired():
+                    self._last_gloss = gloss
+                    self._last_ms = time.monotonic() * 1000
+                    self.last_from_memory = True
+                    return gloss, similarity, took
             return UNKNOWN, confidence, took
         if gloss == UNKNOWN:
             return UNKNOWN, confidence, took
@@ -100,6 +118,9 @@ class Recogniser:
 
         self._last_gloss, self._last_ms = gloss, now
         return gloss, confidence, took
+
+    def _cooldown_expired(self) -> bool:
+        return time.monotonic() * 1000 - self._last_ms >= settings.repeat_cooldown_ms
 
     def reset(self) -> None:
         self._last_gloss, self._last_ms = "", 0.0

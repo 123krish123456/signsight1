@@ -26,6 +26,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from backend.config import ROOT, settings
+from backend.pipeline.memory import MEMORY
 from backend.vocab.schema import load_pack
 from ml.data.manifest import Clip, load, save
 
@@ -75,6 +76,10 @@ def judge(body: Judgement) -> dict:
     path = out_dir / f"{body.segment}.npy"
     np.save(path, frames)
 
+    # Into the live memory straight away: the whole point is that the next attempt at
+    # this sign is recognised, not the one after the next retrain.
+    MEMORY.add(frames, body.gloss, body.signer)
+
     rel = path.relative_to(ROOT).as_posix()
     clips = load()
     clips.append(Clip(clip=rel, gloss=body.gloss, signer=body.signer, source="live"))
@@ -83,7 +88,8 @@ def judge(body: Judgement) -> dict:
     mine = sum(1 for c in clips if c.source == "live" and c.signer == body.signer)
     log.info("feedback: %s confirmed as %s (%d live examples)", body.segment[:8],
              body.gloss, mine)
-    return {"saved": rel, "gloss": body.gloss, "live_examples": mine}
+    return {"saved": rel, "gloss": body.gloss, "live_examples": mine,
+            "remembered": len(MEMORY)}
 
 
 @router.get("/feedback/count")

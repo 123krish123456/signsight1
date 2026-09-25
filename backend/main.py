@@ -23,6 +23,7 @@ from backend.config import ROOT, settings
 from backend.feedback import remember, router as feedback_router
 from backend.pipeline.assembler import Assembler
 from backend.pipeline.buffer import Frame, FrameBuffer
+from backend.pipeline.memory import MEMORY
 from backend.mock import MockRecogniser
 from backend.pipeline.recogniser import Recogniser
 from backend.pipeline.segmenter import Segmenter
@@ -61,6 +62,10 @@ async def lifespan(app: FastAPI):
         except Exception:
             log.exception("could not load %s — continuing without a classifier",
                           settings.model_path)
+    remembered = MEMORY.load()
+    if remembered:
+        log.info("recalled %d corrected signs — they are recognised without retraining",
+                 remembered)
     yield
 
 
@@ -203,6 +208,8 @@ async def stream(ws: WebSocket) -> None:
                         "confidence": round(confidence, 3),
                         "segment_ms": round(segment.duration_ms),
                         "segment": remember(segment.frames),
+                        "via": "memory" if (recogniser and recogniser.last_from_memory)
+                               else "model",
                     })
                     # The runners-up, because a rejected segment is only diagnosable
                     # if you can see what it nearly was: the right sign in second place
@@ -213,8 +220,9 @@ async def stream(ws: WebSocket) -> None:
                             f"{g} {p:.2f}" for g, p in recogniser.top(segment.frames)
                         )
                     log.info(
-                        "session %s   -> %s (%.2f)%s%s",
+                        "session %s   -> %s (%.2f)%s%s%s",
                         session_id[:8], gloss, confidence,
+                        " [recalled]" if (recogniser and recogniser.last_from_memory) else "",
                         f" {took:.0f} ms" if took else "", ranked,
                     )
 
