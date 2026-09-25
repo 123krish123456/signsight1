@@ -9,6 +9,7 @@ sign was made and builds an English sentence from it. Two front ends use that: a
 captions a signer during a video call.
 
 Minor project. Specification: [`docs/SignSight_PRD.md`](docs/SignSight_PRD.md).
+Proposal, background, literature review and planning: [`docs/first-review.md`](docs/first-review.md).
 
 ---
 
