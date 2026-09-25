@@ -39,15 +39,18 @@ class Settings(BaseSettings):
     energy_smoothing_frames: int = 5
     segment_resample_frames: int = 45
 
-    # --- smoothing / gating (PRD §4.5) ---
+    # --- gating (PRD §4.5) ---
+    # The specification also describes a rolling window of three predictions, but nothing
+    # in it then uses the window, and the obvious reading — require agreement across three
+    # segments — would delay every word by two more signs. There is no smoothing_window
+    # setting because there is no smoothing; see backend/pipeline/recogniser.py.
     confidence_thresh: float = 0.75
-    smoothing_window: int = 3
     repeat_cooldown_ms: int = 1200
 
-    # --- assembly (PRD §4.6, §4.7) ---
+    # --- assembly (PRD §4.6) ---
+    # Fingerspelling (§4.7) has no settings here because it has no implementation: the 26
+    # letter classes have no training data, so the branch could never fire.
     assembly_timeout_ms: int = 2500
-    fingerspell_timeout_ms: int = 1500
-    fingerspell_min_letters: int = 3
 
     # --- backpressure (PRD §5.3) ---
     max_queue_frames: int = 90  # 6 s at 15 FPS; oldest dropped past this

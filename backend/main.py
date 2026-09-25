@@ -204,7 +204,10 @@ async def stream(ws: WebSocket) -> None:
                         f" {took:.0f} ms" if took else "",
                     )
 
-                    sentence = mock.advance() if mock else assembler.push(gloss)
+                    # One path for both: the mock emits glosses and the real assembler
+                    # turns them into English, so mock output cannot drift away from
+                    # what a real session would say.
+                    sentence = assembler.push(gloss)
                     if sentence is not None:
                         await ws.send_json({
                             "type": "transcript", "text": sentence, "is_final": True,
@@ -212,7 +215,7 @@ async def stream(ws: WebSocket) -> None:
 
                 # A gloss run the templates never match must not strand the signer
                 # waiting for a sentence that is not coming (PRD §4.6).
-                if not mock and assembler.due() and (text := assembler.flush()):
+                if assembler.due() and (text := assembler.flush()):
                     await ws.send_json({
                         "type": "transcript", "text": text, "is_final": True,
                     })
