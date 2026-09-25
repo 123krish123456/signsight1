@@ -243,8 +243,8 @@ signs the data actually contains — same budget of 24 words, chosen so sentence
    service worker owns the WebSocket and the content script draws the overlay, both
    written. What is missing is the middle: `manifest.json` requests the `offscreen`
    permission but there is no `offscreen.html` or `offscreen.js`, so nothing captures the
-   screen or runs MediaPipe on it. That file is the job. Start at
-   [`docs/frontend-guide.md`](docs/frontend-guide.md).
+   screen or runs MediaPipe on it. Those files are the job. Step-by-step walkthrough:
+   [`docs/extension-guide.md`](docs/extension-guide.md).
 2. **Eashan — record 24 signs**, then re-run `make crossval`.
 3. **Everyone — the final report.** M0-M5 and M7 are done; M6 is the gap.
 

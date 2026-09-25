@@ -67,79 +67,22 @@ about 8% of the time on purpose. Render it as `…`, never hide it: the user has
 able to tell "I wasn't understood" from "it didn't see me". That distinction is a
 requirement, not a nicety.
 
-## Your tasks, in the order I'd do them
+## Your tasks
 
-### 1. Transcript view — `app/src/App.tsx`
+**The speaker app is done** — transcript view, speech output and the sign reference sheet
+are all in `app/src/App.tsx` and working. Tasks 1 to 3 of the original list came off your
+plate on 25 September.
 
-Right now finished sentences are thrown away. Keep a running list and show it.
+**What is left is the Chrome extension (M6), and it is the last substantial piece of the
+whole project.** It has its own walkthrough, written for someone who has not touched
+Manifest V3 before:
 
-**Done when:** you sign a few times and see a growing list of sentences, newest at the
-bottom, with the gloss strip still visible above it.
+> **[`docs/extension-guide.md`](extension-guide.md)**
 
-### 2. Speech output — `app/src/tts.ts` (new file)
-
-The signer's actual voice. Use the browser's built-in `speechSynthesis` — no library,
-no API key.
-
-```ts
-const u = new SpeechSynthesisUtterance(text);
-u.rate = 1.0;
-speechSynthesis.speak(u);
-```
-
-Three things that will bite you:
-- Speak **only** when `is_final` is true, or you'll stutter over partial sentences.
-- Call `speechSynthesis.cancel()` when the user hits Stop, or it keeps talking.
-- Voices load asynchronously — `getVoices()` is empty on first call. Listen for
-  `voiceschanged` if you offer a voice picker.
-
-**Done when:** signing produces "My name is Eashan." out of the laptop speakers, and
-pressing Stop shuts it up mid-sentence.
-
-### 3. Sign reference sheet — new component
-
-Users can't use a 50-sign vocabulary they can't see. `GET http://127.0.0.1:8000/vocab`
-returns every sign with its part of speech. Render it as a panel or modal, grouped by
-`pos` — the 26 letters are the manual alphabet, the other 24 are words.
-
-**Done when:** a first-time user can open the sheet and see what the system understands.
-Fetch it once on load, not per render.
-
-### 4. Extension: region selection — `extension/popup.js`
-
-Now the Chrome half. The hearing person picks which part of their screen has the signer
-in it.
-
-- `chrome.desktopCapture.chooseDesktopMedia(["tab","window","screen"], cb)` gets a stream
-- Show a still preview, let them drag a rectangle over the signer's video tile
-- **Store the rectangle as fractions** (`{x:0.25, y:0.1, w:0.3, h:0.4}`), not pixels —
-  pixels break the moment the window is resized
-
-**Done when:** you can pick a region and it survives resizing the window.
-
-### 5. Extension: offscreen document — `extension/offscreen.html` + `.js` (new)
-
-This one has a trap. Chrome extensions' background workers **have no DOM**, so they
-cannot touch video at all. Everything media-related happens in an "offscreen document" —
-a hidden page the worker creates.
-
-Flow: crop each frame to the chosen region on an `OffscreenCanvas` → feed the crop to
-MediaPipe → send the landmarks to `background.js`, which owns the socket.
-
-Copy the tracking setup from `app/src/landmarks.ts`; it already works. Load the model
-files with `chrome.runtime.getURL("vendor/models/holistic_landmarker.task")` — **never
-from a URL on the internet.** Extensions are forbidden from running remote code and will
-silently fail. The files are already vendored in `extension/vendor/` for you.
-
-**Done when:** the overlay captions a signer in a real Google Meet call.
-
-### 6. Overlay polish — `extension/content.js`
-
-Basic version exists: draggable, opacity slider, last 4 lines. Make it good.
-
-**Keep the "SignSight — automated, may contain errors" label visible.** It is not
-decoration — we are putting words in a deaf person's mouth, and a viewer has to know a
-machine wrote them. This is discussed in the report.
+Short version: a service worker has no DOM and cannot touch video, so capture happens in
+a hidden "offscreen document". `offscreen.html` and `offscreen.js` do not exist yet and
+are the work. Everything around them — the socket, the overlay, the vendored MediaPipe
+files — is already written.
 
 ## Rules
 

@@ -14,6 +14,14 @@ const WASM_SRC = resolve(APP, "node_modules/@mediapipe/tasks-vision/wasm");
 const MODEL_URL =
   "https://storage.googleapis.com/mediapipe-models/holistic_landmarker/holistic_landmarker/float16/latest/holistic_landmarker.task";
 
+// The library itself, not just its wasm. Vite bundles this into the app from
+// node_modules, but the extension has no build step: offscreen.js is a plain ES module
+// loaded by Chrome, so it needs the file sitting next to it to import by relative path.
+// Without this the extension cannot run MediaPipe at all, and the failure looks like a
+// module resolution error rather than a missing asset.
+const LIB_SRC = resolve(APP, "node_modules/@mediapipe/tasks-vision/vision_bundle.mjs");
+const LIB_DEST = resolve(APP, "../extension/vendor/vision_bundle.mjs");
+
 const targets = [
   { wasm: resolve(APP, "public/wasm"), model: resolve(APP, "public/models") },
   { wasm: resolve(APP, "../extension/vendor/wasm"), model: resolve(APP, "../extension/vendor/models") },
@@ -40,4 +48,7 @@ for (const t of targets) {
   await writeFile(resolve(t.model, "holistic_landmarker.task"), model);
   console.log(`vendored → ${t.wasm}, ${t.model}`);
 }
+await cp(LIB_SRC, LIB_DEST);
+console.log(`vendored → ${LIB_DEST}`);
+
 console.log(`done (${(model.length / 1e6).toFixed(1)} MB model)`);
