@@ -7,6 +7,11 @@ import { drawLandmarks } from "./overlay";
 import { SignSocket, type ServerEvent } from "./socket";
 import { FEATURE_DIM } from "./normalise";
 
+/** Same rule as the recorder: reach the backend on whichever host served this page,
+ *  not 127.0.0.1, so it still works from another machine on the network. */
+const API =
+  import.meta.env.VITE_API_URL ?? `${location.protocol}//${location.hostname}:8000`;
+
 type Status = "idle" | "loading" | "running" | "error";
 
 export default function App() {
@@ -26,6 +31,14 @@ export default function App() {
   // Those thresholds were tuned on studio footage; on a different camera in a different
   // room they need checking, and this is how you check them.
   const [meter, setMeter] = useState<{ energy: number; enter: number } | null>(null);
+
+  // The last segment offered for judgement. Confirming or correcting it stores the
+  // 45x261 features under the right label — the only data that captures how this signer
+  // actually signs live, as opposed to how they signed into the recorder.
+  const [pending, setPending] = useState<{ id: string; guess: string } | null>(null);
+  const [taught, setTaught] = useState(0);
+  const [picking, setPicking] = useState(false);
+  const signer = (localStorage.getItem("signsight.signer") ?? "").trim().toLowerCase();
   const [glosses, setGlosses] = useState<string[]>([]);
   const [lines, setLines] = useState<string[]>([]);
   const [speak, setSpeak] = useState(true);
@@ -41,7 +54,7 @@ export default function App() {
   // The vocabulary is data from the pack, never hardcoded here (PRD §4.6) — the sheet
   // has to stay correct when the pack changes without anyone remembering to edit it.
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API ?? "http://127.0.0.1:8000"}/vocab`)
+    fetch(`${API}/vocab`)
       .then((r) => (r.ok ? r.json() : null))
       .then((p) => p && setVocab(p.entries.map((e: { gloss: string; pos: string }) =>
         ({ gloss: e.gloss, pos: e.pos }))))
@@ -53,8 +66,11 @@ export default function App() {
     else if (e.type === "meter") setMeter({ energy: e.energy, enter: e.enter });
     // "…" means a sign was detected but not understood — the user must be able to
     // tell that apart from "not signing at all" (PRD §4.5).
-    else if (e.type === "gloss")
+    else if (e.type === "gloss") {
       setGlosses((g) => [...g.slice(-11), e.value === "UNKNOWN" ? "…" : e.value]);
+      if (e.segment) setPending({ id: e.segment, guess: e.value });
+      setPicking(false);
+    }
     else if (e.type === "transcript") {
       setLines((l) => [...l.slice(-19), e.text]);
       if (speakRef.current && "speechSynthesis" in window) {
@@ -66,6 +82,24 @@ export default function App() {
     }
     else if (e.type === "error") setError(`${e.code}: ${e.message}`);
   }, []);
+
+  /** Store the last segment under `gloss`, whether that confirms the guess or fixes it. */
+  const teach = useCallback(async (gloss: string) => {
+    if (!pending || !signer) return;
+    try {
+      const r = await fetch(`${API}/feedback`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ segment: pending.id, gloss, signer }),
+      });
+      if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail ?? `HTTP ${r.status}`);
+      setTaught((await r.json()).live_examples);
+      setPending(null);
+      setPicking(false);
+    } catch (err) {
+      setError(`Not saved: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }, [pending, signer]);
 
   const stop = useCallback(() => {
     stopRef.current?.();
@@ -186,6 +220,43 @@ export default function App() {
             : <p style={S.placeholder}>Sign something. Finished sentences appear here.</p>}
         </div>
 
+        {pending && status === "running" && (
+          <div style={S.teach}>
+            {!signer ? (
+              <span style={S.muted}>
+                Record a clip first so the app knows who you are — it needs a signer id to
+                label what you teach it.
+              </span>
+            ) : picking ? (
+              <>
+                <span style={S.muted}>Which sign was it?</span>
+                <div style={S.chips}>
+                  {vocab.map((v) => (
+                    <button key={v.gloss} style={S.chip} onClick={() => teach(v.gloss)}>
+                      {v.gloss}
+                    </button>
+                  ))}
+                  <button style={S.chip} onClick={() => setPending(null)}>skip</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <span>
+                  Heard <b>{pending.guess === "UNKNOWN" ? "nothing it was sure of" : pending.guess}</b>
+                </span>
+                {pending.guess !== "UNKNOWN" && (
+                  <button style={S.yes} onClick={() => teach(pending.guess)}>✓ correct</button>
+                )}
+                <button style={S.no} onClick={() => setPicking(true)}>
+                  {pending.guess === "UNKNOWN" ? "tell it what it was" : "✗ wrong"}
+                </button>
+                <button style={S.skip} onClick={() => setPending(null)}>skip</button>
+                {taught > 0 && <span style={S.muted}>{taught} taught</span>}
+              </>
+            )}
+          </div>
+        )}
+
         <h2 style={{ ...S.h2, marginTop: 18 }}>Glosses</h2>
         <p style={S.glosses}>{glosses.length ? glosses.join(" · ") : "—"}</p>
         <p style={S.note}>
@@ -237,6 +308,16 @@ const S: Record<string, React.CSSProperties> = {
   disclosure: { background: "transparent", border: 0, color: "#94a3b8", fontSize: 14,
                 cursor: "pointer", padding: 0 },
   chips: { display: "flex", flexWrap: "wrap", gap: 6, marginTop: 12 },
+  teach: { display: "flex", alignItems: "center", flexWrap: "wrap", gap: 10, marginTop: 14,
+           padding: "10px 12px", borderRadius: 10, background: "#0f172a",
+           border: "1px solid #334155", fontSize: 14 },
+  yes: { padding: "6px 12px", borderRadius: 7, border: 0, background: "#16a34a",
+         color: "#fff", fontSize: 13, cursor: "pointer" },
+  no: { padding: "6px 12px", borderRadius: 7, border: 0, background: "#b91c1c",
+        color: "#fff", fontSize: 13, cursor: "pointer" },
+  skip: { padding: "6px 10px", borderRadius: 7, border: "1px solid #334155",
+          background: "transparent", color: "#94a3b8", fontSize: 13, cursor: "pointer" },
+  muted: { fontSize: 12, color: "#94a3b8" },
   chip: { fontSize: 12, padding: "4px 9px", borderRadius: 999, background: "#0f172a",
           border: "1px solid #334155", color: "#cbd5e1" },
   note: { fontSize: 12, color: "#64748b", margin: "12px 0 0" },

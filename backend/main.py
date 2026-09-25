@@ -20,6 +20,7 @@ from fastapi.staticfiles import StaticFiles
 
 from backend.capture import REFERENCE_DIR, router as capture_router
 from backend.config import ROOT, settings
+from backend.feedback import remember, router as feedback_router
 from backend.pipeline.assembler import Assembler
 from backend.pipeline.buffer import Frame, FrameBuffer
 from backend.mock import MockRecogniser
@@ -74,6 +75,7 @@ app.add_middleware(
 
 
 app.include_router(capture_router)
+app.include_router(feedback_router)
 # Reference clips for the browser recorder. Versioned in the repo so a fresh clone
 # can record without the 57 GB corpus.
 if REFERENCE_DIR.exists():
@@ -193,10 +195,14 @@ async def stream(ws: WebSocket) -> None:
                     else:
                         gloss, confidence = UNKNOWN, 0.0
 
+                    # Offer the segment for judgement even when it was rejected: a
+                    # sign the model got wrong is worth more as training data than one
+                    # it already knows.
                     await ws.send_json({
                         "type": "gloss", "value": gloss,
                         "confidence": round(confidence, 3),
                         "segment_ms": round(segment.duration_ms),
+                        "segment": remember(segment.frames),
                     })
                     # The runners-up, because a rejected segment is only diagnosable
                     # if you can see what it nearly was: the right sign in second place

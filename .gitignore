@@ -13,6 +13,11 @@ app/public/models/
 extension/vendor/
 
 # data + artefacts
+# Live-confirmed segments (ml/data/live/) are NOT ignored. Unlike a recorded clip they
+# cannot be regenerated -- there is no source video, only the 261-value features that
+# were in flight when the signer confirmed them -- and at 47 KB each they are cheap to
+# keep. Losing them means losing the only record of how someone signs live.
+
 # Recorded clips. Regenerable data, not source: 720 of them would be a few hundred MB
 # baked into git history forever, and removing them later means rewriting it. The
 # manifest tracks them by path, so the pipeline is unaffected.

@@ -7,7 +7,7 @@ const WS_URL =
 
 export type ServerEvent =
   | { type: "state"; value: "IDLE" | "SIGNING" }
-  | { type: "gloss"; value: string; confidence: number; segment_ms: number }
+  | { type: "gloss"; value: string; confidence: number; segment_ms: number; segment?: string }
   | { type: "transcript"; text: string; is_final: boolean }
   | { type: "meter"; energy: number; enter: number; exit: number }
   | { type: "error"; code: string; message: string };

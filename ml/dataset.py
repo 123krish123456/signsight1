@@ -69,8 +69,16 @@ def mirror(seq: np.ndarray) -> np.ndarray:
 # ---------------------------------------------------------------- features
 
 def features_for_clip(clip: str, use_cache: bool = True) -> np.ndarray:
-    """(T,261) for one clip, cached on disk keyed by path and mtime."""
+    """(T,261) for one clip, cached on disk keyed by path and mtime.
+
+    A `.npy` path is features already — segments confirmed live in the speaker app are
+    stored that way. There is no video to extract, and treating them as ordinary clips
+    means the manifest, the splits, cross-validation and training all handle them with
+    no special case anywhere.
+    """
     path = ROOT / clip if not Path(clip).is_absolute() else Path(clip)
+    if path.suffix == ".npy":
+        return np.load(path)
     key = f"{Path(clip).stem}_{int(path.stat().st_mtime)}.npy"
     cached = CACHE / key
     if use_cache and cached.exists():
