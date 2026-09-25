@@ -32,7 +32,7 @@ Full numbers, ablations and failure analysis: [`docs/results.md`](docs/results.m
 | M0 Skeleton | done — backend, app, extension shell, CI |
 | M1 Landmark pipeline | done — browser and Python agree to 8.9e-16, 15 FPS sustained |
 | M2 Data | done — 1,001 clips, 24 signs, 10 signers: the INCLUDE corpus plus our own |
-| M3 Model | done — 76.1%, exported to ONNX at 7 ms |
+| M3 Model | done — 76.1%, exported to ONNX at 12.3 ms. **Short of the 85% target** |
 | M4 Live recognition | done — classifier, confidence gating and sentence assembly wired in |
 | M5 Speaker app | done — transcript, speech and reference sheet; the extension is M6 |
 | M6 Listener extension | shell only — screen capture not written |
@@ -67,7 +67,7 @@ cd ..
 ### Check it works
 
 ```bash
-pytest                       # 56 tests, a few seconds
+pytest                       # 60 tests, a few seconds
 ```
 
 ---
@@ -89,8 +89,19 @@ Then open **http://127.0.0.1:5173** and press **Start camera**.
 You should see roughly 15 FPS and the hand indicators (`L ● R ●`) light up as you move
 each hand into frame. The **SIGNING / IDLE** badge responds to you in real time.
 
-The Glosses panel stays empty, and that is expected: recognition is M4. To see the whole
-interface working end to end before then, start the backend with the mock recogniser:
+Now sign one of [the 24 signs](#the-24-signs) — the reference sheet is in the app, under
+**Signs it knows**. A recognised sign appears as a gloss, a finished sentence appears in
+the transcript, and the browser speaks it. Untick **Speak** to silence it.
+
+**Expect it to be wrong sometimes.** 76.1% means roughly one sign in four. A `…` means a
+sign was detected but the model was not confident enough to name it, which is deliberate:
+the system says nothing rather than guessing.
+
+> Accuracy is far lower for someone who has not recorded training clips — measured at
+> 29–39%. If you are demonstrating this, record yourself first.
+
+To exercise the interface without signing at all, start the backend with the mock
+recogniser:
 
 ```bash
 SIGNSIGHT_MOCK_RECOGNITION=true uvicorn backend.main:app --reload
@@ -226,8 +237,19 @@ signs the data actually contains — same budget of 24 words, chosen so sentence
 | **Krish** | Backend recognition path | `backend/pipeline/`, `backend/storage/` |
 | **Arpit** | Both front ends | `app/src/`, `extension/` |
 
-Start here: Krish → connect the classifier to the live stream (M4). Arpit →
-[`docs/frontend-guide.md`](docs/frontend-guide.md). Eashan → fingerspelling and latency.
+**What is left, in priority order:**
+
+1. **Arpit — the Chrome extension (M6).** The only substantial build remaining. The
+   service worker owns the WebSocket and the content script draws the overlay, both
+   written. What is missing is the middle: `manifest.json` requests the `offscreen`
+   permission but there is no `offscreen.html` or `offscreen.js`, so nothing captures the
+   screen or runs MediaPipe on it. That file is the job. Start at
+   [`docs/frontend-guide.md`](docs/frontend-guide.md).
+2. **Eashan — record 24 signs**, then re-run `make crossval`.
+3. **Everyone — the final report.** M0-M5 and M7 are done; M6 is the gap.
+
+Fingerspelling stays out of v1: 26 of the 50 planned classes have no training data, and a
+letter branch that can never fire is untested code rather than a feature.
 
 **Interfaces that are settled** — build against these rather than renegotiating them:
 
@@ -272,12 +294,30 @@ production while every other test stays green.
 make help                    # everything below, listed
 make test                    # tests and module self-checks
 make data                    # extract and ingest downloaded corpora
+make ingest                  # newly recorded clips → manifest → features → report
 make train                   # train the classifier
+make crossval                # the honest accuracy: leave one signer out, every signer
 make evaluate                # accuracy, confusion matrix, ablations
+make latency                 # sign-end → gloss, p50/p95 (needs `make serve` running)
+```
 
+Without `make` (Windows), this is what `make ingest` and `make crossval` run:
+
+```bash
+python -m ml.data.ingest videos ml/data/clips --source self \
+    --signer-pattern '^([^/]+)/' --no-letters
+python -m ml.data.manifest --assign --check
+python -m ml.data.precompute --workers 6
+python -m ml.data.precompute --report        # tracking rate per signer — read this first
+python -m ml.crossval --pack backend/vocab/isl_v2_words.json \
+    --init-from ml/models/include_pretrain_long.keras
+```
+
+Others worth knowing:
+
+```bash
 python -m ml.data.catalogue --dir <dir>          # what signs a dataset contains
 python -m ml.data.ingest videos <dir> --probe    # is a dataset usable at all?
-python -m ml.crossval --pack backend/vocab/isl_v2_words.json    # the honest accuracy
 ```
 
 Every tunable — thresholds, frame rates, timeouts — lives in `backend/config.py` and can
